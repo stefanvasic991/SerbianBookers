@@ -64,7 +64,7 @@ public class WebApiClient extends AndroidViewModel {
                             Toast.makeText(getApplication(), "err login", Toast.LENGTH_LONG).show();
                     }
                 }
-
+//
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
                     t.printStackTrace();
