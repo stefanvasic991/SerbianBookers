@@ -89,17 +89,17 @@ public class WebApiClient extends AndroidViewModel {
                     } else {
                         data.setValue(null);
                         Timber.v("ResponseError");
-                        switch (response.code()) {
-                            case 404:
-                                Timber.v( "not found");
-                                break;
-                            case 500:
-                                Timber.v("server broken");
-                                break;
-                            default:
-                                Timber.v("unknown error");
-                                break;
-                        }
+//                        switch (response.code()) {
+//                            case 404:
+//                                Timber.v( "not found");
+//                                break;
+//                            case 500:
+//                                Timber.v("server broken");
+//                                break;
+//                            default:
+//                                Timber.v("unknown error");
+//                                break;
+//                        }
                     }
                 }
 
