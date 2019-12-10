@@ -21,6 +21,8 @@ import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.User;
 
+import org.jetbrains.annotations.NotNull;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,13 +56,13 @@ public class WebApiClient extends AndroidViewModel {
                     if (response.isSuccessful()) {
                         login.setValue(response.body());
 //                        Toast.makeText(getApplication(), "Login proso", Toast.LENGTH_LONG).show();
-                        if  (user.getStatus().equals("error"))
+                        if  (user.getStatus() == "error")
                             Toast.makeText(getApplication(), "error login", Toast.LENGTH_LONG).show();
                     } else {
                         login.setValue(null);
                         Timber.v("ResponseError");
 
-                        if  (user.getStatus().equals("error"))
+                        if  (user.getStatus() == "error")
                             Toast.makeText(getApplication(), "err login", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -127,7 +129,7 @@ public class WebApiClient extends AndroidViewModel {
                 }
 
                 @Override
-                public void onFailure(Call<ReservationList> call, Throwable t) {
+                public void onFailure(@NotNull Call<ReservationList> call, Throwable t) {
                     Log.e("ERROR: ", t.getMessage());
 //                    reservation.setValue(null);
                     Timber.v("onFailure");
