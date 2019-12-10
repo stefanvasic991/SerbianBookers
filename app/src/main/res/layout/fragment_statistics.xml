@@ -1,0 +1,1166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.home.StatisticsFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:clipToPadding="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        tools:ignore="MissingConstraints"
+        android:clipChildren="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/appBarLayout"
+            android:layout_alignTop="@+id/appBarLayout">
+
+<!--            <TextView-->
+<!--                android:id="@+id/appName"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:fontFamily="sans-serif"-->
+<!--                android:text="@string/app_name"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/logo__24" />
+
+            <ImageView
+                android:id="@+id/navigationViewBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_menu"
+                tools:ignore="VectorDrawableCompat" />
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/ivSearch"-->
+            <!--                android:layout_width="35dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toStartOf="@+id/imageView"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                app:srcCompat="@drawable/ic_search_white_24dp"-->
+            <!--                tools:ignore="VectorDrawableCompat" />-->
+
+            <!--            <SearchView-->
+            <!--                android:id="@+id/searchView"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                android:layout_below="@+id/textView3"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginEnd="36dp"-->
+            <!--                android:focusable="true"-->
+            <!--                android:background="@drawable/filter_shape"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toStartOf="@+id/imageView"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                android:visibility="gone"/>-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBarLayout"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="60dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/pickDates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorGrayLight"
+                app:cardCornerRadius="10dp"
+                tools:targetApi="lollipop">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/colorText"
+                    android:textSize="14dp"
+                    android:text="@string/datumski_opseg_izmene" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from"
+                        android:textColor="@color/colorText"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbResDateFrom"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/colorText"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:textSize="10dp"
+                        android:hint="@string/pickDate"
+                        android:textColorHint="@color/colorTextLight"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/to"
+                        android:textColor="@color/colorText" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbResDateTo"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/colorText"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColorHint="@color/colorTextLight"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/totalStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorGrayLight"
+                app:cardCornerRadius="10dp"
+                tools:targetApi="lollipop">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tvRes"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/NoRes"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbTotalRes"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="64dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvYesterday"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbTotalRes"
+                        android:layout_alignTop="@+id/pbTotalRes"
+                        android:layout_alignBottom="@+id/pbTotalRes"
+                        android:layout_marginStart="10dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/pbTotalRes"
+                        app:layout_constraintStart_toStartOf="@+id/pbTotalRes"
+                        app:layout_constraintTop_toTopOf="@+id/pbTotalRes"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbTotalRes"
+                        android:layout_alignEnd="@+id/pbTotalRes"
+                        android:layout_alignBottom="@+id/pbTotalRes"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvNights"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvRes"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/NoNights"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbNights"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbTotalRes"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbTotalRes"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvNightsReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbNights"
+                        android:layout_alignTop="@+id/pbNights"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvNightsCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbNights"
+                        android:layout_alignEnd="@+id/pbNights"
+                        android:layout_alignBottom="@+id/pbNights"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvIncome"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvNights"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/income"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbIncome"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbNights"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:layout_marginBottom="24dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbTotalRes"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvIncomeReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbIncome"
+                        android:layout_alignTop="@+id/pbIncome"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvIncomeCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbIncome"
+                        android:layout_alignEnd="@+id/pbIncome"
+                        android:layout_alignBottom="@+id/pbIncome"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/totalStatsChart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorGrayLight"
+                app:cardCornerRadius="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/NoNight"
+                        android:textAllCaps="true"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/tvStudio"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/studio"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbStudio"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/textView"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="64dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvStudioReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbStudio"
+                        android:layout_alignTop="@+id/pbStudio"
+                        android:layout_alignBottom="@+id/pbStudio"
+                        android:layout_marginStart="10dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvStudioCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbStudio"
+                        android:layout_alignEnd="@+id/pbStudio"
+                        android:layout_alignBottom="@+id/pbStudio"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvJednosobni"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvStudio"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/oneBathroom"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbJednosobni"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbStudio"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbStudio"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvJednosobniReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbJednosobni"
+                        android:layout_alignTop="@+id/pbJednosobni"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvJednosobniCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbJednosobni"
+                        android:layout_alignEnd="@+id/pbJednosobni"
+                        android:layout_alignBottom="@+id/pbJednosobni"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvDvosobni"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvJednosobni"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/twoBathroom"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbDvosobni"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbJednosobni"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbJednosobni"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvDvosobniReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbDvosobni"
+                        android:layout_alignTop="@+id/pbDvosobni"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvDvosobniCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbDvosobni"
+                        android:layout_alignEnd="@+id/pbDvosobni"
+                        android:layout_alignBottom="@+id/pbDvosobni"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartments"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvDvosobni"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/apartments"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbApartments"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbDvosobni"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbJednosobni"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartmentReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbApartments"
+                        android:layout_alignTop="@+id/pbApartments"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartmentCanceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbApartments"
+                        android:layout_alignEnd="@+id/pbApartments"
+                        android:layout_alignBottom="@+id/pbApartments"
+                        android:layout_marginEnd="9dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartment1"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvApartments"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/apartment1"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbApartment1"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbApartments"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbJednosobni"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartment1Received"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbApartment1"
+                        android:layout_alignTop="@+id/pbApartment1"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartment1Canceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbApartment1"
+                        android:layout_alignEnd="@+id/pbApartment1"
+                        android:layout_alignBottom="@+id/pbApartment1"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartment2"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvApartment1"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/apartment2"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar
+                        android:id="@+id/pbApartment2"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/pbApartment1"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="21dp"
+                        android:layout_marginBottom="24dp"
+                        android:progress="64"
+                        app:backgroundColor="@color/colorOrange"
+                        app:isRounded="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pbJednosobni"
+                        app:progressColor="@color/colorBlue"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartment2Received"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/pbApartment2"
+                        android:layout_alignTop="@+id/pbApartment2"
+                        android:layout_marginStart="8dp"
+                        android:text="25"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvApartment2Canceled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pbApartment2"
+                        android:layout_alignEnd="@+id/pbApartment2"
+                        android:layout_alignBottom="@+id/pbApartment2"
+                        android:layout_marginEnd="10dp"
+                        android:text="17"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        tools:ignore="MissingConstraints" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorGrayLight"
+                app:cardCornerRadius="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/byCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/byCountries"
+                        android:textSize="20dp"
+                        android:textAllCaps="true"/>
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/countryPieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_below="@+id/byCountry"
+                        android:layout_marginTop="8dp" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorGrayLight"
+                app:cardCornerRadius="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/byChannel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/byChannels"
+                        android:textSize="20dp"
+                        android:textAllCaps="true"/>
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/channelPieChart"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_centerInParent="true"
+                        android:layout_below="@+id/byChannel"
+                        android:layout_marginTop="8dp" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorGrayLight"
+                app:cardCornerRadius="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/byUnits"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/byUnits"
+                        android:textSize="20dp"
+                        android:textAllCaps="true"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/byUnits"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.27"
+                            android:layout_marginStart="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:text="JEDINICE" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="apartman 1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="apartman 2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="apartman 3" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="apartman 4" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="apartman 5" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="suma" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.17"
+                            android:layout_marginStart="4dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="25dp"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="@string/noincome" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="665 1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6694" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.17"
+                            android:layout_marginStart="4dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="@string/noRes" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="665 1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6694" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                            android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                            android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.17"
+                            android:layout_marginStart="4dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="@string/noNights" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="665 1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6694" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.17"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:textAllCaps="true"
+                                android:text="@string/midPrice" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="665 1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6694" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:textAlignment="center"
+                                android:layout_marginTop="2dp"
+                                android:background="@color/colorReservationDate"
+                                android:text="6695" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_gravity="end">
+
+        <RadioButton
+            android:id="@+id/vila1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vila 1"
+            android:textSize="20dp"
+            android:textColor="@color/colorWhite"/>
+
+        <RadioButton
+            android:id="@+id/vila2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vila 2"
+            android:textSize="20dp"
+            android:textColor="@color/colorWhite" />
+
+        <RadioButton
+            android:id="@+id/vila3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vila 3"
+            android:textSize="20dp"
+            android:textColor="@color/colorWhite" />
+
+        <RadioButton
+            android:id="@+id/vila4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:text="Vila 4"
+            android:textSize="20dp"
+            android:textColor="@color/colorWhite" />
+    </RadioGroup>
+
+    <Switch
+        android:id="@+id/notificationSwitch"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_gravity="end"
+        android:text="Notifikacije"
+        android:enabled="true"
+        android:textSize="20dp"
+        android:textColor="@color/colorWhite"/>
+</LinearLayout>

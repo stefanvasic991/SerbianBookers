@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+    android:orientation="vertical"
+    tools:context=".views.filter.CalendarFilterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:background="@color/colorBlue">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp"
+            android:text="@string/izaberi_datum" />
+
+        <TextView
+            android:id="@+id/tvCurrentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="32dp"
+            android:text="Uto, Nov '19" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:id="@+id/tvMonthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="June 2019"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="28dp" />
+
+        <include
+            layout="@layout/calendar_day_heather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp" />
+
+        <com.kizitonwose.calendarview.CalendarView
+            android:id="@+id/cvCalendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:cv_maxRowCount="6"
+            app:cv_dayViewResource="@layout/calendar_filter_day_layout"
+            app:cv_orientation="horizontal"
+            app:cv_outDateStyle="endOfRow"
+            app:cv_scrollMode="paged" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="16dp"
+            android:text="otkaži"
+            android:textAllCaps="true"
+            android:textColor="@color/colorBlue"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tvConfirmDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
+            android:text="potvrdi datum"
+            android:textAllCaps="true"
+            android:textColor="@color/colorBlue"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+
+</LinearLayout>

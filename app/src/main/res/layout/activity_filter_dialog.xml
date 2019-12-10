@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    app:cardElevation="24dp"
+    app:cardCornerRadius="25dp"
+    android:clipToPadding="false"
+    tools:context=".views.dialog.TimeDialog">
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/circle_dialog_close"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/llYesterday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tvOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/yesterday"
+                android:textColor="@color/colorText"
+                android:textAllCaps="true"
+                android:textSize="24dp" />
+
+            <CheckBox
+                android:id="@+id/cbOne"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:tag="0"
+                android:button="@drawable/filter_checkbox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llYesterday"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tvTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/today"
+                android:textColor="@color/colorText"
+                android:textAllCaps="true"
+                android:textSize="24dp" />
+
+            <CheckBox
+                android:id="@+id/cbTwo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:tag="1"
+                android:button="@drawable/filter_checkbox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llTomorrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llToday"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tvThree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/tomorrow"
+                android:textColor="@color/colorText"
+                android:textAllCaps="true"
+                android:textSize="24dp" />
+
+            <CheckBox
+                android:id="@+id/cbThree"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:tag="2"
+                android:button="@drawable/filter_checkbox" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llTomorrow"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="primeni filtere"
+            app:cornerRadius="12dp" />
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

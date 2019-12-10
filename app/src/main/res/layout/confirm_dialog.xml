@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/search_view_shape">
+
+        <TextView
+            android:id="@+id/unete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:textSize="16dp"
+            android:textColor="@color/colorBlack"
+            android:text="@string/unete_izmene_su_sacuvane"/>
+
+        <TextView
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/unete"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:padding="10dp"
+            android:text="u redu"
+            android:textAllCaps="true"
+            android:textColor="@color/colorBlue"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/chk"/>
+
+</RelativeLayout>

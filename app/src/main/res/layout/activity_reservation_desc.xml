@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="360dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="8dp"
+    android:orientation="vertical"
+    tools:context=".views.home.ReservationDescActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:cornerRadius="15dp"
+        app:icon="@drawable/rewind"
+        app:iconTint="@color/colorText"
+        android:text="@string/back"
+        android:textColor="@color/colorText"
+        app:backgroundTint="@color/colorReservationData"
+        android:layout_below="@+id/tvHeadline"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="25dp"
+        android:backgroundTint="@color/colorWhite">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clReservation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/reservationDesc"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Stefan Vasić"
+                        android:textColor="@color/colorText"
+                        android:textSize="20dp"
+                        android:textStyle="normal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mcvStatus"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="35dp"
+                        app:cardBackgroundColor="@color/colorGreen"
+                        app:cardCornerRadius="3dp"
+                        app:layout_constraintStart_toEndOf="@+id/tvName"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints">
+
+                        <ImageView
+                            android:id="@+id/ivStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_confirmed" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/tvPerNight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif"
+                        android:lineSpacingExtra="-2sp"
+                        android:text="35 € / noć"
+                        android:textColor="@color/colorTextLight"
+                        android:textSize="10sp"
+                        android:textStyle="normal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvName"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/tvNights"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif"
+                        android:text="3 noćenja"
+                        android:textColor="@color/colorTextLight"
+                        android:textSize="10sp"
+                        android:textStyle="normal"
+                        app:layout_constraintStart_toEndOf="@+id/tvPerNight"
+                        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+
+                    <TextView
+                        android:id="@+id/tvTotalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif"
+                        android:text="€135"
+                        android:textColor="@color/colorText"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/tvNights"
+                        app:layout_constraintTop_toBottomOf="@+id/tvName"
+                        tools:ignore="MissingConstraints" />
+
+                    <ImageView
+                        android:id="@+id/ivLogo"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:padding="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/airbnb_logo_red"
+                        tools:ignore="MissingConstraints" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="28dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvPerNight"
+                        app:srcCompat="@drawable/ic_mail"
+                        tools:ignore="MissingConstraints,VectorDrawableCompat" />
+
+                    <TextView
+                        android:id="@+id/tvEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="30dp"
+                        android:textIsSelectable="true"
+                        android:text="stefanvasic991@icloud.com"
+                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNights" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                        app:srcCompat="@drawable/ic_phone"
+                        tools:ignore="MissingConstraints,VectorDrawableCompat" />
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="12dp"
+                        android:textIsSelectable="true"
+                        android:text="+381 66 007723"
+                        app:layout_constraintStart_toEndOf="@+id/imageView4"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/llReservationCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/clReservation"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:padding="4dp"
+                        android:background="@color/reservationDesc"
+                        android:text="@string/reservationCode"
+                        android:textSize="14dp"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/tvReservationCode"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.6"
+                        android:background="@color/reservationDesc"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:textSize="14dp"
+                        android:text="154823625" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llReservationCode"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:padding="4dp"
+                        android:background="@color/reservationDesc"
+                        android:text="@string/time"
+                        android:textSize="14dp"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:layout_marginStart="4dp"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:textSize="14dp"
+                        android:background="@color/reservationDesc"
+                        android:text="05.12.2019  09:26h"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llArrival"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llTime"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:padding="4dp"
+                        android:background="@color/reservationDesc"
+                        android:text="@string/arrival"
+                        android:textSize="14dp"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/tvArrival"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.6"
+                        android:background="@color/reservationDesc"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:textSize="14dp"
+                        android:text="05.12.2019" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llDeparture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llArrival"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:background="@color/reservationDesc"
+                        android:padding="4dp"
+                        android:text="@string/departure"
+                        android:textSize="14dp"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/tvDeparture"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:layout_marginStart="4dp"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:textSize="14dp"
+                        android:background="@color/reservationDesc"
+                        android:text="09.12.2019"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llApartment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llDeparture"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:background="@color/reservationDesc"
+                        android:padding="4dp"
+                        android:text="@string/apartment"
+                        android:textSize="14dp"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/tvApartment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:layout_marginStart="4dp"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:textSize="14dp"
+                        android:background="@color/reservationDesc"
+                        android:text="4"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llPeople"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llApartment"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:background="@color/reservationDesc"
+                        android:padding="4dp"
+                        android:text="@string/peoples"
+                        android:textSize="14dp"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/tvPeople"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:layout_marginStart="4dp"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:textSize="14dp"
+                        android:background="@color/reservationDesc"
+                        android:text="2, 3"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llExtra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llPeople"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:background="@color/reservationDesc"
+                        android:padding="4dp"
+                        android:text="@string/extra"
+                        android:textSize="14dp"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/tvExtra"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:layout_marginStart="4dp"
+                        android:padding="4dp"
+                        android:paddingStart="10dp"
+                        android:background="@color/reservationDesc"
+                        android:text="Taksa je 30$"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/llExtra"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textNote"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.4"
+                        android:background="@color/reservationDesc"
+                        android:padding="20dp"
+                        android:text="@string/note"
+                        android:textSize="14dp"
+                        android:textAlignment="center"/>
+
+                    <RelativeLayout
+                        android:id="@+id/rlSaveNote"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.4"
+                        android:background="@color/reservationDesc"
+                        android:visibility="gone">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/saveNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            app:cornerRadius="25dp"
+                            android:textSize="12sp"
+                            android:text="@string/saveNote" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llEditNote"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="4dp"
+                        android:background="@color/reservationDesc"
+                        android:layout_weight="0.6"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvNote"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.8"
+                            android:layout_height="match_parent"
+                            android:padding="4dp"
+                            android:paddingStart="10dp"
+                            android:background="@color/reservationDesc"
+                            android:text="Taksa je 30$"
+                            tools:ignore="MissingConstraints" />
+
+                        <ImageView
+                            android:id="@+id/ivEditNote"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:padding="8dp"
+                            android:background="@drawable/edit_note_shape"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:srcCompat="@drawable/edit_note"
+                            tools:ignore="MissingConstraints"
+                            android:layout_gravity="bottom|right"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlNote"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.6"
+                        android:layout_marginStart="4dp"
+                        android:background="@color/reservationDesc"
+                        android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/etNote"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="4dp"
+                        android:layout_margin="4dp"
+                        android:background="@drawable/search_view_shape"
+                        android:padding="4dp"
+                        android:text="Taksa je 30$"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llNote"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/reservationDesc"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="@color/cardView"
+                        android:text="@string/cardReview"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="8dp"
+                        app:cornerRadius="40dp"
+                        app:icon="@drawable/credit_card" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="@color/colorRed"
+                        android:text="@string/invalidCard"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="8dp"
+                        app:cornerRadius="40dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="@color/colorText"
+                        android:text="@string/guestNotCame"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="8dp"
+                        app:cornerRadius="40dp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

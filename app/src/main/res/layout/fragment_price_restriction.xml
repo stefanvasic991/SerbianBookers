@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.home.PriceRestrictionFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:clipToPadding="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        tools:ignore="MissingConstraints"
+        android:clipChildren="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/appBarLayout"
+            android:layout_alignTop="@+id/appBarLayout">
+
+<!--            <TextView-->
+<!--                android:id="@+id/appName"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:fontFamily="sans-serif"-->
+<!--                android:text="@string/app_name"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/logo__24" />
+
+            <ImageView
+                android:id="@+id/navigationViewBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_menu"
+                tools:ignore="VectorDrawableCompat" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/pickDates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@id/appBarLayout"
+        android:backgroundTint="@color/colorGrayLight"
+        app:cardCornerRadius="10dp"
+        tools:targetApi="lollipop">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/colorText"
+            android:textSize="14dp"
+            android:text="@string/datumski_opseg_izmene" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/from"
+                android:textColor="@color/colorText"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mbResDateFrom"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/colorText"
+                app:icon="@drawable/event"
+                app:iconTint="@color/colorBlack"
+                android:textSize="10dp"
+                android:hint="@string/pickDate"
+                android:textColorHint="@color/colorTextLight"
+                app:backgroundTint="@color/colorWhite"
+                app:cornerRadius="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/to"
+                android:textColor="@color/colorText" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mbResDateTo"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/colorText"
+                app:icon="@drawable/event"
+                app:iconTint="@color/colorBlack"
+                android:hint="@string/pickDate"
+                android:textSize="10dp"
+                android:textColorHint="@color/colorTextLight"
+                app:backgroundTint="@color/colorWhite"
+                app:cornerRadius="10dp"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/pickTypes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@id/pickDates"
+        android:backgroundTint="@color/colorGrayLight"
+        app:cardCornerRadius="10dp"
+        tools:targetApi="lollipop">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/colorText"
+        android:textSize="14dp"
+        android:text="@string/roomType" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:entries="@array/rooms"
+                android:background="@drawable/spinner_background"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/spinner"
+                android:layout_alignEnd="@+id/spinner"
+                android:layout_alignBottom="@+id/spinner"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_arrow_down" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/menus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/pickTypes"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvMenuPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAllCaps="true"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:background="@drawable/menus_background"
+            android:textSize="16dp"
+            android:text="cena" />
+
+        <TextView
+            android:id="@+id/tvMenuAvail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:text="raspolož." />
+
+        <TextView
+            android:id="@+id/tvMenuRestr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:text="restrikcije" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/menus"
+        tools:context=".views.price.AvailabilityFragment">
+
+        <RelativeLayout
+            android:id="@+id/rlPricee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrayLight"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvChangeAvailability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:text="@string/changePriceType" />
+
+            <EditText
+                android:id="@+id/etInsertPrice"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="40dp"
+                android:layout_below="@+id/tvChangeAvailability"
+                android:background="@drawable/diagram_shape"
+                android:layout_centerHorizontal="true"
+                android:hint="unesi iznos u €"
+                android:textSize="12dp"
+                android:cursorVisible="false"
+                android:textAlignment="center"
+                android:inputType="number" />
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/savePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/rlPricee"
+            android:layout_centerHorizontal="true"
+            app:cornerRadius="25dp"
+            android:text="@string/saveChanges">
+        </com.google.android.material.button.MaterialButton>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlAvailability"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        android:layout_below="@+id/menus"
+        tools:context=".views.price.AvailabilityFragment">
+
+        <RelativeLayout
+            android:id="@+id/rlAvail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrayLight"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvChangePriceType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:text="@string/changeAvailabilityType" />
+
+            <EditText
+                android:id="@+id/etInsertAvailability"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="40dp"
+                android:layout_below="@+id/tvChangePriceType"
+                android:background="@drawable/diagram_shape"
+                android:layout_centerHorizontal="true"
+                android:hint="unesi broj raspoloživih jedinica"
+                android:textSize="12dp"
+                android:cursorVisible="false"
+                android:textAlignment="center"
+                android:inputType="number" />
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveAvailability"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/rlAvail"
+            android:layout_centerHorizontal="true"
+            app:cornerRadius="25dp"
+            android:text="@string/saveChanges">
+        </com.google.android.material.button.MaterialButton>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlRestriction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/menus"
+        android:visibility="gone"
+        tools:context=".views.price.RestrictionFragment">
+
+        <RelativeLayout
+            android:id="@+id/rlRestr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrayLight"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mbOpen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:padding="8dp"
+                android:text="@string/open"
+                android:textSize="16dp"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:background="@color/colorRestrictionGreen" />
+
+            <TextView
+                android:id="@+id/tvChangeMinStay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginStart="16dp"
+                android:layout_below="@+id/mbOpen"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:text="@string/changeMinStay" />
+
+            <EditText
+                android:id="@+id/etInsertMinStay"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="40dp"
+                android:layout_below="@+id/mbOpen"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/diagram_shape"
+                android:hint="klikni za unos"
+                android:cursorVisible="false"
+                android:textAlignment="center"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/tvChangeMaxStay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_below="@+id/tvChangeMinStay"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:text="@string/changeMaxStay" />
+
+            <EditText
+                android:id="@+id/etInsertMaxStay"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/tvChangeMinStay"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/diagram_shape"
+                android:hint="klikni za unos"
+                android:cursorVisible="false"
+                android:textAlignment="center"
+                android:inputType="number" />
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveRestriction"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/rlRestr"
+            android:layout_centerHorizontal="true"
+            android:text="@string/saveChanges"
+            app:cornerRadius="25dp">
+        </com.google.android.material.button.MaterialButton>
+    </RelativeLayout>
+
+    <!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:id="@+id/viewPager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_below="@+id/pickTypes"-->
+<!--        tools:ignore="MissingConstraints">-->
+
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/tabLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="top"-->
+<!--            android:layout_below="@+id/clDate"-->
+<!--            app:tabBackground="@drawable/tab_color_selector"-->
+<!--            app:tabSelectedTextColor="@color/colorBlack"-->
+<!--            app:tabIndicator="@color/colorGrayLight"-->
+<!--            app:tabTextAppearance="@style/FontTheme" />-->
+<!--    </androidx.viewpager.widget.ViewPager>-->
+</RelativeLayout>

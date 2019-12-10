@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".views.filter.FilterActivity">
+
+    <TextView
+        android:id="@+id/tvHeadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/filter_headline"
+        android:textSize="20dp"
+        android:textColor="@color/colorWhite"
+        android:textAllCaps="true"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        app:cornerRadius="15dp"
+        app:icon="@drawable/rewind"
+        app:iconTint="@color/colorText"
+        android:text="@string/back"
+        android:textColor="@color/colorText"
+        app:backgroundTint="@color/colorReservationData"
+        android:layout_below="@+id/tvHeadline"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        app:cornerRadius="15dp"
+        android:layout_below="@+id/tvHeadline"
+        android:text="@string/add_filter"
+        android:layout_alignParentEnd="true"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnFilter">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/filterOne"
+                    android:textColor="@color/colorWhite"/>
+
+                <SearchView
+                    android:layout_width="250dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_below="@+id/textView3"
+                    android:background="@drawable/filter_shape"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFiterTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/mcvFilterOne"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/reservationDate"
+                    android:textColor="@color/colorWhite"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginStart="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbResDateFrom"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/colorText"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/to"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbResDateTo"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/pickDate"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        android:textSize="10dp"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/mcvFiterTwo"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/arrivalDate"
+                    android:textColor="@color/colorWhite"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginStart="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbArrDateFrom"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/to"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbArrDateTo"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColor="@color/colorText"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterFour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/mcvFilterThree"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/departureDate"
+                    android:textColor="@color/colorWhite"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginStart="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbDepDateFrom"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/to"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbDepDateTo"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterFive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/mcvFilterFour"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/cancelingDate"
+                    android:textColor="@color/colorWhite"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginStart="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbCanDateFrom"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/to"
+                        android:textColor="@color/colorWhite"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mbCanDateTo"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        app:icon="@drawable/event"
+                        app:iconTint="@color/colorBlack"
+                        android:hint="@string/pickDate"
+                        android:textSize="10dp"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        app:backgroundTint="@color/colorWhite"
+                        app:cornerRadius="10dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterSix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_below="@+id/mcvFilterFive"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/reservationStatus"
+                    android:textColor="@color/colorWhite"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <Spinner
+                        android:id="@+id/statusSpinner"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp"
+                        android:spinnerMode="dropdown"
+                        android:entries="@array/status"
+                        android:background="@drawable/spinner_background"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/statusSpinner"
+                        android:layout_alignEnd="@+id/statusSpinner"
+                        android:layout_alignBottom="@+id/statusSpinner"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_arrow_down" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterSeven"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mcvFilterFive"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_toEndOf="@+id/mcvFilterSix"
+                android:backgroundTint="@color/colorDataBackground"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/reservationChannel"
+                    android:textColor="@color/colorWhite" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <Spinner
+                        android:id="@+id/channelSpinner"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/spinner_background"
+                        android:entries="@array/channels"
+                        android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/channelSpinner"
+                        android:layout_alignEnd="@+id/channelSpinner"
+                        android:layout_alignBottom="@+id/channelSpinner"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_arrow_down" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvFilterEight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorDataBackground"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_below="@+id/mcvFilterSix"
+                app:cardCornerRadius="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/apartmentType"
+                    android:textColor="@color/colorWhite" />
+
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <Spinner
+                        android:id="@+id/typeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:spinnerMode="dropdown"
+                        android:entries="@array/rooms"
+                        android:background="@drawable/spinner_background"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/typeSpinner"
+                        android:layout_alignEnd="@+id/typeSpinner"
+                        android:layout_alignBottom="@+id/typeSpinner"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_arrow_down" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
+
+
+    </ScrollView>
+</RelativeLayout>

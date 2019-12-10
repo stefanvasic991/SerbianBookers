@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialog_shape">
+
+        <LinearLayout
+            android:id="@+id/llYesterday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tvYesterday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/arrival"
+                android:textAllCaps="true"
+                android:textSize="24dp" />
+
+            <CheckBox
+                android:id="@+id/cbYesterday"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:button="@drawable/filter_checkbox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llYesterday"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tvToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/stay"
+                android:textAllCaps="true"
+                android:textSize="24dp" />
+
+            <CheckBox
+                android:id="@+id/cbToday"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:button="@drawable/filter_checkbox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llTomorrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llToday"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tvTomorrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/departure"
+                android:textAllCaps="true"
+                android:textSize="24dp" />
+
+            <CheckBox
+                android:id="@+id/cbTomorrow"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:button="@drawable/filter_checkbox" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llTomorrow"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="primeni filtere"
+            app:cornerRadius="12dp" />
+    </RelativeLayout>

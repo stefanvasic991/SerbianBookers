@@ -1,0 +1,129 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Serbian Bookers</string>
+    <string name="splash_app_name">Serbian\nBookers</string>
+
+    <!-- Login -->
+    <string name="login">prijavi se</string>
+    <string name="username_required">Korisnicko ime obavezno.</string>
+    <string name="username_not_valid">Korisnicko ime nije validno.</string>
+    <string name="password_required">Lozinka je obavezna!</string>
+
+    <!-- Home -->
+    <string name="home" tools:ignore="ExtraTranslation">Početna</string>
+    <string name="reservation">Rezervacije</string>
+    <string name="calendar">Kalendar</string>
+    <string name="price">Cene/Restr.</string>
+    <string name="statistics">Statistika</string>
+    <string name="occupancy">popunjenost</string>
+    <string name="yesterday">juče</string>
+    <string name="today">danas</string>
+    <string name="time">Vreme</string>
+    <string name="tomorrow">sutra</string>
+    <string name="status">status</string>
+    <string name="arrival">Dolazak</string>
+    <string name="stay">boravak</string>
+    <string name="departure">Odlazak</string>
+    <string name="filterReservation">filtrirajte\nrezervacije\novde</string>
+    <string name="filter">filtriraj</string>
+    <string name="add_filter">primeni filtere</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="absence">nedolazak</string>
+    <string name="canceled">otkazane</string>
+
+    <!-- Filter -->
+    <string name="filter_headline">napredno filtriranje</string>
+    <string name="back">nazad</string>
+    <string name="filterOne">Pretraži po imenu, prezimenu ili email adresi:</string>
+    <string name="reservationDate">Datum rezervacije:</string>
+    <string name="arrivalDate">Datum dolaska:</string>
+    <string name="departureDate">Datum odlaska:</string>
+    <string name="from">Od:</string>
+    <string name="to">Do:</string>
+    <string name="cancelingDate">Datum otkazivanja:</string>
+    <string name="reservationStatus">Status rezervacije:</string>
+    <string name="reservationChannel">Kanal rezervacije:</string>
+    <string name="apartmentType">Tip apartmana:</string>
+    <string name="pickDate">izaberi datum</string>
+
+    <!-- Reservation Descriptions -->
+    <string name="reservationCode">Kod rezervacije</string>
+    <string name="apartment">Apartman</string>
+    <string name="peoples">Odrasli/deca</string>
+    <string name="extra">Dodatno</string>
+    <string name="note">Napomena</string>
+    <string name="cardReview">pregled\nkartice</string>
+    <string name="invalidCard">kartica je\nnevalidna</string>
+    <string name="guestNotCame">gost nije\ndošao</string>
+
+    <!-- Calendar Descriptions -->
+    <string name="open">Otvoreno</string>
+    <string name="closed">Zatvoreno</string>
+    <string name="closure">Zatvaranje</string>
+    <string name="onCheckIn">Na prijavljivanju</string>
+    <string name="onCheckOut">Na odjavljivanju</string>
+    <string name="ota">OTA</string>
+    <string name="minStay">Minimalni\nboravak</string>
+    <string name="minStayArr">Minimalni\nboravak Arr</string>
+    <string name="maxStay">Maksimalni\nboravak</string>
+    <string name="izaberi_datum">Izaberi datum</string>
+    <string name="sunday">S</string>
+    <string name="monday">M</string>
+    <string name="tuesday">T</string>
+    <string name="wednesday">W</string>
+    <string name="thursday">T</string>
+    <string name="friday">F</string>
+    <string name="saturday">S</string>
+    <string name="datumski_opseg_izmene">Izaberi datumski opseg izmene:</string>
+    <string name="roomType">Izaberi tip sobe:</string>
+    <string name="changePriceType">Izmeni cenu za tip:</string>
+    <string name="changeAvailabilityType">Izmeni raspoloživost za tip:</string>
+    <string name="changeMinStay">Izmeni min boravak:</string>
+    <string name="changeMaxStay">Izmeni max boravak:</string>
+    <string name="saveChanges">sačuvaj izmene</string>
+    <string name="saveNote">sačuvaj\nizmenu</string>
+    <string name="unete_izmene_su_sacuvane">Unete izmene su sačuvane.</string>
+    <string name="NoRes">Broj rezervacija:</string>
+    <string name="NoNight">broj noćenja</string>
+    <string name="NoNights">Broj noćenja:</string>
+    <string name="income">Prihod:</string>
+    <string name="noRes">Broj\nrezervacija</string>
+    <string name="noNight">broj\nnoćenja</string>
+    <string name="noNights">Broj\nnoćenja</string>
+    <string name="noincome">Prihod</string>
+    <string name="midPrice">prosečna\ncena</string>
+
+    <string name="oneBathroom">Jednosobni:</string>
+    <string name="twoBathroom">Dvosobni:</string>
+    <string name="threeBathroom">Trosobni:</string>
+    <string name="studio">Studio:</string>
+    <string name="apartments">Apartmani:</string>
+    <string name="apartment1">Apartman1:</string>
+    <string name="apartment2">Apartman2:</string>
+    <string name="byCountries">po državama</string>
+    <string name="byChannels">po kanalima</string>
+    <string name="byUnits">po jedinicama</string>
+
+
+    <string-array name="rooms">
+        <item>Jednosobni</item>
+        <item>Dvosobni</item>
+        <item>Trosobni</item>
+        <item>Studio</item>
+    </string-array>
+
+    <string-array name="status">
+        <item>Dolazak</item>
+        <item>Boravak</item>
+        <item>Odlazak</item>
+    </string-array>
+
+    <string-array name="channels">
+        <item>Booking</item>
+        <item>AirBnb</item>
+        <item>Trip Advisor</item>
+        <item>Expedia</item>
+    </string-array>
+
+</resources>
