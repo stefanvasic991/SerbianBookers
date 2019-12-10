@@ -106,7 +106,6 @@ public class WebApiClient extends AndroidViewModel {
                 @Override
                 public void onFailure(Call<Data> call, Throwable t) {
                     t.printStackTrace();
-//                    Toast.makeText(getApplication(), "Prazna lista", Toast.LENGTH_LONG).show();
                     Timber.v("onFailure");
                 }
             });
