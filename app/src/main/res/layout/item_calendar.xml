@@ -25,39 +25,39 @@
             android:textColor="@color/colorText"
             android:textSize="20dp" />
 
-        <!--    <TextView-->
-        <!--        android:id="@+id/tvMonth"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginStart="12dp"-->
-        <!--        android:layout_marginTop="16dp"-->
-        <!--        android:layout_toEndOf="@+id/tvDate"-->
-        <!--        android:text="Nov"-->
-        <!--        android:textColor="@color/colorTextLight"-->
-        <!--        android:textSize="16dp" />-->
+            <TextView
+                android:id="@+id/tvMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@+id/tvDate"
+                android:text="Nov"
+                android:textColor="@color/colorTextLight"
+                android:textSize="16dp" />
 
-        <!--    <View-->
-        <!--        android:id="@+id/vLine"-->
-        <!--        android:layout_width="2dp"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_below="@+id/tvStartMonth"-->
-        <!--        android:layout_toEndOf="@+id/tvMonth"-->
-        <!--        android:layout_marginTop="20dp"-->
-        <!--        android:layout_marginStart="8dp"-->
-        <!--        android:layout_marginBottom="16dp"-->
-        <!--        android:background="@color/colorTextLight"-->
-        <!--        android:orientation="vertical" />-->
+            <View
+                android:id="@+id/vLine"
+                android:layout_width="2dp"
+                android:layout_height="16dp"
+                android:layout_below="@+id/tvStartMonth"
+                android:layout_toEndOf="@+id/tvMonth"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/colorTextLight"
+                android:orientation="vertical" />
 
-        <!--    <TextView-->
-        <!--        android:id="@+id/tvDay"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginStart="10dp"-->
-        <!--        android:layout_marginTop="16dp"-->
-        <!--        android:layout_toEndOf="@+id/vLine"-->
-        <!--        android:text="Pon"-->
-        <!--        android:textColor="@color/colorTextLight"-->
-        <!--        android:textSize="16dp" />-->
+            <TextView
+                android:id="@+id/tvDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@+id/vLine"
+                android:text="Pon"
+                android:textColor="@color/colorTextLight"
+                android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tv1_0"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="16dp"
-            android:layout_toStartOf="@+id/tvPrice"
+            android:layout_toEndOf="@+id/tvDay"
             android:text="1/0"
             android:textColor="@color/colorTextLight"
             android:textSize="16dp" />
@@ -84,8 +84,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbStatus"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="12dp"
             android:layout_toStartOf="@+id/ivClose"
             app:backgroundTint="@color/colorGreen"
@@ -95,10 +96,9 @@
             android:id="@+id/ivClose"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:tag="0"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="12dp"
             app:srcCompat="@drawable/ic_arrow_down"
             tools:ignore="VectorDrawableCompat" />
     </RelativeLayout>

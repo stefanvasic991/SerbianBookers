@@ -41,6 +41,15 @@ public class Property implements Parcelable {
     @SerializedName("logo")
     @Expose
     private String logo;
+    @SerializedName("default_price")
+    @Expose
+    private String defaultPrice;
+    @SerializedName("pib")
+    @Expose
+    private String pib;
+    @SerializedName("mb")
+    @Expose
+    private String mb;
 
     protected Property(Parcel in) {
         lcode = in.readString();
@@ -54,6 +63,9 @@ public class Property implements Parcelable {
         latitude = in.readString();
         longitude = in.readString();
         logo = in.readString();
+        defaultPrice = in.readString();
+        pib = in.readString();
+        mb = in.readString();
     }
 
     @Override
@@ -69,6 +81,9 @@ public class Property implements Parcelable {
         dest.writeString(latitude);
         dest.writeString(longitude);
         dest.writeString(logo);
+        dest.writeString(defaultPrice);
+        dest.writeString(pib);
+        dest.writeString(mb);
     }
 
     @Override
@@ -174,5 +189,29 @@ public class Property implements Parcelable {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getDefaultPrice() {
+        return defaultPrice;
+    }
+
+    public void setDefaultPrice(String defaultPrice) {
+        this.defaultPrice = defaultPrice;
+    }
+
+    public String getPib() {
+        return pib;
+    }
+
+    public void setPib(String pib) {
+        this.pib = pib;
+    }
+
+    public String getMb() {
+        return mb;
+    }
+
+    public void setMb(String mb) {
+        this.mb = mb;
     }
 }

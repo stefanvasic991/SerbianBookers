@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACTION_CALL" />
 
     <application
         android:name=".App"
@@ -21,11 +23,40 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".views.NavigationViewActivity"
-            android:theme="@style/NavTheme"
-            android:label="" />
+        <activity android:name=".views.dialog.SendMailActivity"></activity>
+        <activity
+            android:name=".views.dialog.SaveRestrictionDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.SaveAvailabilityDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.SavePriceDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.GuestNotShowDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.InvalidCardDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.NavigationViewActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/NavTheme" />
         <activity
             android:name=".views.login.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeWhite">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,29 +67,36 @@
         <activity
             android:name=".views.filter.CalendarFilterActivity"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
-        <activity android:name=".views.GantogramActivity" />
         <activity
-            android:name=".views.calendar.CalendarDescriptionActivity"
-            android:label=""
-            android:theme="@style/AppThemeDialog" />
+            android:name=".views.GantogramActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.dialog.StatusDialog"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
-        <activity android:name=".views.filter.FilterActivity" />
+        <activity
+            android:name=".views.filter.FilterActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.dialog.TimeDialog"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name=".views.login.LoginActivity"
-            android:theme="@style/AppThemeWhite"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeWhite" />
         <activity
             android:name=".views.home.ReservationDescActivity"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
-        <activity android:name=".views.home.HomeActivity" />
+        <activity
+            android:name=".views.home.HomeActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

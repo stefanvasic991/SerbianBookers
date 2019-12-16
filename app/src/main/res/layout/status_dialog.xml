@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="200dp"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/dialog_shape">
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    app:cardElevation="24dp"
+    app:cardCornerRadius="25dp"
+    android:clipToPadding="false"
+    tools:context=".views.dialog.TimeDialog">
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/circle_dialog_close"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/llYesterday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
 
             <TextView
-                android:id="@+id/tvYesterday"
+                android:id="@+id/tvOne"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/arrival"
                 android:textAllCaps="true"
+                android:textColor="@color/colorText"
                 android:textSize="24dp" />
 
             <CheckBox
-                android:id="@+id/cbYesterday"
+                android:id="@+id/cbOne"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:button="@drawable/filter_checkbox" />
+                android:button="@drawable/filter_checkbox"
+                android:tag="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -38,25 +57,29 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/llYesterday"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
 
             <TextView
-                android:id="@+id/tvToday"
+                android:id="@+id/tvTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/stay"
                 android:textAllCaps="true"
+                android:textColor="@color/colorText"
                 android:textSize="24dp" />
 
             <CheckBox
-                android:id="@+id/cbToday"
+                android:id="@+id/cbTwo"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:button="@drawable/filter_checkbox" />
+                android:checked="true"
+                android:button="@drawable/filter_checkbox"
+                android:tag="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -65,35 +88,40 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/llToday"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
 
             <TextView
-                android:id="@+id/tvTomorrow"
+                android:id="@+id/tvThree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/departure"
                 android:textAllCaps="true"
+                android:textColor="@color/colorText"
                 android:textSize="24dp" />
 
             <CheckBox
-                android:id="@+id/cbTomorrow"
+                android:id="@+id/cbThree"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:button="@drawable/filter_checkbox" />
+                android:button="@drawable/filter_checkbox"
+                android:tag="2" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/llTomorrow"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:text="primeni filtere"
             app:cornerRadius="12dp" />
     </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

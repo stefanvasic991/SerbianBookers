@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="25dp"
+    tools:context=".views.dialog.InvalidCardDialog">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:text="@string/doesInvalidCard" />
+
+        <TextView
+            android:id="@+id/tvQuit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvQuestion"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/colorRed"
+            android:text="odustani" />
+
+        <TextView
+            android:id="@+id/tvConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvQuestion"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="50dp"
+            android:paddingEnd="16dp"
+            android:text="@string/confirm"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/colorBlue" />
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
@@ -29,6 +30,7 @@ import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.adapters.ReservationAdapter;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.Reservation;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.User;
@@ -38,6 +40,9 @@ import com.easyswitch.serbianbookers.views.dialog.TimeDialog;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar;
 
+import org.threeten.bp.LocalDate;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -76,16 +81,16 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.tvReservation)
     TextView tvReservation;
+    @BindView(R.id.tvConfirmed)
+    TextView tvConfirmed;
     @BindView(R.id.tvCanceled)
     TextView tvCanceled;
-    @BindView(R.id.tvAbsence)
-    TextView tvAbsensce;
     @BindView(R.id.tvReservationTxt)
     TextView tvReservationTxt;
+    @BindView(R.id.tvConfirmedTxt)
+    TextView tvConfirmedTxt;
     @BindView(R.id.tvCanceledTxt)
     TextView tvCanceledTxt;
-    @BindView(R.id.tvAbsenceTxt)
-    TextView tvAbsensceTxt;
 
     @BindView(R.id.rvReservation)
     RecyclerView rvReservation;
@@ -98,7 +103,11 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.clStatus)
     ConstraintLayout clStatus;
 
+    @BindView(R.id.noReservations)
+    TextView noReservations;
 
+
+    User u;
     ArrayList<Reservation> reservationList = new ArrayList<>();
     private ReservationAdapter reservationAdapter;
 
@@ -129,20 +138,20 @@ public class HomeFragment extends Fragment {
 
         pbLoading.setVisibility(View.VISIBLE);
 
+        u = getActivity().getIntent().getParcelableExtra("currentUser");
         DataBody dataBody = new DataBody();
-        User user = new User();
-        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
-        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
-        dataBody.setNewsOrderBy("2019-12-05");
+        dataBody.setKey(u.getKey());
+        dataBody.setLcode(u.getProperties().get(0).getLcode());
+        dataBody.setAccount(u.getAccount());
+        dataBody.setNewsOrderBy("2019-12-25");
         dataBody.setNewsOrderType("");
         dataBody.setNewsDfrom("");
         dataBody.setEventsDfrom("");
         dataBody.setEventsDto("");
-        dataBody.setCalendarDfrom("2019-12-05");
-        dataBody.setCalendarDto("2019-12-24");
-        dataBody.setReservationsDfrom("2019-12-05");
-        dataBody.setReservationsDto("2019-12-24");
+        dataBody.setCalendarDfrom("2019-12-25");
+        dataBody.setCalendarDto("2020-12-24");
+        dataBody.setReservationsDfrom("2020-12-25");
+        dataBody.setReservationsDto("2020-01-24");
         dataBody.setReservationsOrderBy("3");
         dataBody.setReservationsFilterBy("2019-12-24");
         dataBody.setReservationsOrderType("");
@@ -158,7 +167,6 @@ public class HomeFragment extends Fragment {
                 if (data == null) return;
 
                 pbLoading.setVisibility(View.GONE);
-                circularProgressBar.setProgress((float) Double.parseDouble(data.getOccupancy().getToday()));
 
                 pbYesterday.setProgress((int) Double.parseDouble(data.getOccupancy().getYesterday()));
                 pbToday.setProgress((int) Double.parseDouble(data.getOccupancy().getToday()));
@@ -168,19 +176,26 @@ public class HomeFragment extends Fragment {
 
                 Double sumaProgress = Double.parseDouble(data.getOccupancy().getToday())
                         - Double.parseDouble(data.getOccupancy().getYesterday());
+                circularProgressBar.setProgress((float) Double.parseDouble(String.valueOf(sumaProgress)));
+//                circularProgressBar.setProgress(Float.parseFloat(data.getOccupancy().getYesterday()));
+//                circularProgressBar.setProgressWithAnimation(Float.parseFloat(data.getOccupancy().getToday()), 3000);
+
+
+                DecimalFormat format = new DecimalFormat("##.##");
+                String formatted = format.format(sumaProgress);
 
                 if (Double.parseDouble(data.getOccupancy().getToday())
                         < Double.parseDouble(data.getOccupancy().getYesterday())) {
                     tvToday.setTextColor(getResources().getColor(R.color.colorOrange));
                     pbToday.setProgressColors(getResources().getColor(R.color.colorText), getResources().getColor(R.color.colorOrange));
 
-                    txtProgress.setText("" + sumaProgress);
+                    txtProgress.setText("" + formatted);
                     circularProgressBar.setColor(getResources().getColor(R.color.colorOrange));
                 } else {
-                    txtProgress.setText("+" + sumaProgress);
+                    txtProgress.setText("+" + formatted);
                     circularProgressBar.setColor(getResources().getColor(R.color.colorBlue));
                 }
-//
+
                 tvReservation.setOnClickListener(v -> {
                     if (Double.parseDouble(data.getOccupancy().getToday())
                             < Double.parseDouble(data.getOccupancy().getYesterday())) {
@@ -191,7 +206,18 @@ public class HomeFragment extends Fragment {
                         tvReservationTxt.setTextColor(getResources().getColor(R.color.colorBlue));
                     }
                 });
-//
+
+                tvConfirmed.setOnClickListener(v -> {
+                    if (Double.parseDouble(data.getOccupancy().getToday())
+                            < Double.parseDouble(data.getOccupancy().getYesterday())) {
+                        tvConfirmed.setBackground(getResources().getDrawable(R.drawable.reservation_shape_negative));
+                        tvConfirmedTxt.setTextColor(getResources().getColor(R.color.colorOrange));
+                    } else {
+                        tvConfirmed.setBackground(getResources().getDrawable(R.drawable.reservation_shape_positive));
+                        tvConfirmedTxt.setTextColor(getResources().getColor(R.color.colorBlue));
+                    }
+                });
+
                 tvCanceled.setOnClickListener(v -> {
                     if (Double.parseDouble(data.getOccupancy().getToday())
                             < Double.parseDouble(data.getOccupancy().getYesterday())) {
@@ -203,28 +229,39 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-                tvAbsensce.setOnClickListener(v -> {
-                    if (Double.parseDouble(data.getOccupancy().getToday())
-                            < Double.parseDouble(data.getOccupancy().getYesterday())) {
-                        tvAbsensce.setBackground(getResources().getDrawable(R.drawable.reservation_shape_negative));
-                        tvAbsensceTxt.setTextColor(getResources().getColor(R.color.colorOrange));
-                    } else {
-                        tvAbsensce.setBackground(getResources().getDrawable(R.drawable.reservation_shape_positive));
-                        tvAbsensceTxt.setTextColor(getResources().getColor(R.color.colorBlue));
-                    }
-                });
+                int res = data.getReceived().size() + data.getCanceled().size();
+                tvReservation.setText(String.valueOf(res));
+                tvConfirmed.setText(String.valueOf(data.getReceived().size()));
+                tvCanceled.setText(String.valueOf(data.getCanceled().size()));
+            }
+        });
 
-                if (data.getReceived() != null) {
+        News news = new News();
+        news.setKey(u.getKey());
+        news.setLcode(u.getProperties().get(0).getLcode());
+        news.setAccount(u.getAccount());
+        news.setNewsOrderBy("");
+        news.setNewsOrderType("ASC");
+        news.setNewsDfrom(LocalDate.now().toString());
+
+        webApiClient.getNews(news).observe(this, new Observer<News>() {
+            @Override
+            public void onChanged(News news) {
+
+                if (news == null) return;
+
+                pbLoading.setVisibility(View.GONE);
+
+                if (news.getReceived().isEmpty()) {
+                    noReservations.setVisibility(View.VISIBLE);
+                } else if (news.getReceived() != null) {
                     reservationList.clear();
-                    reservationList.addAll(data.getReceived());
+                    reservationList.addAll(news.getReceived());
                     reservationAdapter.notifyDataSetChanged();
                 } else {
                     ArrayList<Reservation> tmpList = new ArrayList<>();
-                    tmpList.addAll(data.getReceived());
+                    tmpList.addAll(news.getReceived());
                 }
-
-                tvReservation.setText(String.valueOf(data.getReceived().size()));
-                tvCanceled.setText(String.valueOf(data.getCanceled().size()));
             }
         });
 
@@ -241,24 +278,31 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+
     @OnClick(R.id.clTime)
     public void openTimeDialog() {
-        TimeDialog.show(HomeFragment.this,
-                getString(R.string.yesterday),
-                getString(R.string.today),
-                getString(R.string.tomorrow),
-                getString(R.string.add_filter)
-        );
+//        TimeDialog.show(HomeFragment.this,
+//                getString(R.string.yesterday),
+//                getString(R.string.today),
+//                getString(R.string.tomorrow),
+//                getString(R.string.add_filter)
+//        );
+        Intent i = new Intent(getActivity(), TimeDialog.class);
+        i.putExtra("currentUser", u);
+        startActivityForResult(i, Consts.REQ_TIME_DIALOG);
     }
 
     @OnClick(R.id.clStatus)
     public void openStatusDialog() {
-        StatusDialog.show(HomeFragment.this,
-                getString(R.string.arrival),
-                getString(R.string.stay),
-                getString(R.string.departure),
-                getString(R.string.add_filter)
-        );
+//        StatusDialog.show(HomeFragment.this,
+//                getString(R.string.arrival),
+//                getString(R.string.stay),
+//                getString(R.string.departure),
+//                getString(R.string.add_filter)
+//        );
+        Intent i = new Intent(getActivity(), StatusDialog.class);
+        i.putExtra("currentUser", u);
+        startActivityForResult(i, Consts.REQ_STATUS_DIALOG);
     }
 
     @OnClick(R.id.navigationViewBtn)
@@ -266,8 +310,6 @@ public class HomeFragment extends Fragment {
         Intent i = new Intent(getActivity(), NavigationViewActivity.class);
         startActivityForResult(i, 200);
     }
-
-
 
     @SuppressLint("NewApi")
     @Override
@@ -281,6 +323,7 @@ public class HomeFragment extends Fragment {
                 tvStatus.setText(status);
                 tvStatus.setTextColor(getResources().getColor(R.color.colorWhite));
                 clStatus.setBackgroundResource(R.drawable.selected_filter_shape);
+
             }
         }
 
@@ -290,6 +333,54 @@ public class HomeFragment extends Fragment {
                 tvTime.setText(days);
                 tvTime.setTextColor(getResources().getColor(R.color.colorWhite));
                 clTime.setBackgroundResource(R.drawable.selected_filter_shape);
+
+                if (days.equals(Consts.YESTERDAY)) {
+                    News news = new News();
+                    news.setKey(u.getKey());
+                    news.setLcode(u.getProperties().get(0).getLcode());
+                    news.setAccount(u.getAccount());
+                    news.setNewsOrderBy("");
+                    news.setNewsOrderType("ASC");
+                    news.setNewsDfrom(LocalDate.now().minusDays(1).toString());
+
+                    WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                    webApiClient.getNews(news).observe(this, new Observer<News>() {
+                        @Override
+                        public void onChanged(News news) {
+                            if (news.getReceived() != null) {
+                                reservationList.clear();
+                                reservationList.addAll(news.getReceived());
+                                reservationAdapter.notifyDataSetChanged();
+                            } else {
+                                ArrayList<Reservation> tmpList = new ArrayList<>();
+                                tmpList.addAll(news.getReceived());
+                            }
+                        }
+                    });
+                } else if (days.equals(Consts.TOMMOROW)) {
+                    News news = new News();
+                    news.setKey(u.getKey());
+                    news.setLcode(u.getProperties().get(0).getLcode());
+                    news.setAccount(u.getAccount());
+                    news.setNewsOrderBy("");
+                    news.setNewsOrderType("ASC");
+                    news.setNewsDfrom(LocalDate.now().plusDays(1).toString());
+
+                    WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                    webApiClient.getNews(news).observe(this, new Observer<News>() {
+                        @Override
+                        public void onChanged(News news) {
+                            if (news.getReceived() != null) {
+                                reservationList.clear();
+                                reservationList.addAll(news.getReceived());
+                                reservationAdapter.notifyDataSetChanged();
+                            } else {
+                                ArrayList<Reservation> tmpList = new ArrayList<>();
+                                tmpList.addAll(news.getReceived());
+                            }
+                        }
+                    });
+                }
             }
         }
     }
@@ -302,9 +393,10 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Search search = new Search();
-                search.setKey(App.getInstance().getCurrentUser().getKey());
-                search.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-                search.setAccount(App.getInstance().getCurrentUser().getAccount());
+                search.setKey(u.getKey());
+//        dataBody.setKey("6229dbc00c2d22e48b68db46b1e80c662a267931");
+                search.setLcode(u.getProperties().get(0).getLcode());
+                search.setAccount(u.getAccount());
                 search.setKeyword(query);
 
                 WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);

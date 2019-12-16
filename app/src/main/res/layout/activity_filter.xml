@@ -36,12 +36,12 @@
         android:id="@+id/btnFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        app:cornerRadius="15dp"
         android:layout_below="@+id/tvHeadline"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="14dp"
         android:text="@string/add_filter"
-        android:layout_alignParentEnd="true"/>
+        app:cornerRadius="15dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -73,9 +73,10 @@
                     android:textColor="@color/colorWhite"/>
 
                 <SearchView
+                    android:id="@+id/searchView"
                     android:layout_width="250dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_below="@+id/textView3"
@@ -92,6 +93,24 @@
                 android:layout_marginEnd="16dp"
                 android:layout_below="@+id/mcvFilterOne"
                 app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tvCancelDateRes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:padding="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:textColor="@color/colorWhite"
+                    android:textAllCaps="true"
+                    android:text="poništi X"
+                    android:textSize="10dp"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -151,6 +170,7 @@
                         app:icon="@drawable/event"
                         app:iconTint="@color/colorBlack" />
                 </LinearLayout>
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -163,6 +183,24 @@
                 android:layout_marginEnd="16dp"
                 android:layout_below="@+id/mcvFiterTwo"
                 app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tvCancelDateArr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:padding="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:textColor="@color/colorWhite"
+                        android:textAllCaps="true"
+                        android:text="poništi X"
+                        android:textSize="10dp"
+                        android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -222,6 +260,7 @@
                         app:backgroundTint="@color/colorWhite"
                         app:cornerRadius="10dp"/>
                 </LinearLayout>
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -234,6 +273,24 @@
                 android:layout_marginEnd="16dp"
                 android:layout_below="@+id/mcvFilterThree"
                 app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tvCancelDateDep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:padding="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:textColor="@color/colorWhite"
+                        android:textAllCaps="true"
+                        android:text="poništi X"
+                        android:textSize="10dp"
+                        android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -293,6 +350,7 @@
                         app:backgroundTint="@color/colorWhite"
                         app:cornerRadius="10dp"/>
                 </LinearLayout>
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -305,6 +363,24 @@
                 android:layout_marginEnd="16dp"
                 android:layout_below="@+id/mcvFilterFour"
                 app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tvCancelDateCan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:padding="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:textColor="@color/colorWhite"
+                        android:textAllCaps="true"
+                        android:text="poništi X"
+                        android:textSize="10dp"
+                        android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -364,6 +440,7 @@
                         app:backgroundTint="@color/colorWhite"
                         app:cornerRadius="10dp"/>
                 </LinearLayout>
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -388,7 +465,7 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp">
@@ -440,7 +517,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp">
 
@@ -489,7 +566,7 @@
                 <RelativeLayout
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp">

@@ -4,9 +4,11 @@
 
     <!-- Login -->
     <string name="login">prijavi se</string>
-    <string name="username_required">Korisnicko ime obavezno.</string>
-    <string name="username_not_valid">Korisnicko ime nije validno.</string>
+    <string name="username_required">Korisničko ime obavezno.</string>
+    <string name="username_not_valid">Korisničko ime nije validno.</string>
+    <string name="password_not_match">Pogrešna lozinka!</string>
     <string name="password_required">Lozinka je obavezna!</string>
+    <string name="password_lenght">Lozinka mora sadržati najmanje 6 karaktera.</string>
 
     <!-- Home -->
     <string name="home" tools:ignore="ExtraTranslation">Početna</string>
@@ -25,11 +27,12 @@
     <string name="departure">Odlazak</string>
     <string name="filterReservation">filtrirajte\nrezervacije\novde</string>
     <string name="filter">filtriraj</string>
+    <string name="changeFilter">izmeni filtere</string>
     <string name="add_filter">primeni filtere</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="absence">nedolazak</string>
+    <string name="confirmed">potvrđene</string>
     <string name="canceled">otkazane</string>
 
     <!-- Filter -->
@@ -44,6 +47,7 @@
     <string name="cancelingDate">Datum otkazivanja:</string>
     <string name="reservationStatus">Status rezervacije:</string>
     <string name="reservationChannel">Kanal rezervacije:</string>
+    <string name="pickChannel">Izaberi kanal prodaje:</string>
     <string name="apartmentType">Tip apartmana:</string>
     <string name="pickDate">izaberi datum</string>
 
@@ -55,7 +59,7 @@
     <string name="note">Napomena</string>
     <string name="cardReview">pregled\nkartice</string>
     <string name="invalidCard">kartica je\nnevalidna</string>
-    <string name="guestNotCame">gost nije\ndošao</string>
+    <string name="guestNotShow">gost nije\ndošao</string>
 
     <!-- Calendar Descriptions -->
     <string name="open">Otvoreno</string>
@@ -104,6 +108,12 @@
     <string name="byCountries">po državama</string>
     <string name="byChannels">po kanalima</string>
     <string name="byUnits">po jedinicama</string>
+    <string name="doesInvalidCard">Da li ste sigurni da kartica nije validna?</string>
+    <string name="gost_not_show">Da li ste sigurni da želite da označite\nda gost nije došao?</string>
+    <string name="confirm">potvrdi</string>
+    <string name="cancelFilter">poništi filtere</string>
+    <string name="reservedRights">Sva prava su rezervisana.</string>
+    <string name="noReservations">Nema rezervacija</string>
 
 
     <string-array name="rooms">

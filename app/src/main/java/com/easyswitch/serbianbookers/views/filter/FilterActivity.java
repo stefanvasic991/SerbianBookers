@@ -2,15 +2,26 @@ package com.easyswitch.serbianbookers.views.filter;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
+import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.models.Reservation;
+import com.easyswitch.serbianbookers.models.Search;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,12 +52,80 @@ public class FilterActivity extends AppCompatActivity {
     Spinner channelSpinner;
     @BindView(R.id.typeSpinner)
     Spinner typeSpinner;
+    @BindView(R.id.searchView)
+    SearchView searchView;
+
+    @BindView(R.id.tvCancelDateRes)
+    TextView tvCancelDateRes;
+    @BindView(R.id.tvCancelDateArr)
+    TextView tvCancelDateArr;
+    @BindView(R.id.tvCancelDateDep)
+    TextView tvCancelDateDep;
+    @BindView(R.id.tvCancelDateCan)
+    TextView tvCancelDateCan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
         ButterKnife.bind(this);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Intent sendQuery = new Intent();
+                sendQuery.putExtra("query", query);
+                setResult(RESULT_OK, sendQuery);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
+    @OnClick(R.id.tvCancelDateRes)
+    public void one() {
+        mbResDateFrom.setText("");
+        mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+        mbResDateTo.setText("");
+        mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+
+        tvCancelDateRes.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.tvCancelDateArr)
+    public void two() {
+        mbArrDateFrom.setText("");
+        mbArrDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+        mbArrDateTo.setText("");
+        mbArrDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+
+        tvCancelDateArr.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.tvCancelDateDep)
+    public void three() {
+        mbDepDateFrom.setText("");
+        mbDepDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+        mbDepDateTo.setText("");
+        mbDepDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+
+        tvCancelDateDep.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.tvCancelDateCan)
+    public void four() {
+        mbCanDateFrom.setText("");
+        mbCanDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+        mbCanDateTo.setText("");
+        mbCanDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+
+        tvCancelDateCan.setVisibility(View.GONE);
     }
 
     @Override
@@ -59,6 +138,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbResDateFrom.setText(status);
                 mbResDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateRes.setVisibility(View.VISIBLE);
             }
         }
 
@@ -68,6 +149,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbResDateTo.setText(status);
                 mbResDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateRes.setVisibility(View.VISIBLE);
             }
         }
 
@@ -77,6 +160,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbArrDateFrom.setText(status);
                 mbArrDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbArrDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateArr.setVisibility(View.VISIBLE);
             }
         }
 
@@ -86,6 +171,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbArrDateTo.setText(status);
                 mbArrDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbArrDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateArr.setVisibility(View.VISIBLE);
             }
         }
 
@@ -95,6 +182,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbDepDateFrom.setText(status);
                 mbDepDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbDepDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateDep.setVisibility(View.VISIBLE);
             }
         }
 
@@ -104,6 +193,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbDepDateTo.setText(status);
                 mbDepDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbDepDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateDep.setVisibility(View.VISIBLE);
             }
         }
 
@@ -113,6 +204,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbCanDateFrom.setText(status);
                 mbCanDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbCanDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateCan.setVisibility(View.VISIBLE);
             }
         }
 
@@ -122,6 +215,8 @@ public class FilterActivity extends AppCompatActivity {
                 mbCanDateTo.setText(status);
                 mbCanDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbCanDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                tvCancelDateCan.setVisibility(View.VISIBLE);
             }
         }
     }

@@ -395,7 +395,7 @@
                         android:padding="4dp"
                         android:paddingStart="10dp"
                         android:background="@color/reservationDesc"
-                        android:text="Taksa je 30$"/>
+                        android:text=""/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -504,6 +504,7 @@
                     android:padding="5dp">
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/showCard"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_marginStart="8dp"
@@ -516,6 +517,7 @@
                         app:icon="@drawable/credit_card" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/invalidCard"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_marginStart="8dp"
@@ -527,13 +529,14 @@
                         app:cornerRadius="40dp" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/guestNotShow"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="0.3"
                         android:backgroundTint="@color/colorText"
-                        android:text="@string/guestNotCame"
+                        android:text="@string/guestNotShow"
                         android:textColor="@color/colorWhite"
                         android:textSize="8dp"
                         app:cornerRadius="40dp" />

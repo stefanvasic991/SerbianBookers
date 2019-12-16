@@ -17,18 +17,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.InsertAvail;
+import com.easyswitch.serbianbookers.models.InsertPrice;
+import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
-import com.easyswitch.serbianbookers.views.dialog.ConfirmDialog;
+import com.easyswitch.serbianbookers.views.dialog.SaveAvailabilityDialog;
+import com.easyswitch.serbianbookers.views.dialog.SavePriceDialog;
+import com.easyswitch.serbianbookers.views.dialog.SaveRestrictionDialog;
 import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.google.android.material.button.MaterialButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by: Stefan Vasic
@@ -65,6 +70,15 @@ public class PriceRestrictionFragment extends Fragment {
     @BindView(R.id.rlRestriction)
     RelativeLayout rlRestriction;
 
+    @BindView(R.id.savePrice)
+    MaterialButton mbSavePrice;
+    @BindView(R.id.saveAvailability)
+    MaterialButton mbSaveAvailability;
+    @BindView(R.id.saveRestriction)
+    MaterialButton mbSaveRestriction;
+
+    User u;
+
     public static PriceRestrictionFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -86,6 +100,8 @@ public class PriceRestrictionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_price_restriction, container, false);
         ButterKnife.bind(this, view);
 
+        u = getActivity().getIntent().getParcelableExtra("currentUser");
+
         return view;
     }
 
@@ -93,16 +109,61 @@ public class PriceRestrictionFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            if (resultCode == CalendarFilterActivity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 String status = data.getStringExtra("data");
                 mbResDateFrom.setText(status);
                 mbResDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                mbSavePrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        InsertPrice insertPrice = new InsertPrice();
+                        insertPrice.setKey(u.getKey());
+                        insertPrice.setAccount(u.getAccount());
+                        insertPrice.setLcode(u.getProperties().get(0).getLcode());
+                        insertPrice.setDfrom(status);
+                        insertPrice.setPid("");
+                        insertPrice.setOldValues("");
+                        insertPrice.setNewValues(etInsertPrice.getText().toString());
+
+                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                        webApiClient.getInsertPrice(insertPrice).observe(getActivity(), new Observer<InsertPrice>() {
+                            @Override
+                            public void onChanged(InsertPrice insertPrice) {
+                                Intent i = new Intent(getActivity(), SavePriceDialog.class);
+                                startActivity(i);
+                            }
+                        });
+                    }
+                });
+
+                mbSaveAvailability.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        InsertAvail insertAvail = new InsertAvail();
+                        insertAvail.setKey(u.getKey());
+                        insertAvail.setAccount(u.getAccount());
+                        insertAvail.setLcode(u.getProperties().get(0).getLcode());
+                        insertAvail.setDfrom(status);
+                        insertAvail.setOldValues("");
+                        insertAvail.setNewValues(etInsertAvailability.getText().toString());
+
+                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                        webApiClient.getInsertAvail(insertAvail).observe(getActivity(), new Observer<InsertAvail>() {
+                            @Override
+                            public void onChanged(InsertAvail insertAvail) {
+                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
+                                startActivity(i);
+                            }
+                        });
+                    }
+                });
             }
         }
 
         if (requestCode == 2) {
-            if (resultCode == CalendarFilterActivity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 String status = data.getStringExtra("data");
                 mbResDateTo.setText(status);
                 mbResDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -164,40 +225,23 @@ public class PriceRestrictionFragment extends Fragment {
     @OnClick(R.id.savePrice)
     public void savePrice() {
 
-
-        ConfirmDialog dialog = new ConfirmDialog();
-        dialog.showDialog(getActivity());
+        Intent i = new Intent(getActivity(), SavePriceDialog.class);
+        startActivity(i);
     }
 
     @OnClick(R.id.saveAvailability)
     public void saveAvailability() {
-        InsertAvail insertAvail = new InsertAvail();
-        insertAvail.setKey(App.getInstance().getCurrentUser().getKey());
-        insertAvail.setAccount(App.getInstance().getCurrentUser().getAccount());
-        insertAvail.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        insertAvail.setDfrom("2019-12-05");
-        insertAvail.setOldValues("");
-        insertAvail.setNewValues("2");
 
+        Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
+        startActivity(i);
 
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getInsertAvail(insertAvail).observe(this, new Observer<InsertAvail>() {
-            @Override
-            public void onChanged(InsertAvail insertAvail) {
-
-            }
-        });
-
-        ConfirmDialog dialog = new ConfirmDialog();
-        dialog.showDialog(getActivity());
     }
 
     @OnClick(R.id.saveRestriction)
     public void saveRestriction() {
 
-
-        ConfirmDialog dialog = new ConfirmDialog();
-        dialog.showDialog(getActivity());
+        Intent i = new Intent(getActivity(), SaveRestrictionDialog.class);
+        startActivity(i);
     }
 
 }

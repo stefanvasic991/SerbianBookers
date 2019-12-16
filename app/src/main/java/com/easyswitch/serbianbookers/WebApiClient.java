@@ -13,12 +13,14 @@ import com.easyswitch.serbianbookers.models.AvailabilityBody;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.GuestList;
+import com.easyswitch.serbianbookers.models.GuestNotShow;
 import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
+import com.easyswitch.serbianbookers.models.ShowCard;
 import com.easyswitch.serbianbookers.models.User;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +44,9 @@ public class WebApiClient extends AndroidViewModel {
     private MutableLiveData<News> news;
     private MutableLiveData<InsertAvail> insertAvail;
     private MutableLiveData<InsertPrice> insertPrice;
+    private MutableLiveData<GuestNotShow> guestNotShow;
+    private MutableLiveData<GuestNotShow> invalidCard;
+    private MutableLiveData<ShowCard> showCard;
 
     public WebApiClient(@NonNull Application application) {
         super(application);
@@ -55,15 +60,9 @@ public class WebApiClient extends AndroidViewModel {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
                         login.setValue(response.body());
-//                        Toast.makeText(getApplication(), "Login proso", Toast.LENGTH_LONG).show();
-                        if  (user.getStatus() == "error")
-                            Toast.makeText(getApplication(), "error login", Toast.LENGTH_LONG).show();
                     } else {
                         login.setValue(null);
                         Timber.v("ResponseError");
-
-                        if  (user.getStatus() == "error")
-                            Toast.makeText(getApplication(), "err login", Toast.LENGTH_LONG).show();
                     }
                 }
 //
@@ -71,7 +70,6 @@ public class WebApiClient extends AndroidViewModel {
                 public void onFailure(Call<User> call, Throwable t) {
                     t.printStackTrace();
                     login.setValue(null);
-//                    Toast.makeText(getApplication(), "Login nije proso", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -189,10 +187,10 @@ public class WebApiClient extends AndroidViewModel {
         return search;
     }
 
-    public MutableLiveData<Availability> getAvailability(AvailabilityBody availabilityBody) {
+    public MutableLiveData<Availability> getAvailability(Availability a) {
         if (availability == null) {
             availability = new MutableLiveData<>();
-            webApi.availability(availabilityBody).enqueue(new Callback<Availability>() {
+            webApi.availability(a).enqueue(new Callback<Availability>() {
                 @Override
                 public void onResponse(Call<Availability> call, Response<Availability> response) {
                     if (response.isSuccessful()) {
@@ -312,5 +310,83 @@ public class WebApiClient extends AndroidViewModel {
             });
         }
         return insertPrice;
+    }
+
+    public MutableLiveData<GuestNotShow> getGuestNotShow(GuestNotShow notShow) {
+        if (guestNotShow ==  null) {
+            guestNotShow = new MutableLiveData<>();
+
+            webApi.noShow(notShow).enqueue(new Callback<GuestNotShow>() {
+                @Override
+                public void onResponse(Call<GuestNotShow> call, Response<GuestNotShow> response) {
+                    if (response.isSuccessful()) {
+                        guestNotShow.setValue(response.body());
+                    } else {
+                        guestNotShow.setValue(null);
+                        Timber.v("OnResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GuestNotShow> call, Throwable t) {
+                    t.printStackTrace();
+                    guestNotShow.setValue(null);
+                    Timber.v("OnFailure");
+                }
+            });
+        }
+        return guestNotShow;
+    }
+
+    public MutableLiveData<GuestNotShow> getInvalidCard(GuestNotShow notShow) {
+        if (invalidCard ==  null) {
+            invalidCard = new MutableLiveData<>();
+
+            webApi.invalidCard(notShow).enqueue(new Callback<GuestNotShow>() {
+                @Override
+                public void onResponse(Call<GuestNotShow> call, Response<GuestNotShow> response) {
+                    if (response.isSuccessful()) {
+                        invalidCard.setValue(response.body());
+                    } else {
+                        invalidCard.setValue(null);
+                        Timber.v("OnResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GuestNotShow> call, Throwable t) {
+                    t.printStackTrace();
+                    invalidCard.setValue(null);
+                    Timber.v("OnFailure");
+                }
+            });
+        }
+        return invalidCard;
+    }
+
+    public MutableLiveData<ShowCard> getShowCard(ShowCard sc) {
+        if (showCard == null) {
+            showCard = new MutableLiveData<>();
+
+            webApi.showCard(sc).enqueue(new Callback<ShowCard>() {
+                @Override
+                public void onResponse(Call<ShowCard> call, Response<ShowCard> response) {
+                    if (response.isSuccessful()) {
+                        showCard.setValue(response.body());
+                    } else {
+                        showCard.setValue(null);
+                        Timber.v("onResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ShowCard> call, Throwable t) {
+                    t.printStackTrace();
+                    showCard.setValue(null);
+                    Timber.v("onFailure");
+                }
+            });
+        }
+        return showCard;
     }
 }

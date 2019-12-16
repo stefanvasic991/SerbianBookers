@@ -36,7 +36,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:inputType="textPassword"
-            android:text="Vojvoda12#"
+            android:text="Vojvoda1234#"
             android:hint="password" />
 
     <CheckBox

@@ -42,8 +42,6 @@ public class StatisticsFragment extends Fragment {
     MaterialButton  mbResDateTo;
     @BindView(R.id.countryPieChart)
     PieChart countryPieChart;
-    @BindView(R.id.channelPieChart)
-    PieChart channelPieChart;
 
     public static StatisticsFragment newInstance() {
 
@@ -80,13 +78,6 @@ public class StatisticsFragment extends Fragment {
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
-
-
-        channelPieChart.setUsePercentValues(true);
-        channelPieChart.getDescription().setEnabled(false);
-        channelPieChart.setExtraOffsets(5, 10, 5, 5);
-        channelPieChart.setDragDecelerationFrictionCoef(0.95f);
-        channelPieChart.setHoleRadius(0);
 
         Legend lg = countryPieChart.getLegend();
         lg.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -215,8 +206,6 @@ public class StatisticsFragment extends Fragment {
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
-
-        channelPieChart.setData(data);
 
         // undo all highlights
 //        countryPieChart.highlightValues(null);

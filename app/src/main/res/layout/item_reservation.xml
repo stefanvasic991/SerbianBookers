@@ -17,8 +17,9 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.12"
             android:background="@color/colorReservationDate"
             android:orientation="vertical">
 
@@ -88,14 +89,15 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.66"
             android:paddingEnd="16dp"
             android:background="@color/colorReservationData">
 
             <LinearLayout
                 android:id="@+id/llCheck"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20sp"
@@ -105,13 +107,14 @@
                     android:id="@+id/tvName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.67"
+                    android:layout_weight="0.64"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="end"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="3dp"
                     android:textColor="@color/colorText"
                     android:textSize="14sp"
                     android:textStyle="normal"
+                    android:textAlignment="center"
                     android:text="Aurelia Blanda" />
 
                 <com.google.android.material.card.MaterialCardView
@@ -119,7 +122,7 @@
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_marginTop="7dp"
-                    android:layout_marginEnd="25dp"
+                    android:layout_marginEnd="12dp"
                     android:layout_weight="0.06"
                     app:cardBackgroundColor="@color/colorGreen"
                     app:cardCornerRadius="3dp">
@@ -135,19 +138,19 @@
                     android:id="@+id/tvTotalPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.27"
+                    android:layout_weight="0.3"
                     android:fontFamily="sans-serif"
-                    android:lineSpacingExtra="-5sp"
                     android:textColor="@color/colorText"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:text="€135" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llHome"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="20dp"
                 android:orientation="horizontal"
                 android:layout_below="@id/llCheck">
@@ -155,62 +158,65 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.67"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="0.66"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="end"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="8dp"
+                    android:text="Terasa sa balkonom"
+                    android:textAlignment="center"
                     android:textColor="@color/colorText"
-                    android:textSize="10sp"
-                    android:textStyle="normal"
-                    android:text="Terasa sa balkonom" />
+                    android:textSize="9sp"
+                    android:textStyle="normal" />
 
                 <ImageView
                     android:id="@+id/ivHome"
-                    android:layout_width="7dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="25dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_weight="0.06"
+                    android:layout_marginEnd="12dp"
                     android:src="@drawable/ic_home" />
 
                 <TextView
                     android:id="@+id/tvPerNight"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.27"
+                    android:layout_weight="0.3"
                     android:fontFamily="sans-serif"
                     android:lineSpacingExtra="-2sp"
-                    android:text="35 € / noć"
+                    android:text="35 €/ noć"
                     android:textColor="@color/colorTextLight"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textStyle="normal" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="20dp"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:layout_below="@id/llHome">
 
                 <TextView
                     android:id="@+id/tvMenChildren"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.67"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="0.64"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="end"
-                    android:layout_marginEnd="8dp"
+                    android:text="Odrasli - 1 Deca - 2"
+                    android:textAlignment="center"
                     android:textColor="@color/colorTextLight"
                     android:textSize="10sp"
-                    android:textStyle="normal"
-                    android:text="Odrasli - 1 Deca - 2" />
+                    android:textStyle="normal" />
 
                 <ImageView
                     android:id="@+id/ivPerson"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
-                    android:layout_marginEnd="25dp"
+                    android:layout_marginEnd="12dp"
                     android:layout_weight="0.06"
                     android:src="@drawable/ic_person" />
 
@@ -218,7 +224,7 @@
                     android:id="@+id/tvNights"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.27"
+                    android:layout_weight="0.3"
                     android:fontFamily="sans-serif"
                     android:text="3 noćenja"
                     android:textColor="@color/colorTextLight"
@@ -228,9 +234,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:paddingEnd="20dp"
+            android:layout_weight="0.22"
             android:background="@color/colorReservationData">
 
             <ImageView
@@ -238,7 +244,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:src="@drawable/airbnb_logo_red" />
         </RelativeLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

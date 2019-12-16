@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,7 +49,6 @@ public class StatusDialog extends AppCompatActivity {
     @BindView(R.id.btnFilter)
     MaterialButton btnFilter;
 
-    String one, two, three, filter;
     String checkedStatus;
     List<CheckBox> checkBoxList = new ArrayList<>();
 
@@ -58,21 +56,11 @@ public class StatusDialog extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(android.R.style.Theme_DeviceDefault_Dialog);
-        setContentView(R.layout.activity_filter_dialog);
+        setContentView(R.layout.status_dialog);
         ButterKnife.bind(this);
 
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, android.R.color.transparent));
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
-
-        one = getIntent().getStringExtra("one");
-        two = getIntent().getStringExtra("two");
-        three = getIntent().getStringExtra("three");
-        filter = getIntent().getStringExtra("filter");
-
-        tvOne.setText(one);
-        tvTwo.setText(two);
-        tvThree.setText(three);
-        btnFilter.setText(filter);
 
         checkBoxList.add(cbOne);
         checkBoxList.add(cbTwo);
@@ -95,6 +83,7 @@ public class StatusDialog extends AppCompatActivity {
         sendStatus.putExtra("status", checkedStatus);
         setResult(RESULT_OK, sendStatus);
     }
+
     @OnClick(R.id.btnFilter)
     public void onFilterClick(){
         setResult(RESULT_OK);

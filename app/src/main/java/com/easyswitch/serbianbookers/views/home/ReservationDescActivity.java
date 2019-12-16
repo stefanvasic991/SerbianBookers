@@ -1,13 +1,17 @@
 package com.easyswitch.serbianbookers.views.home;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -17,16 +21,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.easyswitch.serbianbookers.App;
+import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.adapters.GuestAdapter;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.Guest;
-import com.easyswitch.serbianbookers.models.GuestList;
 import com.easyswitch.serbianbookers.models.Reservation;
-import com.google.android.material.button.MaterialButton;
-import com.squareup.picasso.Picasso;
+import com.easyswitch.serbianbookers.models.ShowCard;
+import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.views.dialog.GuestNotShowDialog;
+import com.easyswitch.serbianbookers.views.dialog.InvalidCardDialog;
 
 import java.util.ArrayList;
 
@@ -82,6 +90,7 @@ public class ReservationDescActivity extends AppCompatActivity {
     private ArrayList<Guest> guestArrayList = new ArrayList<>();
     private GuestAdapter guestAdapter;
     Reservation reservation;
+    User u;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -95,12 +104,22 @@ public class ReservationDescActivity extends AppCompatActivity {
         setFinishOnTouchOutside(true);
 
         reservation = getIntent().getParcelableExtra("reservation");
+        u = getIntent().getParcelableExtra("currentUser");
 
         assert reservation != null;
         tvName.setText(reservation.getCustomerName());
-//        tvPerNight.setText(String.valueOf(reservation.getDayprices().get288968().get(1) + " / noć"));
+
+        double dayPrice = Double.parseDouble(String.valueOf(Double.parseDouble(reservation.getTotalPrice())
+                - Double.parseDouble(reservation.getPaymentGatewayFee()))) / Double.parseDouble(reservation.getNights());
+        int pricePerNight = (int) dayPrice;
+        tvPerNight.setText(pricePerNight + " / noć");
+
         tvNights.setText(reservation.getNights() + " noćenja");
-        tvTotalPrice.setText("€" + reservation.getTotalPrice());
+
+        double total = Double.parseDouble(reservation.getTotalPrice());
+        int totalPrice = (int) total;
+        tvTotalPrice.setText("€" + totalPrice);
+
         tvEmail.setText(reservation.getCustomerMail());
         tvPhone.setText(reservation.getCustomerPhone());
         tvReservationCode.setText(reservation.getReservationCode());
@@ -114,24 +133,26 @@ public class ReservationDescActivity extends AppCompatActivity {
         tvNote.setText(reservation.getCustomerNotes());
 
 
-//        Data data = new Data();
-//        if (reservation.getIdWoodoo().equals("110238")) {
-//            Picasso.with(this).load(Integer.parseInt(data.getChannels().get(0).getLogo())).into(ivLogo);
+        Data data = new Data();
+        if (reservation.getIdWoodoo().equals("110238")) {
+            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(0).getLogo()));
 //        } else if (reservation.getIdWoodoo().equals("110239")) {
-//            Picasso.with(this).load(Integer.parseInt(data.getChannels().get(1).getLogo())).into(ivLogo);
-//        } else if (reservation.getIdWoodoo().equals("110240")) {
-//            Picasso.with(this).load(Integer.parseInt(data.getChannels().get(2).getLogo())).into(ivLogo);
+//            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(1).getLogo()));
+        } else if (reservation.getIdWoodoo().equals("110240")) {
+            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(2).getLogo()));
 //        } else if (reservation.getIdWoodoo().equals("141075")) {
-//            Picasso.with(this).load(Integer.parseInt(data.getChannels().get(3).getLogo())).into(ivLogo);
-//        }
+//            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(3).getLogo()));
+        } else {
+            ivLogo.setImageResource(R.drawable.direct_res);
+        }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        // TODO Auto-generated method stub
-        finish();
-        return super.dispatchTouchEvent(ev);
-
+    @OnClick(R.id.tvPhone)
+    public void makeCall() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) ==
+                PackageManager.PERMISSION_GRANTED) {
+            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(reservation.getCustomerPhone())));
+        }
     }
 
     @OnClick(R.id.ivEditNote)
@@ -158,5 +179,59 @@ public class ReservationDescActivity extends AppCompatActivity {
     @OnClick(R.id.btnBack)
     public void back() {
         onBackPressed();
+    }
+
+    @OnClick(R.id.showCard)
+    public void showCard() {
+        ShowCard showCard = new ShowCard();
+        showCard.setKey(u.getKey());
+        showCard.setAccount(u.getAccount());
+        showCard.setLcode(u.getProperties().get(0).getLcode());
+        showCard.setRcode(reservation.getReservationCode());
+        showCard.setCcPass("");
+
+        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+        webApiClient.getShowCard(showCard).observe(this, new Observer<ShowCard>() {
+            @Override
+            public void onChanged(ShowCard showCard) {
+
+            }
+        });
+
+
+    }
+
+    @OnClick(R.id.invalidCard)
+    public void invalidCard() {
+        Intent i = new Intent(this, InvalidCardDialog.class);
+        i.putExtra("question", getResources().getString(R.string.doesInvalidCard));
+        i.putExtra("reservationCode", reservation.getReservationCode());
+        startActivity(i);
+    }
+
+    @OnClick(R.id.guestNotShow)
+    public void guestNotShow() {
+        Intent i = new Intent(this, GuestNotShowDialog.class);
+        i.putExtra("question", getResources().getString(R.string.gost_not_show));
+        i.putExtra("reservationCode", reservation.getReservationCode());
+        startActivity(i);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == 1) {
+            if (resultCode == InvalidCardDialog.RESULT_OK) {
+                
+            }
+        }
+
+        if (requestCode == 2) {
+            if (resultCode == GuestNotShowDialog.RESULT_OK) {
+
+            }
+        }
     }
 }

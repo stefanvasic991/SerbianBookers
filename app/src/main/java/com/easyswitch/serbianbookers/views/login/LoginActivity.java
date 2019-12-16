@@ -55,8 +55,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     @OnClick(R.id.btnLogin)
     public void login() {
+
+        if (!checkUser()) return;
 
         showLoading(false);
         User user = new User();
@@ -68,25 +76,29 @@ public class LoginActivity extends AppCompatActivity {
             user.setRemember("0");
         }
 
-
         WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
         webApiClient.getLogin(user).observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                if (user.getStatus().equals("error")) return;
 
                 if (user != null) {
+//                    if (checkBox.isChecked()) {
+//                        SP.getInstance().setRemember("1");
+//                    } else {
+//                        SP.getInstance().setRemember("0");
+//                    }
+////                    SP.getInstance().setUser(user);
+//                    SP.getInstance().setUsername(username.getText().toString());
+//                    SP.getInstance().setPassword(password.getText().toString());
+//                    SP.getInstance().setUserExist(true);
+//                    App.getInstance().setCurrentUser(user);
 
-//                    SP.getInstance().setUser(user);
-                    SP.getInstance().setUsername(username.getText().toString());
-                    SP.getInstance().setPassword(password.getText().toString());
-                    if (checkBox.isChecked()) {
-                        SP.getInstance().setRemember("1");
-                    } else {
-                        SP.getInstance().setRemember("0");
+                    if (user.getStatus().equals("error")) {
+                        password.setError(getText(R.string.password_not_match));
+                        login.setVisibility(View.VISIBLE);
+                        pbLoading.setVisibility(View.GONE);
+                        return;
                     }
-                    SP.getInstance().setUserExist(true);
-                    App.getInstance().setCurrentUser(user);
 
                     Intent i = new Intent(getApplication(), HomeActivity.class);
                     i.putExtra("currentUser", user);
@@ -96,11 +108,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-//        Intent i = new Intent(getApplication(), HomeActivity.class);
-////        i.putExtra("currentUser", user);
-//        startActivity(i);
-//        finish();
-
         showLoading(true);
     }
 
@@ -108,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
         boolean isValid = true;
 
-        if (username.getText().toString().isEmpty()) {
+        if (username.getText().toString().length() == 0) {
             username.setError(getText(R.string.username_required));
             isValid = false;
         }

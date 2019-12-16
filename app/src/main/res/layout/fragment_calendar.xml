@@ -162,6 +162,7 @@
             android:layout_below="@+id/clDate"
             android:layout_gravity="top"
             android:background="@color/calendarBackground"
+            style="@style/TabLayoutTextSize"
             app:tabSelectedTextColor="@color/colorBlack"
             app:tabTextAppearance="@style/FontTheme"/>
     </androidx.viewpager.widget.ViewPager>

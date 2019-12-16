@@ -89,22 +89,42 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
             holder.ivStatus.setImageResource(R.drawable.ic_canceled);
             holder.mcvStatus.setBackgroundResource(R.color.colorRed);
         }
-//
-        holder.tvTotalPrice.setText(reservation.getTotalPrice());
-//        holder.tvPerNight.setText(reservation.getDayprices().get288968().get(0) + " / noć");
+
+        double total = Double.parseDouble(reservation.getTotalPrice());
+        int totalPrice = (int) total;
+        holder.tvTotalPrice.setText("€" + totalPrice);
+
+        double dayPrice = Double.parseDouble(String.valueOf(Double.parseDouble(reservation.getTotalPrice())
+                - Double.parseDouble(reservation.getPaymentGatewayFee()))) / Double.parseDouble(reservation.getNights());
+        int pricePerNight = (int) dayPrice;
+        holder.tvPerNight.setText(pricePerNight + " / noć");
 
         holder.tvNights.setText(reservation.getNights() + " noćenja");
-        holder.ivLogo.setImageResource(R.drawable.airbnb_logo_red);
         Data data = new Data();
-//        if (reservation.getIdWoodoo().equals("110238")) {
-//            Picasso.with(context).load(data.getChannels().get(0).getLogo()).into(holder.ivLogo);
-//        } else if (reservation.getIdWoodoo().equals("110239")) {
-//            Picasso.with(context).load(data.getChannels().get(1).getLogo()).into(holder.ivLogo);
-//        } else if (reservation.getIdWoodoo().equals("110240")) {
-//            Picasso.with(context).load(data.getChannels().get(2).getLogo()).into(holder.ivLogo);
-//        } else if (reservation.getIdWoodoo().equals("141075")) {
-//            Picasso.with(context).load(data.getChannels().get(3).getLogo()).into(holder.ivLogo);
-//        }
+        switch (reservation.getIdWoodoo()) {
+            case "110238": {
+//                Picasso.with(context).load(data.getChannels().get(0).getLogo()).into(holder.ivLogo);
+                holder.ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(0).getLogo()));
+                break;
+            }
+//            case "110239": {
+//                Picasso.with(context).load(data.getChannels().get(1).getLogo()).into(holder.ivLogo);
+//                break;
+//            }
+            case "110240": {
+//                Picasso.with(context).load(data.getChannels().get(2).getLogo()).into(holder.ivLogo);
+                holder.ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(2).getLogo()));
+            }
+                break;
+//            case "141075": {
+//                Picasso.with(context).load(data.getChannels().get(3).getLogo()).into(holder.ivLogo);
+//                break;
+//            }
+            case "": {
+                holder.ivLogo.setImageResource(R.drawable.direct_res);
+                break;
+            }
+        }
     }
 
     @Override
@@ -112,7 +132,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         return reservations.size();
     }
 
-    private String getDayFromDate(String date){
+    private String getDayFromDate(String date) {
         try {
             Date d = dateFormat.parse(date);
 
@@ -123,7 +143,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         return "";
     }
 
-    private String getMonthFromDate(String date){
+    private String getMonthFromDate(String date) {
         try {
             Date d = dateFormat.parse(date);
 

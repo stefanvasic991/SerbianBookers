@@ -3,7 +3,8 @@ package com.easyswitch.serbianbookers.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AvailabilityBody {
+public class GuestNotShow {
+
     @SerializedName("key")
     @Expose
     private String key;
@@ -13,12 +14,13 @@ public class AvailabilityBody {
     @SerializedName("lcode")
     @Expose
     private String lcode;
-    @SerializedName("dfrom")
+    @SerializedName("rcode")
     @Expose
-    private String dfrom;
-    @SerializedName("dto")
+    private String rcode;
+
+    @SerializedName("status")
     @Expose
-    private String dto;
+    private String status;
 
     public String getKey() {
         return key;
@@ -44,19 +46,19 @@ public class AvailabilityBody {
         this.lcode = lcode;
     }
 
-    public String getDfrom() {
-        return dfrom;
+    public String getRcode() {
+        return rcode;
     }
 
-    public void setDfrom(String dfrom) {
-        this.dfrom = dfrom;
+    public void setRcode(String rcode) {
+        this.rcode = rcode;
     }
 
-    public String getDto() {
-        return dto;
+    public String getStatus() {
+        return status;
     }
 
-    public void setDto(String dto) {
-        this.dto = dto;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

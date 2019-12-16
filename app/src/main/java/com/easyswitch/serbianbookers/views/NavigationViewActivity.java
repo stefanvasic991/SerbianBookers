@@ -6,16 +6,13 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ActionMenuView;
-import android.widget.RadioButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.views.dialog.SendMailActivity;
 import com.easyswitch.serbianbookers.views.login.LoginActivity;
 
 import butterknife.BindView;
@@ -30,13 +27,12 @@ public class NavigationViewActivity extends AppCompatActivity {
     @BindView(R.id.rgVila)
     RadioGroup rgVila;
 
+    @BindView(R.id.llFinishTouchOutside)
+    LinearLayout llFinishTouchOutside;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-
-        // ...but notify us that it happened.
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
         setContentView(R.layout.activity_navigation_view);
         ButterKnife.bind(this);
 
@@ -60,24 +56,14 @@ public class NavigationViewActivity extends AppCompatActivity {
             }
         });
     }
-//
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        // TODO Auto-generated method stub
-//        finish();
-//        return super.dispatchTouchEvent(ev);
-//
-//    }
+
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (MotionEvent.ACTION_OUTSIDE == event.getAction()) {
-            finish();
-        }
-        return super.onTouchEvent(event);
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
-    @OnClick(R.id.tvLogout)
+    @OnClick(R.id.ivLogout)
     public void logout() {
         User user = new User();
         user.setUsername(null);
@@ -88,5 +74,18 @@ public class NavigationViewActivity extends AppCompatActivity {
 
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
+        finish();
+    }
+
+    @OnClick(R.id.llFinishTouchOutside)
+    public void setLlFinishTouchOutside() {
+        finish();
+    }
+
+    @OnClick(R.id.llSupport)
+    public void sendEmail() {
+        Intent i = new Intent(this, SendMailActivity.class);
+        startActivity(i);
+        finish();
     }
 }

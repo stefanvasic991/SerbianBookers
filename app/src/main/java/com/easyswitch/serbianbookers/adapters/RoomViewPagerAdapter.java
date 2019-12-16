@@ -1,7 +1,10 @@
 package com.easyswitch.serbianbookers.adapters;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -17,6 +20,7 @@ public class RoomViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public Fragment getItem(int position) {

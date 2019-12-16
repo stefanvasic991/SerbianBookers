@@ -49,7 +49,6 @@ public class WebApiManager {
                     .baseUrl(WebApi.BASE_URL)
                     .client(getOkHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(gson))
-//                    .addConverterFactory(ScalarsConverterFactory.create())
                     .build()
                     .create(WebApi.class);
         }

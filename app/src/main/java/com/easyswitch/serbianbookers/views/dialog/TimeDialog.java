@@ -10,17 +10,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.adapters.ReservationAdapter;
 import com.easyswitch.serbianbookers.models.News;
+import com.easyswitch.serbianbookers.models.Reservation;
+import com.easyswitch.serbianbookers.models.User;
 import com.google.android.material.button.MaterialButton;
+
+import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +33,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.easyswitch.serbianbookers.Consts.TODAY;
+import static com.easyswitch.serbianbookers.Consts.TODAYiTOMMOROW;
 import static com.easyswitch.serbianbookers.Consts.TOMMOROW;
 import static com.easyswitch.serbianbookers.Consts.YESTERDAY;
+import static com.easyswitch.serbianbookers.Consts.YESTERDAYiTODAY;
 
 public class TimeDialog extends AppCompatActivity {
 
@@ -55,55 +60,59 @@ public class TimeDialog extends AppCompatActivity {
     @BindView(R.id.btnFilter)
     MaterialButton btnFilter;
 
-    String one, two, three, filter;
     String checkedDays;
     List<CheckBox> checkBoxList = new ArrayList<>();
+    User u;
+
+
+    ArrayList<Reservation> reservationList = new ArrayList<>();
+    private ReservationAdapter reservationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(android.R.style.Theme_DeviceDefault_Dialog);
-        setContentView(R.layout.activity_filter_dialog);
+        setContentView(R.layout.activity_time_dialog);
         ButterKnife.bind(this);
 
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, android.R.color.transparent));
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
 
-        one = getIntent().getStringExtra("one");
-        two = getIntent().getStringExtra("two");
-        three = getIntent().getStringExtra("three");
-        filter = getIntent().getStringExtra("filter");
-
-        tvOne.setText(one);
-        tvTwo.setText(two);
-        tvThree.setText(three);
-        btnFilter.setText(filter);
+        u = getIntent().getParcelableExtra("currentUser");
 
         checkBoxList.add(cbOne);
         checkBoxList.add(cbTwo);
         checkBoxList.add(cbThree);
     }
 
+//    @SuppressLint("NewApi")
     public void getCheckedDays() {
-
-        News news = new News();
-        news.setKey(App.getInstance().getCurrentUser().getKey());
-        news.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        news.setAccount(App.getInstance().getCurrentUser().getAccount());
-        news.setNewsOrderBy("2019-12-05");
-        news.setNewsOrderType("");
-        news.setNewsDfrom("2019-12-05");
-
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getNews(news).observe(this, new Observer<News>() {
-            @Override
-            public void onChanged(News news) {
-
-            }
-        });
 
         if (cbOne.isChecked()) {
             checkedDays = YESTERDAY;
+//
+//            News news = new News();
+//            news.setKey(u.getKey());
+//            news.setLcode(u.getProperties().get(0).getLcode());
+//            news.setAccount(u.getAccount());
+//            news.setNewsOrderBy("");
+//            news.setNewsOrderType("ASC");
+//            news.setNewsDfrom(LocalDate.now().minusDays(1).toString());
+//
+//            WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+//            webApiClient.getNews(news).observe(this, new Observer<News>() {
+//                @Override
+//                public void onChanged(News news) {
+//                    if (news.getReceived() != null) {
+//                        reservationList.clear();
+//                        reservationList.addAll(news.getReceived());
+//                        reservationAdapter.notifyDataSetChanged();
+//                    } else {
+//                        ArrayList<Reservation> tmpList = new ArrayList<>();
+//                        tmpList.addAll(news.getReceived());
+//                    }
+//                }
+//            });
         }
         if (cbTwo.isChecked()) {
             checkedDays = TODAY;
@@ -111,6 +120,14 @@ public class TimeDialog extends AppCompatActivity {
         if (cbThree.isChecked()) {
             checkedDays = TOMMOROW;
         }
+
+        if (cbOne.isChecked() && cbTwo.isChecked()) {
+            checkedDays = YESTERDAYiTODAY;
+        }
+        if (cbTwo.isChecked() && cbThree.isChecked()) {
+            checkedDays = TODAYiTOMMOROW;
+        }
+
 
         Intent sendData = new Intent();
         sendData.putExtra("data", checkedDays);

@@ -1,29 +1,28 @@
 package com.easyswitch.serbianbookers;
 
 import com.easyswitch.serbianbookers.models.Availability;
-import com.easyswitch.serbianbookers.models.AvailabilityBody;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.GuestList;
+import com.easyswitch.serbianbookers.models.GuestNotShow;
 import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
+import com.easyswitch.serbianbookers.models.ShowCard;
 import com.easyswitch.serbianbookers.models.User;
 
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface WebApi {
 
     String BASE_URL = "https://admin.serbian-bookers.com/";
-    int TIMEOUT = 30;
+    int TIMEOUT = 40;
 
     @Headers("Content-type: application/json")
     @POST("api/account/login")
@@ -47,7 +46,7 @@ public interface WebApi {
 
     @Headers("Content-type: application/json")
     @POST("api/data/avail")
-    Call<Availability> availability(@Body AvailabilityBody availabilityBody);
+    Call<Availability> availability(@Body Availability a);
 
     @Headers("Content-type: application/json")
     @POST("api/data/restrictions")
@@ -66,4 +65,16 @@ public interface WebApi {
     @Headers("Content-type: application/json")
     @POST("api/data/insert/price")
     Call<InsertPrice> insertPrice(@Body InsertPrice insertPrice);
+
+    @Headers("Content-type: application/json")
+    @POST("api/user/noshow")
+    Call<GuestNotShow> noShow(@Body GuestNotShow guestNotShow);
+
+    @Headers("Content-type: application/json")
+    @POST("api/user/invalidcc")
+    Call<GuestNotShow> invalidCard(@Body GuestNotShow guestNotShow);
+
+    @Headers("Content-type: application/json")
+    @POST("api/data/showCC")
+    Call<ShowCard> showCard(@Body ShowCard showCard);
 }
