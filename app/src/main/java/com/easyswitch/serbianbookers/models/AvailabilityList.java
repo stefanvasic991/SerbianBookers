@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AvailabilityList {
 
-    @SerializedName("288967")
+    @SerializedName("MR332")
     @Expose
     private List<AvailabilityData> _288967;
     @SerializedName("288966")

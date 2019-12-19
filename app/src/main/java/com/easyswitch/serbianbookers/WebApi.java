@@ -12,6 +12,7 @@ import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.ShowCard;
+import com.easyswitch.serbianbookers.models.Statistics;
 import com.easyswitch.serbianbookers.models.User;
 
 import retrofit2.Call;
@@ -21,7 +22,7 @@ import retrofit2.http.POST;
 
 public interface WebApi {
 
-    String BASE_URL = "https://admin.serbian-bookers.com/";
+    String BASE_URL = "https://admin.otasync.me/";
     int TIMEOUT = 40;
 
     @Headers("Content-type: application/json")
@@ -56,8 +57,6 @@ public interface WebApi {
     @POST("api/data/news")
     Call<News> news(@Body News news);
 
-
-
     @Headers("Content-type: application/json")
     @POST("api/data/insert/avail")
     Call<InsertAvail> insertAvail(@Body InsertAvail insertAvail);
@@ -77,4 +76,8 @@ public interface WebApi {
     @Headers("Content-type: application/json")
     @POST("api/data/showCC")
     Call<ShowCard> showCard(@Body ShowCard showCard);
+
+    @Headers("Content-type: application/json")
+    @POST("api/data/statistics")
+    Call<Statistics> statistics(@Body Statistics statistics);
 }

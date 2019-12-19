@@ -1,22 +1,15 @@
 package com.easyswitch.serbianbookers.views.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.easyswitch.serbianbookers.App;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.easyswitch.serbianbookers.R;
-import com.easyswitch.serbianbookers.SP;
-import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.User;
-import com.easyswitch.serbianbookers.views.home.HomeActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

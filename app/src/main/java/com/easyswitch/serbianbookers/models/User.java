@@ -10,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 public class User implements Parcelable {
 
     @SerializedName("status")

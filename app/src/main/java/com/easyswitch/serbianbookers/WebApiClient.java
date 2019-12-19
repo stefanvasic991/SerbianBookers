@@ -21,6 +21,7 @@ import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.ShowCard;
+import com.easyswitch.serbianbookers.models.Statistics;
 import com.easyswitch.serbianbookers.models.User;
 
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +48,7 @@ public class WebApiClient extends AndroidViewModel {
     private MutableLiveData<GuestNotShow> guestNotShow;
     private MutableLiveData<GuestNotShow> invalidCard;
     private MutableLiveData<ShowCard> showCard;
+    private MutableLiveData<Statistics> statistics;
 
     public WebApiClient(@NonNull Application application) {
         super(application);
@@ -388,5 +390,31 @@ public class WebApiClient extends AndroidViewModel {
             });
         }
         return showCard;
+    }
+
+    public MutableLiveData<Statistics> getStatistics(Statistics stats) {
+        if (statistics == null) {
+            statistics = new MutableLiveData<>();
+
+            webApi.statistics(stats).enqueue(new Callback<Statistics>() {
+                @Override
+                public void onResponse(Call<Statistics> call, Response<Statistics> response) {
+                    if (response.isSuccessful()) {
+                        statistics.setValue(response.body());
+                    } else {
+                        statistics.setValue(null);
+                        Timber.v("onResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Statistics> call, Throwable t) {
+                    t.printStackTrace();
+                    statistics.setValue(null);
+                    Timber.v("onFailure");
+                }
+            });
+        }
+        return statistics;
     }
 }

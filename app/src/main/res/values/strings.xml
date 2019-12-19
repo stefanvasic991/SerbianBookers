@@ -114,6 +114,8 @@
     <string name="cancelFilter">poništi filtere</string>
     <string name="reservedRights">Sva prava su rezervisana.</string>
     <string name="noReservations">Nema rezervacija</string>
+    <string name="save">SAVE</string>
+    <string name="reset">RESET</string>
 
 
     <string-array name="rooms">

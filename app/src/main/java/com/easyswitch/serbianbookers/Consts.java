@@ -18,4 +18,6 @@ public class Consts {
     public static final String ARRIVAL = "Dolazak";
     public static final String STAY = "Boravak";
     public static final String DEPARTURE = "Odlazak";
+    public static final String ARRIVALiSTAY = "Dolazak, Boravak";
+    public static final String STAYiDEPARTURE = "Boravak, Odlazak";
 }

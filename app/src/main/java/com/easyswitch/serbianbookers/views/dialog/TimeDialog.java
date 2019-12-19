@@ -90,29 +90,6 @@ public class TimeDialog extends AppCompatActivity {
 
         if (cbOne.isChecked()) {
             checkedDays = YESTERDAY;
-//
-//            News news = new News();
-//            news.setKey(u.getKey());
-//            news.setLcode(u.getProperties().get(0).getLcode());
-//            news.setAccount(u.getAccount());
-//            news.setNewsOrderBy("");
-//            news.setNewsOrderType("ASC");
-//            news.setNewsDfrom(LocalDate.now().minusDays(1).toString());
-//
-//            WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-//            webApiClient.getNews(news).observe(this, new Observer<News>() {
-//                @Override
-//                public void onChanged(News news) {
-//                    if (news.getReceived() != null) {
-//                        reservationList.clear();
-//                        reservationList.addAll(news.getReceived());
-//                        reservationAdapter.notifyDataSetChanged();
-//                    } else {
-//                        ArrayList<Reservation> tmpList = new ArrayList<>();
-//                        tmpList.addAll(news.getReceived());
-//                    }
-//                }
-//            });
         }
         if (cbTwo.isChecked()) {
             checkedDays = TODAY;
@@ -120,14 +97,15 @@ public class TimeDialog extends AppCompatActivity {
         if (cbThree.isChecked()) {
             checkedDays = TOMMOROW;
         }
-
         if (cbOne.isChecked() && cbTwo.isChecked()) {
             checkedDays = YESTERDAYiTODAY;
         }
         if (cbTwo.isChecked() && cbThree.isChecked()) {
             checkedDays = TODAYiTOMMOROW;
         }
-
+        if (!cbOne.isChecked() && !cbTwo.isChecked() && !cbThree.isChecked()) {
+            checkedDays = TODAY;
+        }
 
         Intent sendData = new Intent();
         sendData.putExtra("data", checkedDays);

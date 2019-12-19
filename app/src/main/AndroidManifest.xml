@@ -23,7 +23,11 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".views.dialog.SendMailActivity"></activity>
+        <activity android:name=".views.dialog.SnackBarDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/NavTheme" />
+        <activity android:name=".views.dialog.SendMailActivity" />
         <activity
             android:name=".views.dialog.SaveRestrictionDialog"
             android:label=""

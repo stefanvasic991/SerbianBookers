@@ -21,6 +21,7 @@
     </style>
 
     <style name="NavTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">#08121F</item>
         <item name="colorAccent">@color/colorBlue</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -29,6 +30,9 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <style name="DescTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <style name="FontTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textSize">14sp</item>

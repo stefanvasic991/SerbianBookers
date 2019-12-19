@@ -164,6 +164,11 @@ public class ReservationDescActivity extends AppCompatActivity {
         rlSaveNote.setVisibility(View.VISIBLE);
     }
 
+    @OnClick(R.id.ivClose)
+    public void onCancelClick(){
+        finish();
+    }
+
     @OnClick(R.id.saveNote)
     public void saveNote() {
 //        reservation.setCustomerNotes(etNote.getText().toString());
@@ -176,10 +181,10 @@ public class ReservationDescActivity extends AppCompatActivity {
         rlSaveNote.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.btnBack)
-    public void back() {
-        onBackPressed();
-    }
+//    @OnClick(R.id.btnBack)
+//    public void back() {
+//        onBackPressed();
+//    }
 
     @OnClick(R.id.showCard)
     public void showCard() {

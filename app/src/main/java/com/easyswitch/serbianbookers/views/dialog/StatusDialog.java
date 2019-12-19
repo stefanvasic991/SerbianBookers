@@ -24,8 +24,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.easyswitch.serbianbookers.Consts.ARRIVAL;
+import static com.easyswitch.serbianbookers.Consts.ARRIVALiSTAY;
 import static com.easyswitch.serbianbookers.Consts.DEPARTURE;
 import static com.easyswitch.serbianbookers.Consts.STAY;
+import static com.easyswitch.serbianbookers.Consts.STAYiDEPARTURE;
+import static com.easyswitch.serbianbookers.Consts.TODAY;
+import static com.easyswitch.serbianbookers.Consts.TODAYiTOMMOROW;
+import static com.easyswitch.serbianbookers.Consts.YESTERDAYiTODAY;
 
 public class StatusDialog extends AppCompatActivity {
 
@@ -77,6 +82,16 @@ public class StatusDialog extends AppCompatActivity {
         }
         if (cbThree.isChecked()) {
             checkedStatus = DEPARTURE;
+        }
+        if (cbOne.isChecked() && cbTwo.isChecked()) {
+            checkedStatus = ARRIVALiSTAY;
+        }
+        if (cbTwo.isChecked() && cbThree.isChecked()) {
+            checkedStatus = STAYiDEPARTURE;
+        }
+        if (!cbOne.isChecked() && !cbTwo.isChecked() && !cbThree.isChecked()) {
+            checkedStatus = STAY;
+
         }
 
         Intent sendStatus = new Intent();

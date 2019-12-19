@@ -4,6 +4,13 @@ package com.easyswitch.serbianbookers.views.home;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,16 +21,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
@@ -173,10 +170,13 @@ public class HomeFragment extends Fragment {
                 tvYesterdayPercentage.setText( data.getOccupancy().getYesterday() + "%");
                 tvTodayPercentage.setText(data.getOccupancy().getToday() + "%");
 
-
                 Double sumaProgress = Double.parseDouble(data.getOccupancy().getToday())
                         - Double.parseDouble(data.getOccupancy().getYesterday());
-                circularProgressBar.setProgress((float) Double.parseDouble(String.valueOf(sumaProgress)));
+                if (sumaProgress < 0) {
+                    circularProgressBar.setProgress((float) - Double.parseDouble(String.valueOf(sumaProgress)));
+                } else {
+                    circularProgressBar.setProgress((float) Double.parseDouble(String.valueOf(sumaProgress)));
+                }
 //                circularProgressBar.setProgress(Float.parseFloat(data.getOccupancy().getYesterday()));
 //                circularProgressBar.setProgressWithAnimation(Float.parseFloat(data.getOccupancy().getToday()), 3000);
 
@@ -334,7 +334,7 @@ public class HomeFragment extends Fragment {
                 tvTime.setTextColor(getResources().getColor(R.color.colorWhite));
                 clTime.setBackgroundResource(R.drawable.selected_filter_shape);
 
-                if (days.equals(Consts.YESTERDAY)) {
+                 if (days.equals(Consts.YESTERDAY)) {
                     News news = new News();
                     news.setKey(u.getKey());
                     news.setLcode(u.getProperties().get(0).getLcode());

@@ -1,13 +1,16 @@
 package com.easyswitch.serbianbookers.views.calendar;
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -20,16 +23,22 @@ import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.adapters.CalendarAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
+import com.easyswitch.serbianbookers.models.AvailabilityList;
+import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.views.dialog.SavePriceDialog;
+import com.easyswitch.serbianbookers.views.dialog.SnackBarDialog;
 
 
 import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by: Stefan Vasic
@@ -95,13 +104,43 @@ public class JednosobniFragment extends Fragment {
         rvCalendar.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvCalendar.setAdapter(calendarAdapter);
 
-        calendarAdapter.setOnCalendarClickListener(new CalendarAdapter.OnCalendarClickListener() {
+        calendarAdapter.setOnPriceClickListener(new CalendarAdapter.OnPriceClickListener() {
             @Override
-            public void onCalendarClick(View view, int position, AvailabilityData av) {
-                
+            public void onPriceClick(View view, int position, AvailabilityData av) {
+                view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            Timber.v("menja");
+                            Intent i = new Intent(getActivity(), SnackBarDialog.class);
+                            i.putExtra("1", "1");
+                            i.putExtra("currentUser", u);
+//                i.putExtra("date", ad.getDate());
+//                i.putExtra("price", holder.tvPrice.getText().toString());
+                            startActivity(i);
+                        }
+                    }
+                });
+            }
+        });
+
+        calendarAdapter.setOnStatusChangeListener(new CalendarAdapter.OnStatusChangeListener() {
+            @Override
+            public void onStatusChanged(View view, int position, AvailabilityData av) {
+
+                Intent i = new Intent(getActivity(), SnackBarDialog.class);
+                i.putExtra("currentUser", u);
+                i.putExtra("2", "2");
+                startActivity(i);
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -11,8 +11,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.easyswitch.serbianbookers.R;
+import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.models.Statistics;
+import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.github.mikephil.charting.charts.PieChart;
@@ -43,6 +48,8 @@ public class StatisticsFragment extends Fragment {
     @BindView(R.id.countryPieChart)
     PieChart countryPieChart;
 
+    User u;
+
     public static StatisticsFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -63,6 +70,8 @@ public class StatisticsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
         ButterKnife.bind(this, view);
+
+        u = getActivity().getIntent().getParcelableExtra("currentUser");
 
         countryPieChart.setUsePercentValues(true);
         countryPieChart.getDescription().setEnabled(false);
@@ -216,10 +225,13 @@ public class StatisticsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
+
+        String dFrom = data.getStringExtra("data");
+        String dTo = data.getStringExtra("data");
+
         if (requestCode == 1) {
             if (resultCode == CalendarFilterActivity.RESULT_OK) {
-                String status = data.getStringExtra("data");
-                mbResDateFrom.setText(status);
+                mbResDateFrom.setText(dFrom);
                 mbResDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
             }
@@ -227,12 +239,29 @@ public class StatisticsFragment extends Fragment {
 
         if (requestCode == 2) {
             if (resultCode == CalendarFilterActivity.RESULT_OK) {
-                String status = data.getStringExtra("data");
-                mbResDateTo.setText(status);
+                mbResDateTo.setText(dTo);
                 mbResDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                Statistics stats = new Statistics();
+                stats.setKey(u.getKey());
+                stats.setAccount(u.getAccount());
+                stats.setLcode(u.getProperties().get(0).getLcode());
+                stats.setDfrom(dFrom);
+                stats.setDto(dTo);
+                stats.setFilterBy("");
+
+                WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+                webApiClient.getStatistics(stats).observe(this, new Observer<Statistics>() {
+                    @Override
+                    public void onChanged(Statistics statistics) {
+
+                    }
+                });
             }
         }
+
+
     }
 
     @OnClick(R.id.mbResDateFrom)
