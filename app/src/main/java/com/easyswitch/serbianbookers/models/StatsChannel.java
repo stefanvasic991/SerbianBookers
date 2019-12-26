@@ -10,19 +10,19 @@ public class StatsChannel {
     private Integer count;
     @SerializedName("income")
     @Expose
-    private Integer income;
+    private Double income;
     @SerializedName("costs")
     @Expose
-    private Integer costs;
+    private Double costs;
     @SerializedName("earnings")
     @Expose
-    private Integer earnings;
+    private Double earnings;
     @SerializedName("avg_income")
     @Expose
-    private Integer avgIncome;
+    private Double avgIncome;
     @SerializedName("canceled")
     @Expose
-    private Integer canceled;
+    private Double canceled;
     @SerializedName("commission")
     @Expose
     private Integer commission;
@@ -38,43 +38,43 @@ public class StatsChannel {
         this.count = count;
     }
 
-    public Integer getIncome() {
+    public Double getIncome() {
         return income;
     }
 
-    public void setIncome(Integer income) {
+    public void setIncome(Double income) {
         this.income = income;
     }
 
-    public Integer getCosts() {
+    public Double getCosts() {
         return costs;
     }
 
-    public void setCosts(Integer costs) {
+    public void setCosts(Double costs) {
         this.costs = costs;
     }
 
-    public Integer getEarnings() {
+    public Double getEarnings() {
         return earnings;
     }
 
-    public void setEarnings(Integer earnings) {
+    public void setEarnings(Double earnings) {
         this.earnings = earnings;
     }
 
-    public Integer getAvgIncome() {
+    public Double getAvgIncome() {
         return avgIncome;
     }
 
-    public void setAvgIncome(Integer avgIncome) {
+    public void setAvgIncome(Double avgIncome) {
         this.avgIncome = avgIncome;
     }
 
-    public Integer getCanceled() {
+    public Double getCanceled() {
         return canceled;
     }
 
-    public void setCanceled(Integer canceled) {
+    public void setCanceled(Double canceled) {
         this.canceled = canceled;
     }
 

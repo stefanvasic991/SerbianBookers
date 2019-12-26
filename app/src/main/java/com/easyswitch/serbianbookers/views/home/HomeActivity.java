@@ -112,5 +112,10 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        viewPager.setCurrentItem(0, true);
+    }
 }
 

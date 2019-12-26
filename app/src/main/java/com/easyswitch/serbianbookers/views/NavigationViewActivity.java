@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.dialog.SendMailActivity;
+import com.easyswitch.serbianbookers.views.home.HomeActivity;
 import com.easyswitch.serbianbookers.views.login.LoginActivity;
 
 import butterknife.BindView;
@@ -75,6 +76,7 @@ public class NavigationViewActivity extends AppCompatActivity {
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
         finish();
+        new HomeActivity().finish();
     }
 
     @OnClick(R.id.llFinishTouchOutside)

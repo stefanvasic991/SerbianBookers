@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Availability implements Parcelable {
 
     @SerializedName("key")
@@ -23,12 +25,15 @@ public class Availability implements Parcelable {
     @SerializedName("dto")
     @Expose
     private String dto;
+    @SerializedName("array")
+    @Expose
+    private String arr;
     @SerializedName("status")
     @Expose
     private String status;
     @SerializedName("avail")
     @Expose
-    private AvailabilityList availabilityList;
+    private List<AvailabilityList> availabilityList;
 
     public Availability(Parcel in) {
         key = in.readString();
@@ -36,6 +41,7 @@ public class Availability implements Parcelable {
         lcode = in.readString();
         dfrom = in.readString();
         dto = in.readString();
+        arr = in.readString();
         status = in.readString();
     }
 
@@ -50,6 +56,7 @@ public class Availability implements Parcelable {
         dest.writeString(lcode);
         dest.writeString(dfrom);
         dest.writeString(dto);
+        dest.writeString(arr);
         dest.writeString(status);
     }
 
@@ -110,6 +117,14 @@ public class Availability implements Parcelable {
         this.dto = dto;
     }
 
+    public String getArr() {
+        return arr;
+    }
+
+    public void setArr(String arr) {
+        this.arr = arr;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -118,11 +133,11 @@ public class Availability implements Parcelable {
         this.status = status;
     }
 
-    public AvailabilityList getAvailabilityList() {
+    public List<AvailabilityList> getAvailabilityList() {
         return availabilityList;
     }
 
-    public void setAvailabilityList(AvailabilityList availabilityList) {
+    public void setAvailabilityList(List<AvailabilityList> availabilityList) {
         this.availabilityList = availabilityList;
     }
 }

@@ -24,7 +24,6 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="25dp"
@@ -49,6 +48,8 @@
                         android:id="@+id/ivClose"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
                         android:backgroundTint="@color/reservationDesc"
                         android:background="@drawable/circle_dialog_close"
                         app:layout_constraintEnd_toEndOf="parent"

@@ -104,22 +104,22 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         switch (reservation.getIdWoodoo()) {
             case "110238": {
 //                Picasso.with(context).load(data.getChannels().get(0).getLogo()).into(holder.ivLogo);
-                holder.ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(0).getLogo()));
+                holder.ivLogo.setImageResource(R.drawable.airbnb);
                 break;
             }
-//            case "110239": {
-//                Picasso.with(context).load(data.getChannels().get(1).getLogo()).into(holder.ivLogo);
-//                break;
-//            }
+            case "110239": {
+                holder.ivLogo.setImageResource(R.drawable.expedia);
+                break;
+            }
             case "110240": {
 //                Picasso.with(context).load(data.getChannels().get(2).getLogo()).into(holder.ivLogo);
-                holder.ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(2).getLogo()));
+                holder.ivLogo.setImageResource(R.drawable.booking);
             }
                 break;
-//            case "141075": {
-//                Picasso.with(context).load(data.getChannels().get(3).getLogo()).into(holder.ivLogo);
-//                break;
-//            }
+            case "141075": {
+                holder.ivLogo.setImageResource(R.drawable.sunhotels);
+                break;
+            }
             case "": {
                 holder.ivLogo.setImageResource(R.drawable.direct_res);
                 break;

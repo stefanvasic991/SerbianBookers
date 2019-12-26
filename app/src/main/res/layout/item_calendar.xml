@@ -36,17 +36,17 @@
                 android:textColor="@color/colorTextLight"
                 android:textSize="16dp" />
 
-            <View
-                android:id="@+id/vLine"
-                android:layout_width="2dp"
-                android:layout_height="16dp"
-                android:layout_below="@+id/tvStartMonth"
-                android:layout_toEndOf="@+id/tvMonth"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/colorTextLight"
-                android:orientation="vertical" />
+        <View
+            android:id="@+id/vLine"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_below="@+id/tvStartMonth"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="16dp"
+            android:layout_toEndOf="@+id/tvMonth"
+            android:background="@color/colorTextLight"
+            android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/tvDay"
@@ -71,20 +71,42 @@
             android:textSize="16dp" />
 
         <EditText
-            android:id="@+id/tvPrice"
+            android:id="@+id/etPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="16sp"
-            android:layout_marginEnd="12dp"
-            android:layout_toStartOf="@+id/mbStatus"
+            android:layout_toStartOf="@+id/tvEuro"
             android:inputType="number"
             android:imeOptions="actionDone"
-            android:text="35€"
+            android:text="60"
             android:cursorVisible="false"
             android:background="@drawable/price_edit"
             android:textColor="@color/colorTextLight"
             android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tvEuro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/price_edit"
+            android:textColor="@color/colorTextLight"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/mbStatus"
+            android:text="€"
+            android:textSize="16dp" />
+
+        <View
+            android:id="@+id/vOnCheckIn"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="-6dp"
+            android:layout_marginTop="22dp"
+            android:layout_toEndOf="@+id/tvEuro"
+            android:background="@drawable/open_closure_shape"
+            android:visibility="gone"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbStatus"
@@ -96,6 +118,17 @@
             android:tag="0"
             app:backgroundTint="@color/colorGreen"
             app:cornerRadius="10dp" />
+
+
+        <View
+            android:id="@+id/vOnCheckOut"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignEnd="@+id/mbStatus"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="-6dp"
+            android:background="@drawable/open_closure_shape"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/ivClose"
@@ -142,6 +175,7 @@
                 android:layout_weight="0.6"
                 android:background="@color/reservationDesc"
                 android:paddingTop="15dp"
+                android:tag="0"
                 android:text="@string/open"
                 android:textAlignment="center"
                 android:textSize="16dp" />
@@ -173,6 +207,7 @@
                 android:layout_weight="0.6"
                 android:background="@color/reservationDesc"
                 android:paddingTop="15dp"
+                android:tag="0"
                 android:text="@string/open"
                 android:textAlignment="center"
                 android:textSize="16dp" />
@@ -204,6 +239,7 @@
                 android:layout_weight="0.6"
                 android:background="@color/reservationDesc"
                 android:paddingTop="15dp"
+                android:tag="0"
                 android:text="@string/open"
                 android:textAlignment="center"
                 android:textSize="16dp" />
@@ -258,14 +294,18 @@
                 android:textAlignment="center"
                 android:textSize="16dp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tvMinStay"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
                 android:layout_weight="0.6"
                 android:background="@color/reservationDesc"
+                android:cursorVisible="false"
                 android:paddingTop="15dp"
+                android:paddingBottom="10dp"
+                android:inputType="number"
+                android:imeOptions="actionDone"
                 android:text="0"
                 android:textAlignment="center"
                 android:textSize="16dp" />
@@ -289,15 +329,19 @@
                 android:textAlignment="center"
                 android:textSize="16dp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tvMinStayArr"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
+                android:paddingBottom="10dp"
                 android:layout_weight="0.6"
                 android:background="@color/reservationDesc"
+                android:cursorVisible="false"
                 android:paddingTop="15dp"
                 android:text="0"
+                android:inputType="number"
+                android:imeOptions="actionDone"
                 android:textAlignment="center"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -320,15 +364,19 @@
                 android:textAlignment="center"
                 android:textSize="16dp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tvMaxStay"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
+                android:paddingBottom="10dp"
                 android:layout_weight="0.6"
                 android:background="@color/reservationDesc"
+                android:cursorVisible="false"
                 android:paddingTop="15dp"
                 android:text="0"
+                android:inputType="number"
+                android:imeOptions="actionDone"
                 android:textAlignment="center"
                 android:textSize="16dp" />
         </LinearLayout>

@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
+import com.easyswitch.serbianbookers.SP;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.home.HomeActivity;
@@ -55,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
     }
 
@@ -80,16 +81,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onChanged(User user) {
 
                 if (user != null) {
-//                    if (checkBox.isChecked()) {
-//                        SP.getInstance().setRemember("1");
-//                    } else {
-//                        SP.getInstance().setRemember("0");
-//                    }
-////                    SP.getInstance().setUser(user);
-//                    SP.getInstance().setUsername(username.getText().toString());
-//                    SP.getInstance().setPassword(password.getText().toString());
-//                    SP.getInstance().setUserExist(true);
-//                    App.getInstance().setCurrentUser(user);
+                    if (checkBox.isChecked()) {
+                        SP.getInstance().setRemember("1");
+                    } else {
+                        SP.getInstance().setRemember("0");
+                    }
+//                    SP.getInstance().setUser(user);
+                    SP.getInstance().setUsername(username.getText().toString());
+                    SP.getInstance().setPassword(password.getText().toString());
+                    SP.getInstance().setUserExist(true);
+                    App.getInstance().setCurrentUser(user);
 
                     if (user.getStatus().equals("error")) {
                         password.setError(getText(R.string.password_not_match));
@@ -101,6 +102,11 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = new Intent(getApplication(), HomeActivity.class);
                     i.putExtra("currentUser", user);
                     startActivity(i);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("user", user);
+                    setResult(RESULT_OK, intent);
+
                     finish();
                 }
             }

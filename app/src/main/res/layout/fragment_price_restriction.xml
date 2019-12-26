@@ -174,7 +174,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:spinnerMode="dropdown"
-                android:entries="@array/rooms"
                 android:background="@drawable/spinner_background"/>
 
             <ImageView

@@ -9,7 +9,7 @@
     </style>
 
     <style name="TabLayoutTextSize" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">9sp</item>
+        <item name="android:textSize">8sp</item>
     </style>
 
     <style name="AppThemeWhite" parent="AppTheme">
@@ -17,6 +17,7 @@
     </style>
 
     <style name="AppThemeDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorAccent">@color/colorWhite</item>
         <item name="colorPrimary">@color/colorBlue</item>
     </style>
 

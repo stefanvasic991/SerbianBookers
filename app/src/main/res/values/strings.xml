@@ -95,7 +95,7 @@
     <string name="noRes">Broj\nrezervacija</string>
     <string name="noNight">broj\nnoćenja</string>
     <string name="noNights">Broj\nnoćenja</string>
-    <string name="noincome">Prihod</string>
+    <string name="noincome">Prihod\n   </string>
     <string name="midPrice">prosečna\ncena</string>
 
     <string name="oneBathroom">Jednosobni:</string>
@@ -116,6 +116,8 @@
     <string name="noReservations">Nema rezervacija</string>
     <string name="save">SAVE</string>
     <string name="reset">RESET</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
 
 
     <string-array name="rooms">

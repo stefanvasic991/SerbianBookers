@@ -13,19 +13,19 @@ public class Bookwindow {
     private Integer confirmed;
     @SerializedName("income")
     @Expose
-    private Integer income;
+    private Double income;
     @SerializedName("nights")
     @Expose
     private Integer nights;
     @SerializedName("avg_income")
     @Expose
-    private Integer avgIncome;
+    private Double avgIncome;
     @SerializedName("avg_nights")
     @Expose
-    private Integer avgNights;
+    private Double avgNights;
     @SerializedName("canceled_percentage")
     @Expose
-    private Integer canceledPercentage;
+    private Double canceledPercentage;
 
     public Integer getCount() {
         return count;
@@ -43,11 +43,11 @@ public class Bookwindow {
         this.confirmed = confirmed;
     }
 
-    public Integer getIncome() {
+    public Double getIncome() {
         return income;
     }
 
-    public void setIncome(Integer income) {
+    public void setIncome(Double income) {
         this.income = income;
     }
 
@@ -59,28 +59,27 @@ public class Bookwindow {
         this.nights = nights;
     }
 
-    public Integer getAvgIncome() {
+    public Double getAvgIncome() {
         return avgIncome;
     }
 
-    public void setAvgIncome(Integer avgIncome) {
+    public void setAvgIncome(Double avgIncome) {
         this.avgIncome = avgIncome;
     }
 
-    public Integer getAvgNights() {
+    public Double getAvgNights() {
         return avgNights;
     }
 
-    public void setAvgNights(Integer avgNights) {
+    public void setAvgNights(Double avgNights) {
         this.avgNights = avgNights;
     }
 
-    public Integer getCanceledPercentage() {
+    public Double getCanceledPercentage() {
         return canceledPercentage;
     }
 
-    public void setCanceledPercentage(Integer canceledPercentage) {
+    public void setCanceledPercentage(Double canceledPercentage) {
         this.canceledPercentage = canceledPercentage;
     }
-
 }

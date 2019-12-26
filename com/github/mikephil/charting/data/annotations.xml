@@ -1,0 +1,5 @@
+<root>
+    <item name='com.github.mikephil.charting.data.Entry'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

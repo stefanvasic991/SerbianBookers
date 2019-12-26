@@ -116,35 +116,35 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints" />
 
-        <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/diagram_shape"
-            android:orientation="horizontal"
-            android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="MissingConstraints">
+<!--        <LinearLayout-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/diagram_shape"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_margin="8dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:ignore="MissingConstraints">-->
 
-                <ImageView
-                    android:id="@+id/ivList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:padding="5dp"
-                    android:src="@drawable/list"
-                    android:background="@drawable/diagram_list_shape"
-                    tools:ignore="MissingConstraints" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/ivList"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="0.5"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:src="@drawable/list"-->
+<!--                    android:background="@drawable/diagram_list_shape"-->
+<!--                    tools:ignore="MissingConstraints" />-->
 
-                <ImageView
-                    android:id="@+id/ivGantogram"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/gantogram"
-                    android:background="@drawable/diagram_gantogram_shape"
-                    tools:ignore="MissingConstraints" />
-        </LinearLayout>
+<!--                <ImageView-->
+<!--                    android:id="@+id/ivGantogram"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:layout_weight="0.5"-->
+<!--                    android:src="@drawable/gantogram"-->
+<!--                    android:background="@drawable/diagram_gantogram_shape"-->
+<!--                    tools:ignore="MissingConstraints" />-->
+<!--        </LinearLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -162,8 +162,8 @@
             android:layout_below="@+id/clDate"
             android:layout_gravity="top"
             android:background="@color/calendarBackground"
-            style="@style/TabLayoutTextSize"
             app:tabSelectedTextColor="@color/colorBlack"
+            app:tabMode="scrollable"
             app:tabTextAppearance="@style/FontTheme"/>
     </androidx.viewpager.widget.ViewPager>
 

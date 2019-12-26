@@ -1,6 +1,7 @@
 package com.easyswitch.serbianbookers.views.calendar;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,8 @@ import com.easyswitch.serbianbookers.adapters.CalendarAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.views.dialog.PriceSnackBar;
+import com.easyswitch.serbianbookers.views.dialog.SnackBarDialog;
 
 import org.threeten.bp.LocalDate;
 
@@ -29,9 +32,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * A simple {@link Fragment} subclass.
+ *//**
  * Created by: Stefan Vasic
  */
-public class StudioFragment extends Fragment {
+public class FifthRoomFragment extends Fragment {
 
     @BindView(R.id.rvCalendar)
     RecyclerView rvCalendar;
@@ -39,35 +44,34 @@ public class StudioFragment extends Fragment {
     List<AvailabilityData> calendarList = new ArrayList<>();
     CalendarAdapter calendarAdapter;
     User u;
+    Availability av = new Availability();
 
-    public static StudioFragment newInstance() {
-
+    public static FifthRoomFragment newInstance() {
         Bundle args = new Bundle();
-
-        StudioFragment fragment = new StudioFragment();
+        FifthRoomFragment fragment = new FifthRoomFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public StudioFragment() {
+    public FifthRoomFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_studio, container, false);
+        View view = inflater.inflate(R.layout.fragment_five_room, container, false);
         ButterKnife.bind(this, view);
 
         u = getActivity().getIntent().getParcelableExtra("currentUser");
-        Availability av = new Availability();
+        assert u != null;
         av.setKey(u.getKey());
         av.setAccount(u.getAccount());
         av.setLcode(u.getProperties().get(0).getLcode());
         av.setDfrom(LocalDate.now().toString());
         av.setDto(LocalDate.now().plusDays(30).toString());
+        av.setArr("");
 
         WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
         webApiClient.getAvailability(av).observe(this, new Observer<Availability>() {
@@ -76,13 +80,17 @@ public class StudioFragment extends Fragment {
 
                 if (availability == null) return;
 
-                if (availability.getAvailabilityList() != null) {
-                    calendarList.clear();
-                    calendarList.addAll(availability.getAvailabilityList().get_387450());
-                    calendarAdapter.notifyDataSetChanged();
-                } else {
-                    List<AvailabilityData> tmpList = new ArrayList<>();
-                    tmpList.addAll(availability.getAvailabilityList().get_387450());
+                for (int i = 0; i < availability.getAvailabilityList().size(); i ++) {
+
+                    if (availability.getAvailabilityList() != null) {
+                        calendarList.clear();
+                        calendarList.addAll(availability.getAvailabilityList().get(4).getData());
+                        calendarAdapter.notifyDataSetChanged();
+                    } else {
+                        List<AvailabilityData> tmpList = new ArrayList<>();
+                        tmpList.addAll(availability.getAvailabilityList().get(4).getData());
+                        calendarAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         });
@@ -90,6 +98,27 @@ public class StudioFragment extends Fragment {
         calendarAdapter = new CalendarAdapter(getActivity(), calendarList);
         rvCalendar.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvCalendar.setAdapter(calendarAdapter);
+
+        calendarAdapter.setOnPriceClickListener(new CalendarAdapter.OnPriceClickListener() {
+            @Override
+            public void onPriceClick(View view, int position, AvailabilityData av) {
+
+                Intent i = new Intent(getActivity(), PriceSnackBar.class);
+                i.putExtra("currentUser", u);
+                i.putExtra("date", av.getDate());
+                startActivity(i);
+            }
+        });
+
+        calendarAdapter.setOnStatusChangeListener(new CalendarAdapter.OnStatusChangeListener() {
+            @Override
+            public void onStatusChanged(View view, int position, AvailabilityData av) {
+
+                Intent i = new Intent(getActivity(), SnackBarDialog.class);
+                i.putExtra("currentUser", u);
+                startActivity(i);
+            }
+        });
 
         return view;
     }

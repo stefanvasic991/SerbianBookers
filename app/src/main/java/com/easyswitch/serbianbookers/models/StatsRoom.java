@@ -10,19 +10,22 @@ public class StatsRoom {
     private Integer count;
     @SerializedName("income")
     @Expose
-    private Integer income;
+    private Double income;
     @SerializedName("nights")
     @Expose
     private Integer nights;
     @SerializedName("avg_income")
     @Expose
-    private Integer avgIncome;
+    private Double avgIncome;
     @SerializedName("avg_nights")
     @Expose
-    private Integer avgNights;
+    private Double avgNights;
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("shortname")
+    @Expose
+    private String shortName;
 
     public Integer getCount() {
         return count;
@@ -32,11 +35,11 @@ public class StatsRoom {
         this.count = count;
     }
 
-    public Integer getIncome() {
+    public Double getIncome() {
         return income;
     }
 
-    public void setIncome(Integer income) {
+    public void setIncome(Double income) {
         this.income = income;
     }
 
@@ -48,19 +51,19 @@ public class StatsRoom {
         this.nights = nights;
     }
 
-    public Integer getAvgIncome() {
+    public Double getAvgIncome() {
         return avgIncome;
     }
 
-    public void setAvgIncome(Integer avgIncome) {
+    public void setAvgIncome(Double avgIncome) {
         this.avgIncome = avgIncome;
     }
 
-    public Integer getAvgNights() {
+    public Double getAvgNights() {
         return avgNights;
     }
 
-    public void setAvgNights(Integer avgNights) {
+    public void setAvgNights(Double avgNights) {
         this.avgNights = avgNights;
     }
 
@@ -70,5 +73,13 @@ public class StatsRoom {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 }

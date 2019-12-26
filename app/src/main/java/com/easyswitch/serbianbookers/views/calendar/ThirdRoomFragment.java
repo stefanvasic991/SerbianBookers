@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 /**
  * Created by: Stefan Vasic
  */
-public class TrosobniFragment extends Fragment {
+public class ThirdRoomFragment extends Fragment {
     @BindView(R.id.rvCalendar)
     RecyclerView rvCalendar;
 
@@ -39,17 +39,17 @@ public class TrosobniFragment extends Fragment {
     CalendarAdapter calendarAdapter;
     User u;
 
-    public static TrosobniFragment newInstance() {
+    public static ThirdRoomFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        TrosobniFragment fragment = new TrosobniFragment();
+        ThirdRoomFragment fragment = new ThirdRoomFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
 
-    public TrosobniFragment() {
+    public ThirdRoomFragment() {
         // Required empty public constructor
     }
 
@@ -78,11 +78,11 @@ public class TrosobniFragment extends Fragment {
 
                 if (availability.getAvailabilityList() != null) {
                     calendarList.clear();
-                    calendarList.addAll(availability.getAvailabilityList().get_288965());
+                    calendarList.addAll(availability.getAvailabilityList().get(2).getData());
                     calendarAdapter.notifyDataSetChanged();
                 } else {
                     List<AvailabilityData> tmpList = new ArrayList<>();
-                    tmpList.addAll(availability.getAvailabilityList().get_288965());
+                    tmpList.addAll(availability.getAvailabilityList().get(2).getData());
                 }
             }
         });

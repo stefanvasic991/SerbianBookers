@@ -3,20 +3,20 @@ package com.easyswitch.serbianbookers.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CountriesPercentage {
+public class ChannelPercentage {
 
     @SerializedName("value")
     @Expose
-    private Integer value;
+    private Double value;
     @SerializedName("id")
     @Expose
     private String id;
 
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
@@ -27,5 +27,4 @@ public class CountriesPercentage {
     public void setId(String id) {
         this.id = id;
     }
-
 }

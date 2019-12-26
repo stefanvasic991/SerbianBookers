@@ -12,19 +12,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.easyswitch.serbianbookers.CalendarUnitKt;
+import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
-import com.easyswitch.serbianbookers.adapters.RoomViewPagerAdapter;
-import com.easyswitch.serbianbookers.views.GantogramActivity;
+import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
+import com.easyswitch.serbianbookers.views.calendar.EighthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.FifthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.NinthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.SecondRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.FirstRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.FourthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.SeventhRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.SixthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.TenthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.ThirdRoomFragment;
+import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -40,13 +57,15 @@ import org.threeten.bp.YearMonth;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by: Stefan Vasic
@@ -55,10 +74,10 @@ public class CalendarFragment extends Fragment {
 
     @BindView(R.id.mbCurrentDate)
     MaterialButton mbCurrentDate;
-    @BindView(R.id.ivList)
-    ImageView ivList;
-    @BindView(R.id.ivGantogram)
-    ImageView ivGantogram;
+//    @BindView(R.id.ivList)
+//    ImageView ivList;
+//    @BindView(R.id.ivGantogram)
+//    ImageView ivGantogram;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
@@ -67,7 +86,11 @@ public class CalendarFragment extends Fragment {
     @BindView(R.id.cvCalendar)
     CalendarView cvCalendar;
 
-    RoomViewPagerAdapter adapter;
+    CalendarPagerAdapter calendarPagerAdapter;
+    List<String> calendarList = new ArrayList<>();
+    List<FirstRoomFragment> fragmentList = new ArrayList<>();
+    User u;
+    Availability av = new Availability();
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd");
     private DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("EEE");
@@ -79,7 +102,6 @@ public class CalendarFragment extends Fragment {
     public static CalendarFragment newInstance() {
 
         Bundle args = new Bundle();
-
         CalendarFragment fragment = new CalendarFragment();
         fragment.setArguments(args);
         return fragment;
@@ -89,6 +111,7 @@ public class CalendarFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,7 +121,6 @@ public class CalendarFragment extends Fragment {
         AndroidThreeTen.init(getActivity());
 
         viewPager.setVisibility(View.VISIBLE);
-        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_selected));
 
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);
@@ -108,13 +130,103 @@ public class CalendarFragment extends Fragment {
         Date date = new Date(System.currentTimeMillis());
         mbCurrentDate.setText(formatter.format(date));
 
-        adapter = new RoomViewPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(4);
 
-        gantogram();
+        calendarPagerAdapter = new CalendarPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(calendarPagerAdapter);
+        viewPager.setOffscreenPageLimit(calendarList.size());
+
+        u = getActivity().getIntent().getParcelableExtra("currentUser");
+        assert u != null;
+        av.setKey(u.getKey());
+        av.setAccount(u.getAccount());
+        av.setLcode(u.getProperties().get(0).getLcode());
+        av.setDfrom(LocalDate.now().toString());
+        av.setDto(LocalDate.now().plusDays(30).toString());
+        av.setArr("");
+
+        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+        webApiClient.getAvailability(av).observe(this, availability -> {
+
+            if (availability == null) return;
+
+            for(int i = 0; i < availability.getAvailabilityList().size(); i++){
+                addTab(availability.getAvailabilityList().get(i).getShortName());
+            }
+        });
+
+        tabLayout.setupWithViewPager(viewPager);
+
+//        gantogram();
 
         return view;
+    }
+
+    private void addTab(String title) {
+        tabLayout.addTab(tabLayout.newTab().setText(title));
+        addTabPage(title);
+    }
+
+    public void addTabPage(String title) {
+        calendarList.add(title);
+        calendarPagerAdapter.notifyDataSetChanged();
+    }
+
+    class CalendarPagerAdapter extends FragmentPagerAdapter {
+
+
+        public CalendarPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @NotNull
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return FirstRoomFragment.newInstance();
+                case 1:
+                    return SecondRoomFragment.newInstance();
+                case 2:
+                    return ThirdRoomFragment.newInstance();
+                case 3:
+                    return FourthRoomFragment.newInstance();
+                case 4:
+                    return FifthRoomFragment.newInstance();
+                case 5:
+                    return SixthRoomFragment.newInstance();
+                case 6:
+                    return SeventhRoomFragment.newInstance();
+                case 7:
+                    return EighthRoomFragment.newInstance();
+                case 8:
+                    return NinthRoomFragment.newInstance();
+                case 9:
+                    return TenthRoomFragment.newInstance();
+                default:
+                    return FirstRoomFragment.newInstance();
+            }
+
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public int getCount() {
+            return calendarList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return calendarList.get(position);
+        }
+
+        public void addFlag(FirstRoomFragment jednosobniFragment) {
+            fragmentList.add(jednosobniFragment);
+        }
     }
 
     public void gantogram() {
@@ -195,23 +307,41 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    @OnClick( R.id.ivList)
-    public void openList() {
-        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_selected));
-        ivGantogram.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_gantogram_shape));
-        cvCalendar.setVisibility(View.GONE);
-        viewPager.setVisibility(View.VISIBLE);
-    }
+//    @OnClick( R.id.ivList)
+//    public void openList() {
+//        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_selected));
+//        ivGantogram.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_gantogram_shape));
+//        cvCalendar.setVisibility(View.GONE);
+//        viewPager.setVisibility(View.VISIBLE);
+//    }
+//
+//    @OnClick( R.id.ivGantogram)
+//    public void openGantogram() {
+//
+//        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_shape));
+//        ivGantogram.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_gantogram_selected));
+//        cvCalendar.setVisibility(View.VISIBLE);
+//        viewPager.setVisibility(View.GONE);
+//    }
 
-    @OnClick( R.id.ivGantogram)
-    public void openGantogram() {
-//        Intent i = new Intent(getActivity(), GantogramActivity.class);
-//        startActivity(i);
 
-        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_shape));
-        ivGantogram.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_gantogram_selected));
-        cvCalendar.setVisibility(View.VISIBLE);
-        viewPager.setVisibility(View.GONE);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        String date = data.getStringExtra("data");
+
+        if (requestCode == Consts.REQ_FILTER_DIALOG) {
+            if (resultCode == RESULT_OK) {
+                mbCurrentDate.setText(date);
+
+                Intent sendDate = new Intent();
+                sendDate.setAction("sendDateToChild");
+                sendDate.putExtra("date", date);
+                getActivity().sendBroadcast(sendDate);
+            }
+
+        }
     }
 
     @OnClick(R.id.navigationViewBtn)
@@ -219,4 +349,11 @@ public class CalendarFragment extends Fragment {
         Intent i = new Intent(getActivity(), NavigationViewActivity.class);
         startActivityForResult(i, 200);
     }
+
+    @OnClick(R.id.mbCurrentDate)
+    public void changeCalendarDate() {
+        Intent intent = new Intent(getActivity(), CalendarFilterActivity.class);
+        startActivityForResult(intent, Consts.REQ_FILTER_DIALOG);
+    }
 }
+

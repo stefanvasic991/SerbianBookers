@@ -165,10 +165,15 @@ public class HomeFragment extends Fragment {
 
                 pbLoading.setVisibility(View.GONE);
 
-                pbYesterday.setProgress((int) Double.parseDouble(data.getOccupancy().getYesterday()));
-                pbToday.setProgress((int) Double.parseDouble(data.getOccupancy().getToday()));
-                tvYesterdayPercentage.setText( data.getOccupancy().getYesterday() + "%");
-                tvTodayPercentage.setText(data.getOccupancy().getToday() + "%");
+                double yest = Double.parseDouble(data.getOccupancy().getYesterday());
+                int yesterday  = (int) yest;
+                pbYesterday.setProgress(yesterday);
+
+                double t = Double.parseDouble(data.getOccupancy().getToday());
+                int today = (int) t;
+                pbToday.setProgress(today);
+                tvYesterdayPercentage.setText(yesterday + "%");
+                tvTodayPercentage.setText(today + "%");
 
                 Double sumaProgress = Double.parseDouble(data.getOccupancy().getToday())
                         - Double.parseDouble(data.getOccupancy().getYesterday());

@@ -12,13 +12,13 @@ public class StatsData {
     private List<Month> months = null;
     @SerializedName("rooms")
     @Expose
-    private List<Room> rooms = null;
+    private List<StatsRoom> rooms = null;
     @SerializedName("channels")
     @Expose
-    private List<Channel> channels = null;
+    private List<StatsChannel> channels = null;
     @SerializedName("channels_percentage")
     @Expose
-    private List<Object> channelsPercentage = null;
+    private List<ChannelPercentage> channelsPercentage = null;
     @SerializedName("countries_percentage")
     @Expose
     private List<CountriesPercentage> countriesPercentage = null;
@@ -34,27 +34,27 @@ public class StatsData {
         this.months = months;
     }
 
-    public List<Room> getRooms() {
+    public List<StatsRoom> getRooms() {
         return rooms;
     }
 
-    public void setRooms(List<Room> rooms) {
+    public void setRooms(List<StatsRoom> rooms) {
         this.rooms = rooms;
     }
 
-    public List<Channel> getChannels() {
+    public List<StatsChannel> getChannels() {
         return channels;
     }
 
-    public void setChannels(List<Channel> channels) {
+    public void setChannels(List<StatsChannel> channels) {
         this.channels = channels;
     }
 
-    public List<Object> getChannelsPercentage() {
+    public List<ChannelPercentage> getChannelsPercentage() {
         return channelsPercentage;
     }
 
-    public void setChannelsPercentage(List<Object> channelsPercentage) {
+    public void setChannelsPercentage(List<ChannelPercentage> channelsPercentage) {
         this.channelsPercentage = channelsPercentage;
     }
 

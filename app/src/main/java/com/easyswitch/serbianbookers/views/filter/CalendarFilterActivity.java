@@ -46,8 +46,6 @@ public class CalendarFilterActivity extends AppCompatActivity {
     TextView tvMonthText;
 
     String tmp;
-//    ArrayList<String> tmp = new ArrayList<>();
-//    Set<LocalDate> selectedDays = new HashSet<>();
 
     LocalDate selectedDays = null;
     LocalDate today = LocalDate.now();

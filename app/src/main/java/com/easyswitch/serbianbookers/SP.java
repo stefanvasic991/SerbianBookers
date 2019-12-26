@@ -34,21 +34,21 @@ public class SP {
         saveBooleanValueToPreferences(USER_EXIST, userExist);
     }
 
-//    public User getUser() {
-//        String userString = getStringValueFromPreferences(USER, null);
-//
-//        if (userString == null)
-//            return null;
-//
-//        try {
-//            User user = App.getInstance().getGson().fromJson(userString, User.class);
-//            return user;
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            logout();
-//            return null;
-//        }
-//    }
+    public User getUser() {
+        String userString = getStringValueFromPreferences(USER, null);
+
+        if (userString == null)
+            return null;
+
+        try {
+            User user = App.getInstance().getGson().fromJson(userString, User.class);
+            return user;
+        } catch (Exception e){
+            e.printStackTrace();
+            logout();
+            return null;
+        }
+    }
 
     public void logout() {
         saveStringValueToPreferences(USER, null);
