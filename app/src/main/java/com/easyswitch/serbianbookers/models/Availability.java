@@ -28,6 +28,12 @@ public class Availability implements Parcelable {
     @SerializedName("array")
     @Expose
     private String arr;
+    @SerializedName("price_id")
+    @Expose
+    private String priceId;
+    @SerializedName("restriction_id")
+    @Expose
+    private String restrictionId;
     @SerializedName("status")
     @Expose
     private String status;
@@ -35,18 +41,21 @@ public class Availability implements Parcelable {
     @Expose
     private List<AvailabilityList> availabilityList;
 
-    public Availability(Parcel in) {
+
+    public Availability() {
+
+    }
+
+    protected Availability(Parcel in) {
         key = in.readString();
         account = in.readString();
         lcode = in.readString();
         dfrom = in.readString();
         dto = in.readString();
         arr = in.readString();
+        priceId = in.readString();
+        restrictionId = in.readString();
         status = in.readString();
-    }
-
-    public Availability() {
-
     }
 
     @Override
@@ -57,6 +66,8 @@ public class Availability implements Parcelable {
         dest.writeString(dfrom);
         dest.writeString(dto);
         dest.writeString(arr);
+        dest.writeString(priceId);
+        dest.writeString(restrictionId);
         dest.writeString(status);
     }
 
@@ -139,5 +150,21 @@ public class Availability implements Parcelable {
 
     public void setAvailabilityList(List<AvailabilityList> availabilityList) {
         this.availabilityList = availabilityList;
+    }
+
+    public String getPriceId() {
+        return priceId;
+    }
+
+    public void setPriceId(String priceId) {
+        this.priceId = priceId;
+    }
+
+    public String getRestrictionId() {
+        return restrictionId;
+    }
+
+    public void setRestrictionId(String restrictionId) {
+        this.restrictionId = restrictionId;
     }
 }

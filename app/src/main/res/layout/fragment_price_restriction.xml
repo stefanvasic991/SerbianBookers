@@ -162,6 +162,7 @@
         android:text="@string/roomType" />
 
         <RelativeLayout
+            android:id="@+id/rlSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -169,10 +170,12 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp">
 
-            <Spinner
+            <com.thomashaertel.widget.MultiSpinner
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:spinnerMode="dropdown"
                 android:background="@drawable/spinner_background"/>
 
@@ -194,7 +197,7 @@
         android:id="@+id/menus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_below="@+id/pickTypes"
@@ -242,6 +245,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_below="@+id/menus"
+        android:visibility="visible"
         tools:context=".views.price.AvailabilityFragment">
 
         <RelativeLayout
@@ -362,19 +366,32 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/mbOpen"
-                android:layout_width="match_parent"
+                android:id="@+id/tvClosure"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:padding="8dp"
-                android:text="@string/open"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorText"
                 android:textSize="16dp"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="true"
+                android:text="@string/closuree" />
+
+
+            <TextView
+                android:id="@+id/mbOpenRestriction"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="17dp"
+                android:background="@drawable/diagram_shape"
+                android:paddingTop="10dp"
+                android:text="@string/open"
                 android:textAlignment="center"
-                android:background="@color/colorRestrictionGreen" />
+                android:singleLine="true"
+                android:textColor="@color/colorText"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvChangeMinStay"
@@ -382,7 +399,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginStart="16dp"
-                android:layout_below="@+id/mbOpen"
+                android:layout_below="@+id/mbOpenRestriction"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorText"
                 android:textSize="16dp"
@@ -392,10 +409,37 @@
                 android:id="@+id/etInsertMinStay"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="8dp"
+                android:layout_below="@+id/mbOpenRestriction"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/diagram_shape"
+                android:cursorVisible="false"
+                android:hint="klikni za unos"
+                android:inputType="number"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tvChangeMinStayArr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginStart="16dp"
+                android:layout_below="@+id/tvChangeMinStay"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:text="@string/changeMinStayArr" />
+
+            <EditText
+                android:id="@+id/etInsertMinStayArr"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="40dp"
-                android:layout_below="@+id/mbOpen"
+                android:layout_below="@+id/tvChangeMinStay"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/diagram_shape"
                 android:hint="klikni za unos"
@@ -407,9 +451,9 @@
                 android:id="@+id/tvChangeMaxStay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginStart="16dp"
-                android:layout_below="@+id/tvChangeMinStay"
+                android:layout_below="@+id/tvChangeMinStayArr"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorText"
                 android:textSize="16dp"
@@ -419,10 +463,10 @@
                 android:id="@+id/etInsertMaxStay"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="20dp"
-                android:layout_below="@+id/tvChangeMinStay"
+                android:layout_below="@+id/tvChangeMinStayArr"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/diagram_shape"
                 android:hint="klikni za unos"

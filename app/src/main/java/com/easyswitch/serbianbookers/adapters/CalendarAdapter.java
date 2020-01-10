@@ -2,9 +2,7 @@ package com.easyswitch.serbianbookers.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
-import com.easyswitch.serbianbookers.views.dialog.ClosureSnackBar;
-import com.easyswitch.serbianbookers.views.dialog.PriceSnackBar;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.DateFormat;
@@ -46,6 +42,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
     private MinStayClickLitener minStayClickLitener;
     private MinStayArrClickLitener minStayArrClickLitener;
     private MaxStayClickLitener maxStayClickLitener;
+    private OnAvailClickListener onAvailClickListener;
 
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -67,8 +64,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         }
     }
 
-    private interface OnCalendarClickListener {
+    public interface OnCalendarClickListener {
         void onCalendarClick(View view, int position, AvailabilityData av);
+    }
+
+    public interface OnAvailClickListener {
+        void onAvailClick(View view, int position, AvailabilityData av);
     }
 
     public interface OnPriceClickListener {
@@ -109,6 +110,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
 
     public void setOnCalendarClickListener(OnCalendarClickListener onCalendarClickListener) {
         this.onCalendarClickListener = onCalendarClickListener;
+    }
+
+    public void setOnAvailClickListener(OnAvailClickListener onAvailClickListener) {
+        this.onAvailClickListener = onAvailClickListener;
     }
 
     public void setOnPriceClickListener(OnPriceClickListener onPriceClickListener) {
@@ -166,6 +171,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
 
         holder.tvDate.setText(getDate(ad.getDate()));
         holder.tvMonth.setText(getMonth(ad.getDate()));
+        holder.tv1_0.setText(ad.getBooked().toString() + "/");
+        holder.tvNoAvail.setText(ad.getAvail().toString());
+        holder.etNoAvail.setText(ad.getAvail().toString());
 
         if (ad.getDay().equals("0")) holder.tvDay.setText("Ned");
         else if (ad.getDay().equals("1")) holder.tvDay.setText("Pon");
@@ -175,10 +183,22 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         else if (ad.getDay().equals("5")) holder.tvDay.setText("Pet");
         else if (ad.getDay().equals("6")) holder.tvDay.setText("Sub");
 
+//        double pp = ad.getPricingPlan();
+//        int pricingPlan  = (int) pp;
+//        holder.tvPrice.setText(String.valueOf(pricingPlan));
+//        holder.etPrice.setText(String.valueOf(pricingPlan));
+
+        holder.tvPrice.setText(ad.getPrice().toString());
         holder.etPrice.setText(ad.getPrice().toString());
 
-        if (ad.getClosed() == 0) holder.tvClosure.setText("Otvoreno");
-        else holder.tvClosure.setText("Zatvoreno");
+        if (ad.getClosed() == 0) {
+            holder.tvClosure.setText("Otvoreno");
+            holder.mbStatus.getBackground().setColorFilter(context.getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
+        }
+        else {
+            holder.tvClosure.setText("Zatvoreno");
+            holder.mbStatus.getBackground().setColorFilter(context.getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+        }
 
         if (ad.getClosedArrival() == 0) holder.tvOnCheckIn.setText("Otvoreno");
         else holder.tvOnCheckIn.setText("Zatvoreno");
@@ -190,8 +210,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         else holder.tvOTA.setText("Da");
 
         holder.tvMinStay.setText(ad.getMinStay().toString());
+        holder.etMinStay.setText(ad.getMinStay().toString());
         holder.tvMinStayArr.setText(ad.getMinStayArrival().toString());
+        holder.etMinStayArr.setText(ad.getMinStayArrival().toString());
         holder.tvMaxStay.setText(ad.getMaxStay().toString());
+        holder.etMaxStay.setText(ad.getMaxStay().toString());
     }
 
     @Override
@@ -234,8 +257,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         TextView tvDay;
         @BindView(R.id.tv1_0)
         TextView tv1_0;
+        @BindView(R.id.tvNoAvail)
+        TextView tvNoAvail;
+        @BindView(R.id.etNoAvail)
+        EditText etNoAvail;
 //        @BindView(R.id.tvPrice)
 //        TextView tvPrice;
+        @BindView(R.id.tvPrice)
+        TextView tvPrice;
         @BindView(R.id.etPrice)
         EditText etPrice;
         @BindView(R.id.mbStatus)
@@ -253,10 +282,16 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         TextView tvOTA;
         @BindView(R.id.tvMinStay)
         TextView tvMinStay;
+        @BindView(R.id.etMinStay)
+        EditText etMinStay;
         @BindView(R.id.tvMinStayArr)
         TextView tvMinStayArr;
+        @BindView(R.id.etMinStayArr)
+        EditText etMinStayArr;
         @BindView(R.id.tvMaxStay)
         TextView tvMaxStay;
+        @BindView(R.id.etMaxStay)
+        EditText etMaxStay;
 
 
         public CalendarHolder(@NonNull View itemView) {
@@ -270,27 +305,20 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             if (onCalendarClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
                 onCalendarClickListener.onCalendarClick(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
             }
+        }
 
-            if (ivClose.getTag().equals("0")) {
-                llInfo.setVisibility(View.VISIBLE);
-                ivClose.setImageResource(R.drawable.ic_arrow_up);
-                ivClose.setTag("1");
-            }
-             else if (ivClose.getTag().equals("1")){
-                llInfo.setVisibility(View.GONE);
-                ivClose.setImageResource(R.drawable.ic_arrow_down);
-                ivClose.setTag("0");
-
+        @OnClick(R.id.tvNoAvail)
+        public void onAvailClick() {
+            if (onAvailClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                onAvailClickListener.onAvailClick(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
             }
         }
 
-        @OnClick(R.id.etPrice)
+        @OnClick(R.id.tvPrice)
         public void onPriceClick() {
             if (onPriceClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
                 onPriceClickListener.onPriceClick(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
             }
-
-
          }
 
          @OnClick(R.id.mbStatus)

@@ -19,7 +19,7 @@ public class Month implements Parcelable {
     private Integer nights;
     @SerializedName("max_income")
     @Expose
-    private Integer maxIncome;
+    private Double maxIncome;
     @SerializedName("max_income_guest")
     @Expose
     private String maxIncomeGuest;
@@ -64,7 +64,7 @@ public class Month implements Parcelable {
         if (in.readByte() == 0) {
             maxIncome = null;
         } else {
-            maxIncome = in.readInt();
+            maxIncome = in.readDouble();
         }
         maxIncomeGuest = in.readString();
         if (in.readByte() == 0) {
@@ -124,7 +124,7 @@ public class Month implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(maxIncome);
+            dest.writeDouble(maxIncome);
         }
         dest.writeString(maxIncomeGuest);
         if (avgIncome == null) {
@@ -207,11 +207,11 @@ public class Month implements Parcelable {
         this.nights = nights;
     }
 
-    public Integer getMaxIncome() {
+    public Double getMaxIncome() {
         return maxIncome;
     }
 
-    public void setMaxIncome(Integer maxIncome) {
+    public void setMaxIncome(Double maxIncome) {
         this.maxIncome = maxIncome;
     }
 

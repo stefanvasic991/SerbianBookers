@@ -2,7 +2,10 @@ package com.easyswitch.serbianbookers.views.home;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +24,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.adapters.ReservationAdapter;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.Event;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.Reservation;
 import com.easyswitch.serbianbookers.models.Search;
@@ -34,6 +40,7 @@ import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.dialog.StatusDialog;
 import com.easyswitch.serbianbookers.views.dialog.TimeDialog;
+import com.google.gson.Gson;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar;
 
@@ -41,16 +48,23 @@ import org.threeten.bp.LocalDate;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
  * Created by: Stefan Vasic
  */
 public class HomeFragment extends Fragment {
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     @BindView(R.id.progressBar2)
     ProgressBar pbLoading;
@@ -137,9 +151,9 @@ public class HomeFragment extends Fragment {
 
         u = getActivity().getIntent().getParcelableExtra("currentUser");
         DataBody dataBody = new DataBody();
-        dataBody.setKey(u.getKey());
-        dataBody.setLcode(u.getProperties().get(0).getLcode());
-        dataBody.setAccount(u.getAccount());
+        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
+        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
         dataBody.setNewsOrderBy("2019-12-25");
         dataBody.setNewsOrderType("");
         dataBody.setNewsDfrom("");
@@ -182,8 +196,6 @@ public class HomeFragment extends Fragment {
                 } else {
                     circularProgressBar.setProgress((float) Double.parseDouble(String.valueOf(sumaProgress)));
                 }
-//                circularProgressBar.setProgress(Float.parseFloat(data.getOccupancy().getYesterday()));
-//                circularProgressBar.setProgressWithAnimation(Float.parseFloat(data.getOccupancy().getToday()), 3000);
 
 
                 DecimalFormat format = new DecimalFormat("##.##");
@@ -245,7 +257,7 @@ public class HomeFragment extends Fragment {
         news.setKey(u.getKey());
         news.setLcode(u.getProperties().get(0).getLcode());
         news.setAccount(u.getAccount());
-        news.setNewsOrderBy("");
+        news.setNewsOrderBy("date_arrival");
         news.setNewsOrderType("ASC");
         news.setNewsDfrom(LocalDate.now().toString());
 
@@ -290,8 +302,8 @@ public class HomeFragment extends Fragment {
 //                getString(R.string.yesterday),
 //                getString(R.string.today),
 //                getString(R.string.tomorrow),
-//                getString(R.string.add_filter)
 //        );
+//                getString(R.string.add_filter)
         Intent i = new Intent(getActivity(), TimeDialog.class);
         i.putExtra("currentUser", u);
         startActivityForResult(i, Consts.REQ_TIME_DIALOG);
@@ -329,6 +341,88 @@ public class HomeFragment extends Fragment {
                 tvStatus.setTextColor(getResources().getColor(R.color.colorWhite));
                 clStatus.setBackgroundResource(R.drawable.selected_filter_shape);
 
+
+                if (status.equals(Consts.STAY)) {
+                    Event e = new Event();
+                    e.setKey(App.getInstance().getCurrentUser().getKey());
+                    e.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    e.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    e.setEventsDfrom(LocalDate.now().minusDays(1).toString());
+                    e.setEventsDto(LocalDate.now().toString());
+
+                    WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                    webApiClient.getEvents(e).observe(this, new Observer<Event>() {
+                        @Override
+                        public void onChanged(Event event) {
+                            if (event == null) return;
+
+                                if (event.getStay() != null) {
+                                    reservationList.clear();
+                                    reservationList.addAll(event.getStay());
+                                    reservationAdapter.notifyDataSetChanged();
+                                } else {
+                                    ArrayList<Reservation> tmpList = new ArrayList<>();
+                                    tmpList.addAll(event.getStay());
+                                }
+                        }
+                    });
+                } else  if (status.equals(Consts.ARRIVAL)) {
+                    Event e = new Event();
+                    e.setKey(App.getInstance().getCurrentUser().getKey());
+                    e.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    e.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    e.setEventsDfrom(LocalDate.now().minusDays(1).toString());
+                    e.setEventsDto(LocalDate.now().toString());
+
+                    WebApiManager.get(getActivity()).getWebApi().event(e).enqueue(new Callback<Event>() {
+                        @Override
+                        public void onResponse(Call<Event> call, Response<Event> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body().getArrivals() != null) {
+                                    reservationList.clear();
+                                    reservationList.addAll(response.body().getArrivals());
+                                    reservationAdapter.notifyDataSetChanged();
+                                } else {
+                                    ArrayList<Reservation> tmpList = new ArrayList<>();
+                                    tmpList.addAll(response.body().getArrivals());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Event> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                } else if (status.equals(Consts.DEPARTURE)) {
+                    Event e = new Event();
+                    e.setKey(App.getInstance().getCurrentUser().getKey());
+                    e.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    e.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    e.setEventsDfrom(LocalDate.now().minusDays(1).toString());
+                    e.setEventsDto(LocalDate.now().toString());
+
+                    WebApiManager.get(getActivity()).getWebApi().event(e).enqueue(new Callback<Event>() {
+                        @Override
+                        public void onResponse(Call<Event> call, Response<Event> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body().getDepartures() != null) {
+                                    reservationList.clear();
+                                    reservationList.addAll(response.body().getDepartures());
+                                    reservationAdapter.notifyDataSetChanged();
+                                } else {
+                                    ArrayList<Reservation> tmpList = new ArrayList<>();
+                                    tmpList.addAll(response.body().getDepartures());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Event> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                }
             }
         }
 
@@ -344,50 +438,65 @@ public class HomeFragment extends Fragment {
                     news.setKey(u.getKey());
                     news.setLcode(u.getProperties().get(0).getLcode());
                     news.setAccount(u.getAccount());
-                    news.setNewsOrderBy("");
+                    news.setNewsOrderBy("date_arrival");
                     news.setNewsOrderType("ASC");
                     news.setNewsDfrom(LocalDate.now().minusDays(1).toString());
 
-                    WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                    webApiClient.getNews(news).observe(this, new Observer<News>() {
-                        @Override
-                        public void onChanged(News news) {
-                            if (news.getReceived() != null) {
-                                reservationList.clear();
-                                reservationList.addAll(news.getReceived());
-                                reservationAdapter.notifyDataSetChanged();
-                            } else {
-                                ArrayList<Reservation> tmpList = new ArrayList<>();
-                                tmpList.addAll(news.getReceived());
-                            }
-                        }
-                    });
+                     WebApiManager.get(getActivity()).getWebApi().news(news).enqueue(new Callback<News>() {
+                         @Override
+                         public void onResponse(Call<News> call, Response<News> response) {
+                             if (response.isSuccessful()) {
+                                 if (response.body().getReceived() != null) {
+                                     reservationList.clear();
+                                     reservationList.addAll(response.body().getReceived());
+                                     reservationAdapter.notifyDataSetChanged();
+                                 } else {
+                                     ArrayList<Reservation> tmpList = new ArrayList<>();
+                                     tmpList.addAll(response.body().getReceived());
+                                 }
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<News> call, Throwable t) {
+
+                         }
+                     });
                 } else if (days.equals(Consts.TOMMOROW)) {
                     News news = new News();
                     news.setKey(u.getKey());
                     news.setLcode(u.getProperties().get(0).getLcode());
                     news.setAccount(u.getAccount());
-                    news.setNewsOrderBy("");
+                    news.setNewsOrderBy("date_arrival");
                     news.setNewsOrderType("ASC");
                     news.setNewsDfrom(LocalDate.now().plusDays(1).toString());
 
-                    WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                    webApiClient.getNews(news).observe(this, new Observer<News>() {
-                        @Override
-                        public void onChanged(News news) {
-                            if (news.getReceived() != null) {
-                                reservationList.clear();
-                                reservationList.addAll(news.getReceived());
-                                reservationAdapter.notifyDataSetChanged();
-                            } else {
-                                ArrayList<Reservation> tmpList = new ArrayList<>();
-                                tmpList.addAll(news.getReceived());
-                            }
-                        }
-                    });
+                     WebApiManager.get(getActivity()).getWebApi().news(news).enqueue(new Callback<News>() {
+                         @Override
+                         public void onResponse(Call<News> call, Response<News> response) {
+                             if (response.isSuccessful()) {
+                                 if (response.body().getReceived() != null) {
+                                     reservationList.clear();
+                                     reservationList.addAll(response.body().getReceived());
+                                     reservationAdapter.notifyDataSetChanged();
+                                 } else {
+                                     ArrayList<Reservation> tmpList = new ArrayList<>();
+                                     tmpList.addAll(response.body().getReceived());
+                                 }
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<News> call, Throwable t) {
+                             t.printStackTrace();
+                             Timber.v("onFailure");
+                         }
+                     });
+
                 }
             }
         }
+
     }
 
     @OnClick(R.id.ivSearch)

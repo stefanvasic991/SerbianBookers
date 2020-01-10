@@ -3,10 +3,12 @@ package com.easyswitch.serbianbookers;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.Event;
 import com.easyswitch.serbianbookers.models.GuestList;
 import com.easyswitch.serbianbookers.models.GuestNotShow;
 import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
+import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
@@ -58,12 +60,20 @@ public interface WebApi {
     Call<News> news(@Body News news);
 
     @Headers("Content-type: application/json")
+    @POST("api/data/events")
+    Call<Event> event(@Body Event event);
+
+    @Headers("Content-type: application/json")
     @POST("api/data/insert/avail")
     Call<InsertAvail> insertAvail(@Body InsertAvail insertAvail);
 
     @Headers("Content-type: application/json")
     @POST("api/data/insert/price")
     Call<InsertPrice> insertPrice(@Body InsertPrice insertPrice);
+
+    @Headers("Content-type: application/json")
+    @POST("api/data/insert/restriction")
+    Call<InsertRestriction> insertRestriction(@Body InsertRestriction insertRestriction);
 
     @Headers("Content-type: application/json")
     @POST("api/user/noshow")

@@ -2,8 +2,11 @@ package com.easyswitch.serbianbookers.views.home;
 
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -13,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +28,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.CalendarUnitKt;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.calendar.EighthRoomFragment;
@@ -44,6 +50,7 @@ import com.easyswitch.serbianbookers.views.calendar.ThirdRoomFragment;
 import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.CalendarView;
 import com.kizitonwose.calendarview.model.CalendarDay;
@@ -60,6 +67,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +100,8 @@ public class CalendarFragment extends Fragment {
     List<FirstRoomFragment> fragmentList = new ArrayList<>();
     User u;
     Availability av = new Availability();
+    String date, priceID, restrictionID;
+    BroadcastReceiver broadcastReceiver;
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd");
     private DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("EEE");
@@ -122,6 +133,14 @@ public class CalendarFragment extends Fragment {
 
         viewPager.setVisibility(View.VISIBLE);
 
+        IntentFilter filter = new IntentFilter("sendPlans");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            }
+        };
+        getActivity().registerReceiver(broadcastReceiver, filter);
+
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);
 
@@ -130,22 +149,25 @@ public class CalendarFragment extends Fragment {
         Date date = new Date(System.currentTimeMillis());
         mbCurrentDate.setText(formatter.format(date));
 
+        SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sp.getString("Data", "");
+        Data data = gson.fromJson(json, Data.class);
 
-        calendarPagerAdapter = new CalendarPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(calendarPagerAdapter);
-        viewPager.setOffscreenPageLimit(calendarList.size());
-
-        u = getActivity().getIntent().getParcelableExtra("currentUser");
-        assert u != null;
-        av.setKey(u.getKey());
-        av.setAccount(u.getAccount());
-        av.setLcode(u.getProperties().get(0).getLcode());
+        av.setKey(App.getInstance().getCurrentUser().getKey());
+        av.setAccount(App.getInstance().getCurrentUser().getAccount());
+        av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         av.setDfrom(LocalDate.now().toString());
         av.setDto(LocalDate.now().plusDays(30).toString());
         av.setArr("");
+//        av.setPriceId("46439");
+//        av.setPriceId(App.getInstance().getData().getPrices().get(1).getId());
+//        av.setRestrictionId("55482");
+//        av.setPriceId(data.getPrices().get(1).getId());
+//        av.setRestrictionId(data.getRestrictions().get(0).getId());
 
         WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, availability -> {
+        webApiClient.getAvailability(av).observe(getActivity(), availability -> {
 
             if (availability == null) return;
 
@@ -154,11 +176,21 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+        calendarPagerAdapter = new CalendarPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(calendarPagerAdapter);
+        viewPager.setOffscreenPageLimit(calendarList.size());
+
         tabLayout.setupWithViewPager(viewPager);
 
 //        gantogram();
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 
     private void addTab(String title) {
@@ -329,10 +361,10 @@ public class CalendarFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String date = data.getStringExtra("data");
 
         if (requestCode == Consts.REQ_FILTER_DIALOG) {
             if (resultCode == RESULT_OK) {
+                date = data.getStringExtra("data");
                 mbCurrentDate.setText(date);
 
                 Intent sendDate = new Intent();

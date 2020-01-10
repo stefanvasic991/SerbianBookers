@@ -24,7 +24,22 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".views.dialog.OtaActivity"
+        <activity android:name=".views.dialog.PickRoomDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.ChangeRestrictionActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.StayActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.OtaActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />

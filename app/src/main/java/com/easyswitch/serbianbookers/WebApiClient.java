@@ -12,10 +12,12 @@ import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityBody;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.Event;
 import com.easyswitch.serbianbookers.models.GuestList;
 import com.easyswitch.serbianbookers.models.GuestNotShow;
 import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
+import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
@@ -43,8 +45,10 @@ public class WebApiClient extends AndroidViewModel {
     private MutableLiveData<Availability> availability;
     private MutableLiveData<Restriction> restrictions;
     private MutableLiveData<News> news;
+    private MutableLiveData<Event> events;
     private MutableLiveData<InsertAvail> insertAvail;
     private MutableLiveData<InsertPrice> insertPrice;
+    private MutableLiveData<InsertRestriction> insertRestriction;
     private MutableLiveData<GuestNotShow> guestNotShow;
     private MutableLiveData<GuestNotShow> invalidCard;
     private MutableLiveData<ShowCard> showCard;
@@ -264,6 +268,32 @@ public class WebApiClient extends AndroidViewModel {
         return news;
     }
 
+    public MutableLiveData<Event> getEvents(Event event) {
+        if (events == null) {
+            events = new MutableLiveData<>();
+
+            webApi.event(event).enqueue(new Callback<Event>() {
+                @Override
+                public void onResponse(Call<Event> call, Response<Event> response) {
+                    if (response.isSuccessful()) {
+                        events.setValue(response.body());
+                    } else {
+                        events.setValue(null);
+                        Timber.v("onResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Event> call, Throwable t) {
+                    t.printStackTrace();
+                    events.setValue(null);
+                    Timber.v("onFailure");
+                }
+            });
+        }
+        return events;
+    }
+
     public MutableLiveData<InsertAvail> getInsertAvail(InsertAvail avail) {
         if (insertAvail == null) {
             insertAvail = new MutableLiveData<>();
@@ -312,6 +342,32 @@ public class WebApiClient extends AndroidViewModel {
             });
         }
         return insertPrice;
+    }
+
+    public MutableLiveData<InsertRestriction> getInsertRestriction(InsertRestriction ir) {
+        if (insertRestriction == null) {
+            insertRestriction = new MutableLiveData<>();
+
+            webApi.insertRestriction(ir).enqueue(new Callback<InsertRestriction>() {
+                @Override
+                public void onResponse(Call<InsertRestriction> call, Response<InsertRestriction> response) {
+                    if (response.isSuccessful()) {
+                        insertRestriction.setValue(response.body());
+                    } else {
+                        insertRestriction.setValue(null);
+                        Timber.v("onResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InsertRestriction> call, Throwable t) {
+                    t.printStackTrace();
+                    insertRestriction.setValue(null);
+                    Timber.v("onFailure");
+                }
+            });
+        }
+        return insertRestriction;
     }
 
     public MutableLiveData<GuestNotShow> getGuestNotShow(GuestNotShow notShow) {

@@ -22,9 +22,9 @@ public class App extends MultiDexApplication {
 
     private static App INSTANCE = new App();
     private Gson gson;
-    public User currentUser;
-    Data data;
-    AvailabilityData availabilityData;
+    private User currentUser;
+    private Data data;
+    private AvailabilityData availabilityData;
 
     public static App getInstance() {
         if (INSTANCE == null) {
@@ -94,6 +94,9 @@ public class App extends MultiDexApplication {
     }
 
     public Data getData() {
+        if (data == null) {
+            data = SP.getInstance().getDATA();
+        }
         return data;
     }
 

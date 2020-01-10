@@ -24,7 +24,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:inputType="text"
-            android:text="PV117"
+            android:text="NK017"
             android:hint="username" />
 
         <EditText
@@ -36,7 +36,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:inputType="textPassword"
-            android:text="Vojvoda1234#"
+            android:text="davincijevkod96"
             android:hint="password" />
 
     <CheckBox

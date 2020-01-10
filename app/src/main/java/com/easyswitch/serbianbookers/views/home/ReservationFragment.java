@@ -1,7 +1,11 @@
 package com.easyswitch.serbianbookers.views.home;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -11,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,9 +25,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.adapters.ReservationAdapter;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
@@ -32,13 +39,20 @@ import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.dialog.TimeDialog;
 import com.easyswitch.serbianbookers.views.filter.FilterActivity;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by: Stefan Vasic
@@ -66,6 +80,9 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
     User u;
     ArrayList<Reservation> reservationList = new ArrayList<>();
     ReservationAdapter reservationAdapter;
+    BroadcastReceiver broadcastReceiver;
+    DataBody dataBody = new DataBody();
+    String dateFromBroadcast;
 
     public static ReservationFragment newInstance() {
         
@@ -89,11 +106,9 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
         ButterKnife.bind(this, view);
 
         u = getActivity().getIntent().getParcelableExtra("currentUser");
-        DataBody dataBody = new DataBody();
-        dataBody.setKey(u.getKey());
-//        dataBody.setKey("6229dbc00c2d22e48b68db46b1e80c662a267931");
-        dataBody.setLcode(u.getProperties().get(0).getLcode());
-        dataBody.setAccount(u.getAccount());
+        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
+        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
         dataBody.setNewsOrderBy("2019-10-21");
         dataBody.setNewsOrderType("");
         dataBody.setNewsDfrom("");
@@ -116,6 +131,8 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
 
                 if (data == null) return;
 
+                App.getInstance().setData(data);
+
                 if (data.getReceived() != null) {
                     reservationList.clear();
                     reservationList.addAll(data.getReceived());
@@ -124,6 +141,13 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
                     ArrayList<Reservation> tmpList = new ArrayList<>();
                     tmpList.addAll(data.getReceived());
                 }
+
+//                SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
+//                SharedPreferences.Editor prefsEditor = sp.edit();
+//                Gson gson = new Gson();
+//                String json = gson.toJson(data);
+//                prefsEditor.putString("Data", json);
+//                prefsEditor.apply();
             }
         });
 
@@ -143,6 +167,7 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), FilterActivity.class);
                 startActivityForResult(i, Consts.REQ_FILTER_DIALOG);
+
             }
         });
 
@@ -203,7 +228,7 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
         Timber.v("onActivityResult");
 
         if (requestCode == Consts.REQ_FILTER_DIALOG) {
-            if (resultCode == TimeDialog.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
                 ivFilter.setColorFilter(getResources().getColor(R.color.colorWhite));
                 tvFilter.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -211,32 +236,77 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
                 clFilter.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
                 clCancelFilter.setVisibility(View.VISIBLE);
 
-                String query = data.getStringExtra("query");
+//                String query = data.getStringExtra("query");
 
-                Search search = new Search();
-                search.setKey("6229dbc00c2d22e48b68db46b1e80c662a267931");
-                search.setLcode("1521199571");
-                search.setAccount("PV117");
-                search.setKeyword(query);
+//                Search search = new Search();
+//                search.setKey(App.getInstance().getCurrentUser().getKey());
+//                search.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+//                search.setAccount(App.getInstance().getCurrentUser().getAccount());
+//                search.setKeyword(query);
+//
+//                WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+//                webApiClient.getSearch(search).observe(this, new Observer<Search>() {
+//                    @Override
+//                    public void onChanged(Search search) {
+//                        if (search == null) return;
+//
+//                        if (search.getReservationList() != null) {
+//                            reservationList.clear();
+//                            reservationList.addAll(search.getReservationList());
+//                            reservationAdapter.notifyDataSetChanged();
+//                        } else {
+//                            ArrayList<Reservation> tmpList = new ArrayList<>();
+//                            tmpList.addAll(search.getReservationList());
+//                            reservationAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                });
 
-                WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-                webApiClient.getSearch(search).observe(this, new Observer<Search>() {
+                WebApiManager.get(getContext()).getWebApi().data(dataBody).enqueue(new Callback<Data>() {
                     @Override
-                    public void onChanged(Search search) {
-                        if (search == null) return;
+                    public void onResponse(Call<Data> call, Response<Data> response) {
+                        if (response.isSuccessful()) {
+                            for (int i = 0; i < response.body().getReceived().size(); i++) {
+                                if (!response.body().getReceived().get(i).getDateArrival().equals(dateFromBroadcast)) {
 
-                        if (search.getReservationList() != null) {
-                            reservationList.clear();
-                            reservationList.addAll(search.getReservationList());
-                            reservationAdapter.notifyDataSetChanged();
-                        } else {
-                            ArrayList<Reservation> tmpList = new ArrayList<>();
-                            tmpList.addAll(search.getReservationList());
+                                    reservationList.clear();
+                                    reservationList.addAll(response.body().getReceived());
+                                    reservationAdapter.notifyDataSetChanged();
+                                }
+                            }
                         }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Data> call, Throwable t) {
+
                     }
                 });
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        IntentFilter filter = new IntentFilter("date");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                dateFromBroadcast = intent.getExtras().getString("arrDateFrom");
+                String dateFromBroadcast1 = intent.getExtras().getString("arrDateTo");
+
+
+            }
+        };
+        getActivity().registerReceiver(broadcastReceiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @OnClick(R.id.ivSearch)

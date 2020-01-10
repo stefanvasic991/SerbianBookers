@@ -9,7 +9,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +39,9 @@ import com.easyswitch.serbianbookers.models.ShowCard;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.dialog.GuestNotShowDialog;
 import com.easyswitch.serbianbookers.views.dialog.InvalidCardDialog;
+import com.easyswitch.serbianbookers.views.dialog.SendMailActivity;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -70,8 +77,8 @@ public class ReservationDescActivity extends AppCompatActivity {
     TextView tvApartment;
     @BindView(R.id.tvPeople)
     TextView tvPeople;
-    @BindView(R.id.tvExtra)
-    TextView tvExtra;
+//    @BindView(R.id.tvExtra)
+//    TextView tvExtra;
     @BindView(R.id.etNote)
     EditText etNote;
     @BindView(R.id.tvNote)
@@ -87,14 +94,14 @@ public class ReservationDescActivity extends AppCompatActivity {
     @BindView(R.id.rlNote)
     RelativeLayout rlNote;
 
-    private ArrayList<Guest> guestArrayList = new ArrayList<>();
-    private GuestAdapter guestAdapter;
     Reservation reservation;
     User u;
+    BroadcastReceiver broadcastReceiver;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_desc);
         ButterKnife.bind(this);
@@ -132,19 +139,8 @@ public class ReservationDescActivity extends AppCompatActivity {
         etNote.setText(reservation.getCustomerNotes());
         tvNote.setText(reservation.getCustomerNotes());
 
+        Picasso.with(this).load(reservation.getChannelLogo()).into(ivLogo);
 
-        Data data = new Data();
-        if (reservation.getIdWoodoo().equals("110238")) {
-            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(0).getLogo()));
-//        } else if (reservation.getIdWoodoo().equals("110239")) {
-//            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(1).getLogo()));
-        } else if (reservation.getIdWoodoo().equals("110240")) {
-            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(2).getLogo()));
-//        } else if (reservation.getIdWoodoo().equals("141075")) {
-//            ivLogo.setImageResource(Integer.parseInt(data.getChannels().get(3).getLogo()));
-        } else {
-            ivLogo.setImageResource(R.drawable.direct_res);
-        }
     }
 
     @OnClick(R.id.tvPhone)
@@ -165,7 +161,7 @@ public class ReservationDescActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.ivClose)
-    public void onCancelClick(){
+    public void onCancelClick() {
         finish();
     }
 
@@ -220,6 +216,30 @@ public class ReservationDescActivity extends AppCompatActivity {
         i.putExtra("question", getResources().getString(R.string.gost_not_show));
         i.putExtra("reservationCode", reservation.getReservationCode());
         startActivity(i);
+    }
+
+    @OnClick({R.id.imageView2, R.id.tvEmail})
+    public void sentMail() {
+        Intent i = new Intent(this, SendMailActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @OnClick({R.id.imageView4, R.id.tvPhone})
+    public void call() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(reservation.getCustomerPhone()));
+        if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        startActivity(callIntent);
     }
 
     @Override

@@ -11,6 +11,9 @@ public class CountriesPercentage {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("name")
+    @Expose
+    private String country;
 
     public Integer getValue() {
         return value;
@@ -28,4 +31,11 @@ public class CountriesPercentage {
         this.id = id;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

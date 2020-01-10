@@ -25,7 +25,7 @@ public class InsertPrice {
     private String oldValues;
     @SerializedName("new_values")
     @Expose
-    private String newValues;
+    private NewPrice newValues;
 
     @SerializedName("status")
     @Expose
@@ -82,11 +82,11 @@ public class InsertPrice {
         this.oldValues = oldValues;
     }
 
-    public String getNewValues() {
+    public NewPrice getNewValues() {
         return newValues;
     }
 
-    public void setNewValues(String newValues) {
+    public void setNewValues(NewPrice newValues) {
         this.newValues = newValues;
     }
 

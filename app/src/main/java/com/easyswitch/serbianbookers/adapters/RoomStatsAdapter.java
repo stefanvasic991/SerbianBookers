@@ -49,6 +49,10 @@ public class RoomStatsAdapter extends RecyclerView.Adapter<RoomStatsAdapter.Room
         double price = statsRoom.getAvgIncome();
         int avPrice = (int) price;
         holder.avPrice.setText(String.valueOf(avPrice));
+
+        double avn = statsRoom.getAvgNights();
+        int avNIGHTS = (int) avn;
+        holder.avNights.setText(String.valueOf(avNIGHTS));
     }
 
     @Override
@@ -68,6 +72,8 @@ public class RoomStatsAdapter extends RecyclerView.Adapter<RoomStatsAdapter.Room
         TextView noNights;
         @BindView(R.id.r1AvPrice)
         TextView avPrice;
+        @BindView(R.id.r1AvNights)
+        TextView avNights;
 
         public RoomStatsHolder(@NonNull View itemView) {
             super(itemView);

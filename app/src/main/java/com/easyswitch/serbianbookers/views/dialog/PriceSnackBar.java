@@ -1,6 +1,7 @@
 package com.easyswitch.serbianbookers.views.dialog;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,10 +14,17 @@ import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.easyswitch.serbianbookers.models.InsertPrice;
+import com.easyswitch.serbianbookers.models.NewPrice;
+import com.easyswitch.serbianbookers.models.NewValues;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.views.home.HomeFragment;
 
 import org.threeten.bp.LocalDate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +36,7 @@ public class PriceSnackBar extends AppCompatActivity {
 
     User u;
     String date, price, oldPrice;
-    String tag;
+    Integer id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,7 @@ public class PriceSnackBar extends AppCompatActivity {
 
         u = getIntent().getParcelableExtra("currentUser");
         date  = getIntent().getStringExtra("datum");
+        id = getIntent().getIntExtra("roomID", 1);
         oldPrice = getIntent().getStringExtra("staraCena");
         price = getIntent().getStringExtra("cena");
     }
@@ -51,22 +60,31 @@ public class PriceSnackBar extends AppCompatActivity {
 
     @OnClick(R.id.tvSave)
     public void onSave() {
+        AvailabilityData av = new AvailabilityData();
+        Integer prc = av.setPrice(Integer.valueOf(price));
 
-        InsertPrice ip = new InsertPrice();
-        ip.setKey(App.getInstance().getCurrentUser().getKey());
-        ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        ip.setAccount(App.getInstance().getCurrentUser().getAccount());
-        ip.setDfrom(date);
-        ip.setPid("");
-        ip.setOldValues("");
-        ip.setNewValues(price);
+        List<Integer> priceList = new ArrayList<>();
+        priceList.add(prc);
 
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getInsertPrice(ip).observe(this, new Observer<InsertPrice>() {
-            @Override
-            public void onChanged(InsertPrice insertPrice) {
-            }
-        });
+        NewPrice newValues = new NewPrice();
+        newValues.setRoomId(String.valueOf(id));
+        newValues.setAvailabilityData(priceList);
+
+//        InsertPrice ip = new InsertPrice();
+//        ip.setKey(App.getInstance().getCurrentUser().getKey());
+//        ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+//        ip.setAccount(App.getInstance().getCurrentUser().getAccount());
+//        ip.setDfrom(date);
+//        ip.setPid();
+//        ip.setOldValues("");
+//        ip.setNewValues(newValues);
+//
+//        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+//        webApiClient.getInsertPrice(ip).observe(this, new Observer<InsertPrice>() {
+//            @Override
+//            public void onChanged(InsertPrice insertPrice) {
+//            }
+//        });
         finish();
     }
 }

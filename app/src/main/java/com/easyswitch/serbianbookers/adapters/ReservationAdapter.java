@@ -2,6 +2,7 @@ package com.easyswitch.serbianbookers.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.Channel;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.Reservation;
+import com.easyswitch.serbianbookers.views.home.HomeFragment;
 import com.google.android.material.card.MaterialCardView;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -27,6 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationHolder> {
 
@@ -100,31 +106,13 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         holder.tvPerNight.setText(pricePerNight + " / noć");
 
         holder.tvNights.setText(reservation.getNights() + " noćenja");
-        Data data = new Data();
-        switch (reservation.getIdWoodoo()) {
-            case "110238": {
-//                Picasso.with(context).load(data.getChannels().get(0).getLogo()).into(holder.ivLogo);
-                holder.ivLogo.setImageResource(R.drawable.airbnb);
-                break;
-            }
-            case "110239": {
-                holder.ivLogo.setImageResource(R.drawable.expedia);
-                break;
-            }
-            case "110240": {
-//                Picasso.with(context).load(data.getChannels().get(2).getLogo()).into(holder.ivLogo);
-                holder.ivLogo.setImageResource(R.drawable.booking);
-            }
-                break;
-            case "141075": {
-                holder.ivLogo.setImageResource(R.drawable.sunhotels);
-                break;
-            }
-            case "": {
-                holder.ivLogo.setImageResource(R.drawable.direct_res);
-                break;
-            }
+//        holder.ivLogo.setImageResource(Integer.parseInt(reservation.getChannelLogo()));
+        if (reservation.getChannelLogo().isEmpty()) {
+            Picasso.with(context).load(R.drawable.direct_res).into(holder.ivLogo);
+        } else {
+            Picasso.with(context).load(reservation.getChannelLogo()).into(holder.ivLogo);
         }
+
     }
 
     @Override

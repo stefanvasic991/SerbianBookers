@@ -3,6 +3,7 @@ package com.easyswitch.serbianbookers.views.dialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 
@@ -13,6 +14,8 @@ import butterknife.OnClick;
 
 public class OtaActivity extends AppCompatActivity {
 
+    String date;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,11 +23,15 @@ public class OtaActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, android.R.color.transparent));
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
+
+        date = getIntent().getStringExtra("datum");
     }
 
     @OnClick(R.id.rbOpen)
     public void setOpen() {
-        setResult(RESULT_OK);
+        Intent i = new Intent();
+        i.putExtra("datum", date);
+        setResult(RESULT_OK, i);
         finish();
     }
 

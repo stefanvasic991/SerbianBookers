@@ -3,6 +3,7 @@ package com.easyswitch.serbianbookers.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.easyswitch.serbianbookers.App;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -339,5 +340,10 @@ public class Data implements Parcelable {
 
     public void setPendingUsers(String pendingUsers) {
         this.pendingUsers = pendingUsers;
+    }
+
+    @Override
+    public String toString() {
+        return App.getInstance().getGson().toJson(this);
     }
 }

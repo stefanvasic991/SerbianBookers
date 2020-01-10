@@ -6,14 +6,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,20 +30,22 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.easyswitch.serbianbookers.App;
-import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.adapters.CalendarAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
+import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.dialog.ClosureSnackBar;
 import com.easyswitch.serbianbookers.views.dialog.OpenClosureActivity;
 import com.easyswitch.serbianbookers.views.dialog.OtaActivity;
 import com.easyswitch.serbianbookers.views.dialog.PriceSnackBar;
 import com.easyswitch.serbianbookers.views.dialog.SnackBarDialog;
+import com.easyswitch.serbianbookers.views.home.HomeFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.LocalDate;
@@ -49,9 +55,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -74,9 +85,12 @@ public class FirstRoomFragment extends Fragment {
 
     EditText price;
     MaterialButton status;
-    private  TextView tvPrice, openClosure, checkIn, checkOut, ota, minStay, minStayArr, maxStay;
+    private  TextView tvPrice, openClosure, checkIn, checkOut, ota, minStay, minStayArr, maxStay, etAvail;
+    TextView tvMinStay, tvMinStayArr, tvMaxStay;
     View vCheckIn, vCheckOut;
+    ImageView ivClose;
     LinearLayout llInfo;
+    Integer id;
 
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateParse = new SimpleDateFormat("dd.MM.yyyy.");
@@ -103,6 +117,11 @@ public class FirstRoomFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_jednosobni, container, false);
         ButterKnife.bind(this, view);
 
+        SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sp.getString("Data", "");
+        Data data = gson.fromJson(json, Data.class);
+
         u = getActivity().getIntent().getParcelableExtra("currentUser");
         assert u != null;
         av.setKey(u.getKey());
@@ -111,48 +130,115 @@ public class FirstRoomFragment extends Fragment {
         av.setDfrom(LocalDate.now().toString());
         av.setDto(LocalDate.now().plusDays(60).toString());
         av.setArr("");
-        Intent intent = new Intent("send");
-
-
+//        av.setPriceId("46439");
+//        av.setRestrictionId("55482");
+//        av.setPriceId(data.getPrices().get(1).getId());
+//        av.setRestrictionId(data.getRestrictions().get(0).getId());
 
         WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, new Observer<Availability>() {
-            @Override
-            public void onChanged(Availability availability) {
+        webApiClient.getAvailability(av).observe(this, availability -> {
 
-                if (availability == null) return;
+            if (availability == null) return;
 
-                        if (availability.getAvailabilityList() != null) {
-                            calendarList.clear();
-                            calendarList.addAll(availability.getAvailabilityList().get(0).getData());
-                            calendarAdapter.notifyDataSetChanged();
-                        } else {
-                            List<AvailabilityData> tmpList = new ArrayList<>();
-                            tmpList.addAll(availability.getAvailabilityList().get(0).getData());
-                            calendarAdapter.notifyDataSetChanged();
-                        }
+                    if (availability.getAvailabilityList() != null) {
+                        calendarList.clear();
+                        calendarList.addAll(availability.getAvailabilityList().get(0).getData());
+                        calendarAdapter.notifyDataSetChanged();
+                    } else {
+                        List<AvailabilityData> tmpList = new ArrayList<>();
+                        tmpList.addAll(availability.getAvailabilityList().get(0).getData());
+                        calendarAdapter.notifyDataSetChanged();
+                    }
 
-            }
+                        id = availability.getAvailabilityList().get(0).getId();
+
+
+//            SharedPreferences.Editor prefs = Objects.requireNonNull(getActivity())
+//                    .getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE).edit();
+//            Gson gson = new Gson();
+//            String json = gson.toJson(availability);
+//            prefs.putString("availability", json);
+//            prefs.apply();
         });
 
         calendarAdapter = new CalendarAdapter(getActivity(), calendarList);
         rvCalendar.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvCalendar.setAdapter(calendarAdapter);
 
+        calendarAdapter.setOnCalendarClickListener(new CalendarAdapter.OnCalendarClickListener() {
+            @Override
+            public void onCalendarClick(View view, int position, AvailabilityData av) {
+                ivClose = view.findViewById(R.id.ivClose);
+                llInfo = view.findViewById(R.id.llInfo);
+
+                if (ivClose.getTag().equals("0")) {
+                    llInfo.setVisibility(View.VISIBLE);
+                    ivClose.setImageResource(R.drawable.ic_arrow_up);
+                    ivClose.setTag("1");
+                }
+                else if (ivClose.getTag().equals("1")){
+                    llInfo.setVisibility(View.GONE);
+                    ivClose.setImageResource(R.drawable.ic_arrow_down);
+                    ivClose.setTag("0");
+                }
+            }
+        });
+
+        calendarAdapter.setOnAvailClickListener(new CalendarAdapter.OnAvailClickListener() {
+            @Override
+            public void onAvailClick(View view, int position, AvailabilityData av) {
+                TextView tvAvail = view.findViewById(R.id.tvNoAvail);
+                etAvail = view.findViewById(R.id.etNoAvail);
+                tvAvail.setVisibility(View.GONE);
+                etAvail.setVisibility(View.VISIBLE);
+
+                etAvail.setCursorVisible(true);
+                etAvail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (etAvail.getText().length() == 0) {
+                            etAvail.setError("Polje ne sme biti prazno");
+                        } else {
+                            tvAvail.setText(etAvail.getText().toString());
+                            etAvail.setVisibility(View.GONE);
+                            tvAvail.setVisibility(View.VISIBLE);
+                            Intent avails = new Intent(getActivity(), ClosureSnackBar.class);
+                            avails.putExtra("datum", av.getDate());
+                            avails.putExtra("roomID", id);
+                            avails.putExtra("avail", tvAvail.getText().toString());
+//                            Toast.makeText(getActivity(), tvAvail.getText().toString(), Toast.LENGTH_SHORT).show();
+                            startActivityForResult(avails, 15);
+                        }
+                        return false;
+                    }
+                });
+
+            }
+        });
+
         calendarAdapter.setOnPriceClickListener(new CalendarAdapter.OnPriceClickListener() {
             @Override
             public void onPriceClick(View view, int position, AvailabilityData av) {
-//                tvPrice = view.findViewById(R.id.tvPrice);
+                tvPrice = view.findViewById(R.id.tvPrice);
                 price = view.findViewById(R.id.etPrice);
-
+                tvPrice.setVisibility(View.GONE);
+                price.setVisibility(View.VISIBLE);
                 price.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Intent i = new Intent(getActivity(), PriceSnackBar.class);
-                        i.putExtra("datum", av.getDate());
-                        i.putExtra("staraCena", av.getPrice().toString());
-                        i.putExtra("cena", price.getText().toString());
-                        getActivity().startActivityForResult(i, 12);
+                        if (price.getText().length() == 0) {
+                            price.setError("Polje ne sme biti prazno");
+                        } else {
+                            tvPrice.setText(price.getText().toString());
+                            price.setVisibility(View.GONE);
+                            tvPrice.setVisibility(View.VISIBLE);
+                            Intent i = new Intent(getActivity(), PriceSnackBar.class);
+                            i.putExtra("datum", av.getDate());
+                            i.putExtra("roomID", id);
+                            i.putExtra("staraCena", av.getPrice().toString());
+                            i.putExtra("cena", price.getText().toString());
+                            getActivity().startActivityForResult(i, 12);
+                        }
                         return false;
                     }
                 });
@@ -169,12 +255,16 @@ public class FirstRoomFragment extends Fragment {
                     status.setTag("1");
 
                     Intent i = new Intent(getActivity(), SnackBarDialog.class);
-                    i.putExtra("currentUser", u);
+                    i.putExtra("datum", av.getDate());
                     i.putExtra("status", status.getTag().toString());
                     startActivityForResult(i, 11);
                 } else if (status.getTag().equals("1")) {
                     status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
                     status.setTag("0");
+                    Intent i = new Intent(getActivity(), SnackBarDialog.class);
+                    i.putExtra("datum", av.getDate());
+                    i.putExtra("status", status.getTag().toString());
+                    startActivityForResult(i, 11);
                 }
             }
         });
@@ -223,13 +313,25 @@ public class FirstRoomFragment extends Fragment {
         calendarAdapter.setMinStayClickLitener(new CalendarAdapter.MinStayClickLitener() {
             @Override
             public void minStayClick(View view, int position, AvailabilityData av) {
-                minStay = view.findViewById(R.id.tvMinStay);
+                minStay = view.findViewById(R.id.etMinStay);
+                tvMinStay = view.findViewById(R.id.tvMinStay);
+
+                tvMinStay.setVisibility(View.GONE);
+                minStay.setVisibility(View.VISIBLE);
                 minStay.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Intent minStays = new Intent(getActivity(), ClosureSnackBar.class);
-                        minStays.putExtra("minStay", minStay.getText().toString());
-                        startActivityForResult(minStays, 18);
+                        if (minStay.getText().length() == 0) {
+                            minStay.setError("Polje ne sme biti prazno");
+                        } else {
+                            tvMinStay.setText(minStay.getText().toString());
+                            minStay.setVisibility(View.GONE);
+                            tvMinStay.setVisibility(View.VISIBLE);
+                            Intent minStays = new Intent(getActivity(), ClosureSnackBar.class);
+                            minStays.putExtra("datum", av.getDate());
+                            minStays.putExtra("minStay", minStay.getText().toString());
+                            startActivityForResult(minStays, 18);
+                        }
                         return false;
                     }
                 });
@@ -240,30 +342,54 @@ public class FirstRoomFragment extends Fragment {
         calendarAdapter.setMinStayArrClickLitener(new CalendarAdapter.MinStayArrClickLitener() {
             @Override
             public void minStayArrClick(View view, int position, AvailabilityData av) {
-                minStayArr = view.findViewById(R.id.tvMinStayArr);
+                minStayArr = view.findViewById(R.id.etMinStayArr);
+                tvMinStayArr = view.findViewById(R.id.tvMinStayArr);
+
+                tvMinStayArr.setVisibility(View.GONE);
+                minStayArr.setVisibility(View.VISIBLE);
                 minStayArr.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Intent minStaysArr = new Intent(getActivity(), ClosureSnackBar.class);
-                        minStaysArr.putExtra("minStayArr", minStayArr.getText());
-                        startActivityForResult(minStaysArr, 17);
+                        if (minStayArr.getText().length() == 0) {
+                            minStayArr.setError("Polje ne sme biti prazno");
+                        } else {
+                            tvMinStayArr.setText(minStayArr .getText().toString());
+                            minStayArr.setVisibility(View.GONE);
+                            tvMinStayArr.setVisibility(View.VISIBLE);
+                            Intent minStayArrs = new Intent(getActivity(), ClosureSnackBar.class);
+                            minStayArrs.putExtra("datum", av.getDate());
+                            minStayArrs.putExtra("minStayArr", minStayArr.getText().toString());
+                            startActivityForResult(minStayArrs, 17);
+                        }
                         return false;
                     }
                 });
-
             }
         });
 
         calendarAdapter.setMaxStayClickLitener(new CalendarAdapter.MaxStayClickLitener() {
             @Override
             public void maxStayClick(View view, int position, AvailabilityData av) {
-                maxStay = view.findViewById(R.id.tvMaxStay);
+                maxStay = view.findViewById(R.id.etMaxStay);
+                tvMaxStay = view.findViewById(R.id.tvMaxStay);
+
+                tvMaxStay.setVisibility(View.GONE);
+                maxStay.setVisibility(View.VISIBLE);
                 maxStay.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Intent maxStays = new Intent(getActivity(), ClosureSnackBar.class);
-                        maxStays.putExtra("maxStay", maxStay.getText().toString());
-                        startActivityForResult(maxStays, 16);
+                        if (maxStay.getText().length() == 0) {
+                            maxStay.setError("Polje ne sme biti prazno");
+                        } else {
+                            tvMaxStay.setText(maxStay.getText().toString());
+                            maxStay.setVisibility(View.GONE);
+                            tvMaxStay.setVisibility(View.VISIBLE);
+
+                            Intent maxStays = new Intent(getActivity(), ClosureSnackBar.class);
+                            maxStays.putExtra("datum", av.getDate());
+                            maxStays.putExtra("maxStay", maxStay.getText().toString());
+                            startActivityForResult(maxStays, 16);
+                        }
                         return false;
                     }
                 });
@@ -282,29 +408,39 @@ public class FirstRoomFragment extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 dateFromBroadcast = intent.getExtras().getString("date");
                 changeFormat = getDate(dateFromBroadcast);
-                Toast.makeText(getActivity(), changeFormat, Toast.LENGTH_SHORT).show();
-                assert u != null;
 
+                SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                String json = sp.getString("Data", "");
+                Data data = gson.fromJson(json, Data.class);
+
+                assert u != null;
                 Availability a = new Availability();
                 a.setKey(u.getKey());
                 a.setAccount(u.getAccount());
                 a.setLcode(u.getProperties().get(0).getLcode());
                 a.setDfrom(changeFormat);
                 a.setDto(LocalDate.now().plusDays(35).toString());
-                a.setArr("");
+//                a.setPriceId("46439");
+//                a.setRestrictionId("55482");
 
-                WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                webApiClient.getAvailability(a).observe(getActivity(), new Observer<Availability>() {
+                WebApiManager.get(getContext()).getWebApi().availability(a).enqueue(new Callback<Availability>() {
                     @Override
-                    public void onChanged(Availability availability) {
+                    public void onResponse(Call<Availability> call, Response<Availability> response) {
+                        if (response.isSuccessful()) {
+                            calendarList.clear();
+                            calendarList.addAll(response.body().getAvailabilityList().get(0).getData());
+                            calendarAdapter.notifyDataSetChanged();
+                        } else {}
+                    }
 
-                        if (availability == null) return;
-
-                        calendarList.clear();
-                        calendarAdapter.notifyDataSetChanged();
-                        calendarList.addAll(availability.getAvailabilityList().get(0).getData());
+                    @Override
+                    public void onFailure(Call<Availability> call, Throwable t) {
+                        t.printStackTrace();
+                        Timber.v("onFailure");
                     }
                 });
+
             }
         };
         getActivity().registerReceiver(broadcastReceiver, filter);
@@ -313,17 +449,45 @@ public class FirstRoomFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 11) {
             if (resultCode == RESULT_CANCELED) {
-                status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
+                String tag = data.getStringExtra("tag");
+//                Toast.makeText(getActivity(), tag, Toast.LENGTH_SHORT).show();
+                if (tag.equals("1")) {
+                        status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
+                        status.setTag("0");
+                } else  if (tag.equals("0")) {
+                    status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+                    status.setTag("1");}
             }
+
+//            if (resultCode == RESULT_OK) {
+//                String tag = data.getStringExtra("tag");
+//                Toast.makeText(getActivity(), tag, Toast.LENGTH_SHORT).show();
+//                if (tag.equals("1")) {
+//                    status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+//                    status.setTag("0");
+//                }
+//                if (tag.equals("0")) {
+//                    status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
+//                    status.setTag("1");
+//                }
+//            }
         }
 
         if (requestCode == 12) {
             if (resultCode == RESULT_CANCELED) {
                 String oldPrice = data.getStringExtra("oldPrice");
                 price.setText(oldPrice);
-                Toast.makeText(getActivity(), oldPrice, Toast.LENGTH_SHORT).show();
+                price.setBackground(getResources().getDrawable(R.drawable.price_edit));
+                price.setCursorVisible(false);
+            }
+
+            if (resultCode == RESULT_OK) {
+                price.setBackground(getResources().getDrawable(R.drawable.price_edit));
+                price.setCursorVisible(false);
+                calendarAdapter.notifyDataSetChanged();
             }
         }
         //tvClosure
@@ -334,9 +498,15 @@ public class FirstRoomFragment extends Fragment {
                 openClosure.setText(getResources().getString(R.string.closed));
             }
 
-            Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+            Intent closure = new Intent(getActivity(), SnackBarDialog.class);
             closure.putExtra("closure", openClosure.getText().toString());
             startActivityForResult(closure, 222);
+
+//            if (openClosure.getText().toString().equals(getResources().getString(R.string.closed))) {
+//                status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+//                checkIn.setFocusable(false);
+//                checkOut.setFocusable(false);
+//            }
         }
 
 
@@ -351,6 +521,8 @@ public class FirstRoomFragment extends Fragment {
 
             if (resultCode == RESULT_OK) {
                 llInfo.setVisibility(View.GONE);
+                ivClose.setImageResource(R.drawable.ic_arrow_down);
+                ivClose.setTag("0");
             }
         }
 
@@ -365,7 +537,11 @@ public class FirstRoomFragment extends Fragment {
                 vCheckIn.setVisibility(View.VISIBLE);
             }
 
+//            String date = data.getStringExtra("datum");
+
             Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+            closure.putExtra("onCheckIn", checkIn.getText().toString());
+//            closure.putExtra("datum", date);
             startActivityForResult(closure, 221);
         }
 
@@ -382,6 +558,8 @@ public class FirstRoomFragment extends Fragment {
 
             if (resultCode == RESULT_OK) {
                 llInfo.setVisibility(View.GONE);
+                ivClose.setImageResource(R.drawable.ic_arrow_down);
+                ivClose.setTag("0");
             }
         }
         //tvOnCheckOut
@@ -394,7 +572,10 @@ public class FirstRoomFragment extends Fragment {
                 vCheckOut.setVisibility(View.VISIBLE);
             }
 
+//            String date = data.getStringExtra("datum");
             Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+            closure.putExtra("onCheckOut", checkOut.getText().toString());
+//            closure.putExtra("datum", date);
             startActivityForResult(closure, 220);
         }
 
@@ -412,6 +593,8 @@ public class FirstRoomFragment extends Fragment {
 
             if (resultCode == RESULT_OK) {
                 llInfo.setVisibility(View.GONE);
+                ivClose.setImageResource(R.drawable.ic_arrow_down);
+                ivClose.setTag("0");
             }
         }
 
@@ -422,7 +605,9 @@ public class FirstRoomFragment extends Fragment {
                 ota.setText(getResources().getString(R.string.no));
             }
 
+//            String date = data.getStringExtra("datum");
             Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+//            closure.putExtra("datum", date);
             startActivityForResult(closure, 219);
         }
 
@@ -434,19 +619,84 @@ public class FirstRoomFragment extends Fragment {
                     ota.setText(getResources().getString(R.string.no));
                 }
             }
-        }
-    }
 
-    private void configureReceiver() {
-        IntentFilter filter = new IntentFilter("sendDateToChild");
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String dateFromBroadcast = intent.getExtras().getString("date");
-                Toast.makeText(context, dateFromBroadcast, Toast.LENGTH_SHORT).show();
+            if (resultCode == RESULT_OK) {
+                llInfo.setVisibility(View.GONE);
+                ivClose.setImageResource(R.drawable.ic_arrow_down);
+                ivClose.setTag("0");
             }
-        };
-        getActivity().registerReceiver(broadcastReceiver, filter);
+        }
+
+        if (requestCode == 18) {
+            if (resultCode ==  RESULT_OK) {
+            }
+
+                if (resultCode == RESULT_CANCELED) {
+                }
+        }
+
+//        if (requestCode == 218) {
+//            if (resultCode == RESULT_CANCELED) {
+//                minStay.setText(av.getAvailabilityList().get(0).getData().get(0).getMinStay());
+//            }
+//
+//            if (resultCode == RESULT_OK) {
+//                llInfo.setVisibility(View.GONE);
+//                ivClose.setImageResource(R.drawable.ic_arrow_down);
+//                ivClose.setTag("0");
+//            }
+//        }
+
+
+//        if (requestCode == 17) {
+//            if (resultCode ==  RESULT_OK) {
+//                String date = data.getStringExtra("datum");
+//                String day = data.getStringExtra("day");
+//                minStayArr.setText(day);
+//                Intent minStayArrs = new Intent(getActivity(), ClosureSnackBar.class);
+//                minStayArrs.putExtra("minStayArr", day);
+//                minStayArrs.putExtra("datum", date);
+//                startActivityForResult(minStayArrs, 217);
+//            }
+//
+//        }
+
+        if (requestCode == 217) {
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+
+            if (resultCode == RESULT_OK) {
+                llInfo.setVisibility(View.GONE);
+                ivClose.setImageResource(R.drawable.ic_arrow_down);
+                ivClose.setTag("0");
+            }
+        }
+
+        if (requestCode == 16) {
+            if (resultCode ==  RESULT_OK) {
+//                assert data != null;
+//                String date = data.getStringExtra("datum");
+//                String day = data.getStringExtra("day");
+//                maxStay.setText(day);
+//                Intent maxStays = new Intent(getActivity(), ClosureSnackBar.class);
+//                maxStays.putExtra("maxStay", day);
+//                maxStays.putExtra("dates", date);
+//                startActivityForResult(maxStays, 216);
+            }
+        }
+
+        if (requestCode == 216) {
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+
+            if (resultCode == RESULT_OK) {
+                llInfo.setVisibility(View.GONE);
+                ivClose.setImageResource(R.drawable.ic_arrow_down);
+                ivClose.setTag("0");
+            }
+        }
     }
 
     @Override

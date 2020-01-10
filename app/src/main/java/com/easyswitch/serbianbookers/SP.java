@@ -3,6 +3,7 @@ package com.easyswitch.serbianbookers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.User;
 
 public class SP {
@@ -17,6 +18,7 @@ public class SP {
     private static final String REMEMBER = "remember";
     private static final String API_KEY = "api_key";
     private static final String USER_EXIST = "user_exist";
+    private static final String DATA = "data";
 
     private SP(Context context) {
         init(context);
@@ -24,6 +26,28 @@ public class SP {
 
     private void init(Context context) {
         pref = context.getSharedPreferences("SAFetlz", Context.MODE_PRIVATE);
+    }
+
+    public Data getDATA() {
+        String dataString = getStringValueFromPreferences(DATA, null);
+
+        return  App.getInstance().getGson().fromJson(dataString, Data.class);
+//        if (dataString == null) {
+//            return null;
+//        }
+//
+//        try {
+//            Data data = App.getInstance().getGson().fromJson(dataString, Data.class);
+//            return data;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            logout();
+//            return  null;
+//        }
+    }
+
+    public void setDATA(Data data) {
+        saveStringValueToPreferences(DATA, App.getInstance().getGson().toJson(data));
     }
 
     public boolean getUserExist() {
@@ -58,6 +82,9 @@ public class SP {
         saveStringValueToPreferences(API_KEY, null);
 //        saveStringValueToPreferences(EMAIL, null);
         saveBooleanValueToPreferences(USER, false);
+//        saveStringValueToPreferences(DATA, null);
+//        App.getInstance().setCurrentUser(null);
+
 //        App.getInstance().setCurrentUser(null);
     }
 

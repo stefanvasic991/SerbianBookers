@@ -31,7 +31,7 @@ public class Room implements Parcelable {
     private String board;
     @SerializedName("boards")
     @Expose
-    private String boards;
+    private Object boards;
     @SerializedName("rtype")
     @Expose
     private String rtype;
@@ -54,7 +54,7 @@ public class Room implements Parcelable {
     @Expose
     private String roomNumbers;
 
-    public Room(Parcel in) {
+    protected Room(Parcel in) {
         id = in.readString();
         name = in.readString();
         shortname = in.readString();
@@ -62,7 +62,6 @@ public class Room implements Parcelable {
         price = in.readString();
         availability = in.readString();
         board = in.readString();
-        boards = in.readString();
         rtype = in.readString();
         rtypeName = in.readString();
         color = in.readString();
@@ -70,10 +69,6 @@ public class Room implements Parcelable {
         masterRoom = in.readString();
         parentRoom = in.readString();
         roomNumbers = in.readString();
-    }
-
-    public Room() {
-
     }
 
     @Override
@@ -85,7 +80,6 @@ public class Room implements Parcelable {
         dest.writeString(price);
         dest.writeString(availability);
         dest.writeString(board);
-        dest.writeString(boards);
         dest.writeString(rtype);
         dest.writeString(rtypeName);
         dest.writeString(color);
@@ -168,11 +162,11 @@ public class Room implements Parcelable {
         this.board = board;
     }
 
-    public String getBoards() {
+    public Object getBoards() {
         return boards;
     }
 
-    public void setBoards(String boards) {
+    public void setBoards(Object boards) {
         this.boards = boards;
     }
 

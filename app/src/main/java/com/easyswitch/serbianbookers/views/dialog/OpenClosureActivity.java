@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.widget.Toast;
 
 import com.easyswitch.serbianbookers.R;
 
@@ -13,6 +14,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class OpenClosureActivity extends AppCompatActivity {
+
+    String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +26,19 @@ public class OpenClosureActivity extends AppCompatActivity {
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
     }
 
+    public void sendDate() {
+        date = getIntent().getStringExtra("datum");
+//        Toast.makeText(this, date, Toast.LENGTH_SHORT).show();
+
+        Intent i = new Intent();
+        i.putExtra("datum", date);
+        setResult(RESULT_OK, i);
+    }
+
     @OnClick(R.id.rbOpen)
     public void setOpen() {
         setResult(RESULT_OK);
+        sendDate();
         finish();
     }
 

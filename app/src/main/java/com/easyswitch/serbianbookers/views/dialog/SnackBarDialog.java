@@ -32,8 +32,7 @@ public class SnackBarDialog extends AppCompatActivity {
     TextView tvReset;
 
     User u;
-    String date, price;
-    String tag;
+    String date, tag, closure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,8 @@ public class SnackBarDialog extends AppCompatActivity {
         u = getIntent().getParcelableExtra("currentUser");
         date  = getIntent().getStringExtra("date");
         tag  =getIntent().getStringExtra("status");
+        closure = getIntent().getStringExtra("closure");
+//        Toast.makeText(this, date + tag + closure, Toast.LENGTH_SHORT).show();
     }
 
 //    @OnClick(R.id.llSnackBar)
@@ -51,30 +52,17 @@ public class SnackBarDialog extends AppCompatActivity {
 
     @OnClick(R.id.tvReset)
     public void onReset() {
-        setResult(RESULT_CANCELED);
+        Intent i = new Intent();
+        i.putExtra("tag", tag);
+        setResult(RESULT_CANCELED, i);
         finish(); }
 
     @OnClick(R.id.tvSave)
     public void onSave() {
-
-        Availability av = new Availability();
-        av.setKey(u.getKey());
-        av.setAccount(u.getAccount());
-        av.setLcode(u.getProperties().get(0).getLcode());
-        av.setDfrom(LocalDate.now().toString());
-        av.setDto(LocalDate.now().plusDays(30).toString());
-        av.setArr("");
-
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, new Observer<Availability>() {
-            @Override
-            public void onChanged(Availability availability) {
-
-                if (availability == null) return;
-
-
-            }
-        });
+        Intent i = new Intent();
+        i.putExtra("tag", tag);
+        setResult(RESULT_OK, i);
+        finish();
     }
 
 }

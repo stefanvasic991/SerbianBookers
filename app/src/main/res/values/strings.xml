@@ -67,6 +67,10 @@
     <string name="closure">Zatvaranje</string>
     <string name="onCheckIn">Na prijavljivanju</string>
     <string name="onCheckOut">Na odjavljivanju</string>
+    <string name="openNoCheckIn">Otvoreno bez prijavljivanja</string>
+    <string name="openNoCheckOut">Otvoreno bez odjavljivanja</string>
+    <string name="openNoCheckInCheckOut">Otvoreno bez prijavljivanja\ni bez odjavljivanja</string>
+
     <string name="ota">OTA</string>
     <string name="minStay">Minimalni\nboravak</string>
     <string name="minStayArr">Minimalni\nboravak Arr</string>
@@ -83,7 +87,9 @@
     <string name="roomType">Izaberi tip sobe:</string>
     <string name="changePriceType">Izmeni cenu za tip:</string>
     <string name="changeAvailabilityType">Izmeni raspoloživost za tip:</string>
+    <string name="closuree">Zatvaranje:</string>
     <string name="changeMinStay">Izmeni min boravak:</string>
+    <string name="changeMinStayArr">Izmeni min boravak Arr:</string>
     <string name="changeMaxStay">Izmeni max boravak:</string>
     <string name="saveChanges">sačuvaj izmene</string>
     <string name="saveNote">sačuvaj\nizmenu</string>
@@ -92,19 +98,22 @@
     <string name="NoNight">broj noćenja</string>
     <string name="NoNights">Broj noćenja:</string>
     <string name="income">Prihod:</string>
+    <string name="incomee">Prihod</string>
+    <string name="avIncome">Prosečan iznos</string>
     <string name="noRes">Broj\nrezervacija</string>
-    <string name="noNight">broj\nnoćenja</string>
-    <string name="noNights">Broj\nnoćenja</string>
-    <string name="noincome">Prihod\n   </string>
+    <string name="noNight">Broj\nnoćenja</string>
+    <string name="noNights">Broj noćenja</string>
+    <string name="noincome">Ukupan\nprihod</string>
     <string name="midPrice">prosečna\ncena</string>
+    <string name="avNights">Broj\nrezervacija</string>
 
-    <string name="oneBathroom">Jednosobni:</string>
-    <string name="twoBathroom">Dvosobni:</string>
-    <string name="threeBathroom">Trosobni:</string>
-    <string name="studio">Studio:</string>
-    <string name="apartments">Apartmani:</string>
-    <string name="apartment1">Apartman1:</string>
-    <string name="apartment2">Apartman2:</string>
+    <string name="naziv">Naziv</string>
+    <string name="unit">Jedinice</string>
+    <string name="cnlNoRes">Broj\nrezervacija</string>
+    <string name="cnlIncome">Ukupan\nprihod</string>
+    <string name="cnlCosts">Ukupan\trošak</string>
+    <string name="cnlEarnings">Ukupan\nprofit</string>
+    <string name="cnlCancel">%\nOtkazanih</string>
     <string name="byCountries">po državama</string>
     <string name="byChannels">po kanalima</string>
     <string name="byUnits">po jedinicama</string>

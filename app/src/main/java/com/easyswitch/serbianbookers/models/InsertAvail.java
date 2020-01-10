@@ -3,6 +3,8 @@ package com.easyswitch.serbianbookers.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class InsertAvail {
 
     @SerializedName("key")
@@ -19,10 +21,10 @@ public class InsertAvail {
     private String dfrom;
     @SerializedName("old_values")
     @Expose
-    private String oldValues;
+    private Object oldValues;
     @SerializedName("new_values")
     @Expose
-    private String newValues;
+    private List<NewValues> newValues;
 
     @SerializedName("status")
     @Expose
@@ -63,19 +65,19 @@ public class InsertAvail {
         this.dfrom = dfrom;
     }
 
-    public String getOldValues() {
+    public Object getOldValues() {
         return oldValues;
     }
 
-    public void setOldValues(String oldValues) {
+    public void setOldValues(Object oldValues) {
         this.oldValues = oldValues;
     }
 
-    public String getNewValues() {
+    public List<NewValues> getNewValues() {
         return newValues;
     }
 
-    public void setNewValues(String newValues) {
+    public void setNewValues(List<NewValues> newValues) {
         this.newValues = newValues;
     }
 

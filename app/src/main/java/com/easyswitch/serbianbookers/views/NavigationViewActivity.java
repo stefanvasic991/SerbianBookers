@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -73,10 +74,14 @@ public class NavigationViewActivity extends AppCompatActivity {
         user.setEmail(null);
         user.setAccount(null);
 
+        SharedPreferences preferences = getSharedPreferences("Data", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("Data");
+        editor.commit();
+
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
         finish();
-        new HomeActivity().finish();
     }
 
     @OnClick(R.id.llFinishTouchOutside)

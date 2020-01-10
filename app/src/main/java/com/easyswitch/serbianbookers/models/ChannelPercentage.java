@@ -11,6 +11,9 @@ public class ChannelPercentage {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("name")
+    @Expose
+    private String channel;
 
     public Double getValue() {
         return value;
@@ -26,5 +29,13 @@ public class ChannelPercentage {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

@@ -12,10 +12,16 @@
     <color name="colorBlue">#2DBFFF</color>
     <color name="colorOrange">#FF3D00</color>
     <color name="colorGreen">#12BE12</color>
+    <color name="colorDarkGreen">#085C08</color>
     <color name="colorRestrictionGreen">#0FCA7D</color>
     <color name="colorRed">#FD0000</color>
+    <color name="colorDarkRed">#641717</color>
     <color name="colorDarkBlue">#2D49FF</color>
+    <color name="lineChart">#1473B8</color>
     <color name="filterColor">#E7DFDF</color>
+    <color name="colorPurple">#6200EA</color>
+    <color name="colorDarkPurple">#3E127A</color>
+    <color name="colorYellow">#FFD600</color>
     <color name="colorReservationDate">#eaeaeb</color>
     <color name="colorReservationData">#d8d8d8</color>
     <color name="colorText">#504F4F</color>
@@ -24,4 +30,6 @@
     <color name="calendarBackground">#F1EBEB</color>
     <color name="reservationDesc">#DAD8D8</color>
     <color name="cardView">#F5980B</color>
+
+    //pie colors
 </resources>

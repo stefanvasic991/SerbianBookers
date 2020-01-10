@@ -139,6 +139,11 @@ public class FilterActivity extends AppCompatActivity {
                 mbResDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
 
+                Intent i = new Intent();
+                i.setAction("date");
+                i.putExtra("resDateFrom", status);
+                sendBroadcast(i);
+
                 tvCancelDateRes.setVisibility(View.VISIBLE);
             }
         }
@@ -161,6 +166,11 @@ public class FilterActivity extends AppCompatActivity {
                 mbArrDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbArrDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
 
+                Intent i = new Intent();
+                i.setAction("date");
+                i.putExtra("arrDateFrom", status);
+                sendBroadcast(i);
+
                 tvCancelDateArr.setVisibility(View.VISIBLE);
             }
         }
@@ -171,6 +181,11 @@ public class FilterActivity extends AppCompatActivity {
                 mbArrDateTo.setText(status);
                 mbArrDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbArrDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                Intent i = new Intent();
+                i.setAction("date");
+                i.putExtra("arrDateTo", status);
+                sendBroadcast(i);
 
                 tvCancelDateArr.setVisibility(View.VISIBLE);
             }
@@ -276,6 +291,7 @@ public class FilterActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnFilter)
     public void filter() {
+        setResult(RESULT_OK);
         finish();
     }
 }

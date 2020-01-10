@@ -47,6 +47,17 @@ public class AvailabilityData implements Parcelable {
     @SerializedName("day")
     @Expose
     private String day;
+    @SerializedName("pricing_plan")
+    @Expose
+    private Double pricingPlan;
+    @SerializedName("restriction_plan")
+    @Expose
+    private RestrictionPlan restrictionPlan;
+
+    public AvailabilityData() {
+
+    }
+
 
     protected AvailabilityData(Parcel in) {
         if (in.readByte() == 0) {
@@ -102,6 +113,11 @@ public class AvailabilityData implements Parcelable {
         }
         date = in.readString();
         day = in.readString();
+        if (in.readByte() == 0) {
+            pricingPlan = null;
+        } else {
+            pricingPlan = in.readDouble();
+        }
     }
 
     @Override
@@ -169,6 +185,12 @@ public class AvailabilityData implements Parcelable {
         }
         dest.writeString(date);
         dest.writeString(day);
+        if (pricingPlan == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(pricingPlan);
+        }
     }
 
     @Override
@@ -224,8 +246,9 @@ public class AvailabilityData implements Parcelable {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public Integer setPrice(Integer price) {
         this.price = price;
+        return price;
     }
 
     public Integer getMinStay() {
@@ -292,4 +315,123 @@ public class AvailabilityData implements Parcelable {
         this.day = day;
     }
 
+    public Double getPricingPlan() {
+        return pricingPlan;
+    }
+
+    public void setPricingPlan(Double pricingPlan) {
+        this.pricingPlan = pricingPlan;
+    }
+
+    public RestrictionPlan getRestrictionPlan() {
+        return restrictionPlan;
+    }
+
+    public void setRestrictionPlan(RestrictionPlan restrictionPlan) {
+        this.restrictionPlan = restrictionPlan;
+    }
+
+    public class RestrictionPlan {
+
+        @SerializedName("closed_arrival")
+        @Expose
+        private Integer closedArrival;
+        @SerializedName("closed")
+        @Expose
+        private Integer closed;
+        @SerializedName("id_room")
+        @Expose
+        private Integer idRoom;
+        @SerializedName("min_stay")
+        @Expose
+        private Integer minStay;
+        @SerializedName("closed_departure")
+        @Expose
+        private Integer closedDeparture;
+        @SerializedName("id_rplan")
+        @Expose
+        private Integer idRplan;
+        @SerializedName("max_stay")
+        @Expose
+        private Integer maxStay;
+        @SerializedName("date")
+        @Expose
+        private String date;
+        @SerializedName("min_stay_arrival")
+        @Expose
+        private Integer minStayArrival;
+
+        public Integer getClosedArrival() {
+            return closedArrival;
+        }
+
+        public void setClosedArrival(Integer closedArrival) {
+            this.closedArrival = closedArrival;
+        }
+
+        public Integer getClosed() {
+            return closed;
+        }
+
+        public void setClosed(Integer closed) {
+            this.closed = closed;
+        }
+
+        public Integer getIdRoom() {
+            return idRoom;
+        }
+
+        public void setIdRoom(Integer idRoom) {
+            this.idRoom = idRoom;
+        }
+
+        public Integer getMinStay() {
+            return minStay;
+        }
+
+        public void setMinStay(Integer minStay) {
+            this.minStay = minStay;
+        }
+
+        public Integer getClosedDeparture() {
+            return closedDeparture;
+        }
+
+        public void setClosedDeparture(Integer closedDeparture) {
+            this.closedDeparture = closedDeparture;
+        }
+
+        public Integer getIdRplan() {
+            return idRplan;
+        }
+
+        public void setIdRplan(Integer idRplan) {
+            this.idRplan = idRplan;
+        }
+
+        public Integer getMaxStay() {
+            return maxStay;
+        }
+
+        public void setMaxStay(Integer maxStay) {
+            this.maxStay = maxStay;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public Integer getMinStayArrival() {
+            return minStayArrival;
+        }
+
+        public void setMinStayArrival(Integer minStayArrival) {
+            this.minStayArrival = minStayArrival;
+        }
+    }
 }
+

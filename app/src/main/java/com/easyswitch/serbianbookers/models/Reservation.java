@@ -52,7 +52,7 @@ public class Reservation implements Parcelable {
     private String nights;
     @SerializedName("boards")
     @Expose
-    private Board boards;
+    private Object boards;
     @SerializedName("men")
     @Expose
     private String men;
@@ -140,9 +140,12 @@ public class Reservation implements Parcelable {
     @SerializedName("cc_info")
     @Expose
     private String ccInfo;
+    @SerializedName("channel_logo")
+    @Expose
+    private String channelLogo;
 
 
-    public Reservation(Parcel in) {
+    protected Reservation(Parcel in) {
         reservationCode = in.readString();
         status = in.readString();
         channelReservationCode = in.readString();
@@ -182,10 +185,7 @@ public class Reservation implements Parcelable {
         createdBy = in.readString();
         invoices = in.readString();
         ccInfo = in.readString();
-    }
-
-    public Reservation() {
-
+        channelLogo = in.readString();
     }
 
     @Override
@@ -229,6 +229,7 @@ public class Reservation implements Parcelable {
         dest.writeString(createdBy);
         dest.writeString(invoices);
         dest.writeString(ccInfo);
+        dest.writeString(channelLogo);
     }
 
     @Override
@@ -352,11 +353,11 @@ public class Reservation implements Parcelable {
         this.nights = nights;
     }
 
-    public Board getBoards() {
+    public Object getBoards() {
         return boards;
     }
 
-    public void setBoards(Board boards) {
+    public void setBoards(Object boards) {
         this.boards = boards;
     }
 
@@ -592,6 +593,14 @@ public class Reservation implements Parcelable {
         this.ccInfo = ccInfo;
     }
 
+    public String getChannelLogo() {
+        return channelLogo;
+    }
+
+    public void setChannelLogo(String channelLogo) {
+        this.channelLogo = channelLogo;
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +
@@ -642,17 +651,5 @@ public class Reservation implements Parcelable {
     }
 
     private class Board {
-
-        @SerializedName("386981")
-        @Expose
-        private String _386981;
-
-        public String get386981() {
-            return _386981;
-        }
-
-        public void set386981(String _386981) {
-            this._386981 = _386981;
-        }
     }
 }
