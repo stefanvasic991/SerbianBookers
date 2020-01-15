@@ -19,6 +19,7 @@ import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.News;
+import com.easyswitch.serbianbookers.models.ReservationFilter;
 import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
@@ -42,6 +43,7 @@ public class WebApiClient extends AndroidViewModel {
     private MutableLiveData<ReservationList> reservation;
     private MutableLiveData<GuestList> guests;
     private MutableLiveData<Search> search;
+    private MutableLiveData<ReservationFilter> filter;
     private MutableLiveData<Availability> availability;
     private MutableLiveData<Restriction> restrictions;
     private MutableLiveData<News> news;
@@ -191,6 +193,32 @@ public class WebApiClient extends AndroidViewModel {
             });
         }
         return search;
+    }
+
+    public MutableLiveData<ReservationFilter> getFilter(ReservationFilter rf) {
+        if (filter == null) {
+            filter = new MutableLiveData<>();
+
+            webApi.reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                @Override
+                public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                    if (response.isSuccessful()) {
+                        filter.setValue(response.body());
+                    } else {
+                        filter.setValue(null);
+                        Timber.v("onResponse");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ReservationFilter> call, Throwable t) {
+                    t.printStackTrace();
+                    filter.setValue(null);
+                    Timber.v("onFailure");
+                }
+            });
+        }
+        return filter;
     }
 
     public MutableLiveData<Availability> getAvailability(Availability a) {

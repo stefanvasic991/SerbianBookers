@@ -26,62 +26,73 @@
             android:id="@+id/tvPickedVila"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             android:text="Nalog Vila 1"
-            android:textSize="20dp"
-            android:textColor="@color/colorWhite"/>
+            android:textColor="@color/colorWhite"
+            android:textSize="21dp" />
 
-        <RadioGroup
-            android:id="@+id/rgVila"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvPickedVila"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="end"
-            android:layout_marginEnd="24dp">
+<!--        <ImageView-->
+<!--            android:id="@+id/ivUserLogo"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="40dp"-->
+<!--            android:layout_marginEnd="24dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            app:srcCompat="@drawable/airbnb_logo_red" />-->
 
-            <RadioButton
-                android:id="@+id/vila1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Vila 1"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
+<!--        <RadioGroup-->
+<!--            android:id="@+id/rgVila"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/tvPickedVila"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginEnd="24dp">-->
 
-            <RadioButton
-                android:id="@+id/vila2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vila 2"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
+<!--            <RadioButton-->
+<!--                android:id="@+id/vila1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:checked="true"-->
+<!--                android:text="Vila 1"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="20dp" />-->
 
-            <RadioButton
-                android:id="@+id/vila3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vila 3"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
+<!--            <RadioButton-->
+<!--                android:id="@+id/vila2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Vila 2"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="20dp" />-->
 
-            <RadioButton
-                android:id="@+id/vila4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity=""
-                android:text="Vila 4"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
-        </RadioGroup>
+<!--            <RadioButton-->
+<!--                android:id="@+id/vila3"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Vila 3"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="20dp" />-->
+
+<!--            <RadioButton-->
+<!--                android:id="@+id/vila4"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity=""-->
+<!--                android:text="Vila 4"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="20dp" />-->
+<!--        </RadioGroup>-->
 
         <Switch
             android:id="@+id/notificationSwitch"
             android:layout_width="155dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rgVila"
+            android:layout_below="@+id/tvPickedVila"
             android:layout_alignParentEnd="true"
             android:layout_gravity="end"
             android:layout_marginTop="30dp"

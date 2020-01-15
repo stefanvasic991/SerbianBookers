@@ -3,15 +3,18 @@ package com.easyswitch.serbianbookers.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.Channel;
@@ -39,6 +42,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     Context context;
     ArrayList<Reservation> reservations;
     OnReservationClickListener onReservationClickListener;
+    String empty = "";
 
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -107,11 +111,12 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
         holder.tvNights.setText(reservation.getNights() + " noćenja");
 //        holder.ivLogo.setImageResource(Integer.parseInt(reservation.getChannelLogo()));
-        if (reservation.getChannelLogo().isEmpty()) {
-            Picasso.with(context).load(R.drawable.direct_res).into(holder.ivLogo);
-        } else {
-            Picasso.with(context).load(reservation.getChannelLogo()).into(holder.ivLogo);
-        }
+
+//        if (reservation.getChannelLogo().equals(empty)) {
+//            Glide.with(context).load(R.drawable.direct_res).into(holder.ivLogo);
+//        } else
+            Glide.with(context).load(reservation.getChannelLogo()).into(holder.ivLogo);
+
 
     }
 

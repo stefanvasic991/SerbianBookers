@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -35,6 +36,7 @@ import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.Data;
+import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.calendar.EighthRoomFragment;
@@ -109,6 +111,7 @@ public class CalendarFragment extends Fragment {
 
     private LocalDate selectedDate = null;
     LocalDate oldDate;
+    Data data;
 
     public static CalendarFragment newInstance() {
 
@@ -133,13 +136,44 @@ public class CalendarFragment extends Fragment {
 
         viewPager.setVisibility(View.VISIBLE);
 
-        IntentFilter filter = new IntentFilter("sendPlans");
-        broadcastReceiver = new BroadcastReceiver() {
+//        IntentFilter filter = new IntentFilter("dataObject");
+//        broadcastReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                data = intent.getParcelableExtra("data");
+//                String s = data.getStatus();
+//                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        getActivity().registerReceiver(broadcastReceiver, filter);
+
+        DataBody dataBody = new DataBody();
+        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
+        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
+        dataBody.setNewsOrderBy("2019-12-25");
+        dataBody.setNewsOrderType("");
+        dataBody.setNewsDfrom("");
+        dataBody.setEventsDfrom("");
+        dataBody.setEventsDto("");
+        dataBody.setCalendarDfrom("2019-12-25");
+        dataBody.setCalendarDto("2020-12-24");
+        dataBody.setReservationsDfrom("2020-12-25");
+        dataBody.setReservationsDto("2020-01-24");
+        dataBody.setReservationsOrderBy("3");
+        dataBody.setReservationsFilterBy("2019-12-24");
+        dataBody.setReservationsOrderType("");
+        dataBody.setGuestsOrderBy("135");
+        dataBody.setGuestsOrderType("");
+
+        WebApiClient dataApi = ViewModelProviders.of(this).get(WebApiClient.class);
+        dataApi.getData(dataBody).observe(this, new Observer<Data>() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onChanged(Data data) {
+                priceID = data.getPrices().get(0).getName();
+                restrictionID = data.getRestrictions().get(0).getName();
             }
-        };
-        getActivity().registerReceiver(broadcastReceiver, filter);
+        });
 
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);
@@ -187,11 +221,11 @@ public class CalendarFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        getActivity().unregisterReceiver(broadcastReceiver);
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        getActivity().unregisterReceiver(broadcastReceiver);
+//        super.onDestroy();
+//    }
 
     private void addTab(String title) {
         tabLayout.addTab(tabLayout.newTab().setText(title));
@@ -380,6 +414,7 @@ public class CalendarFragment extends Fragment {
     public void openNavigationView() {
         Intent i = new Intent(getActivity(), NavigationViewActivity.class);
         startActivityForResult(i, 200);
+        Toast.makeText(getActivity(), priceID, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.mbCurrentDate)

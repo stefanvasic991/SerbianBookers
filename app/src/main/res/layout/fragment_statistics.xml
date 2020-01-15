@@ -447,7 +447,7 @@
                             android:id="@+id/five"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
-                            android:layout_weight="0.16"
+                            android:layout_weight="0.17"
                             android:layout_marginStart="4dp"
                             android:padding="5dp"
                             android:textAlignment="center"

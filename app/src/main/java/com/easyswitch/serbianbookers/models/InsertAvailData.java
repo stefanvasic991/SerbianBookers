@@ -1,5 +1,7 @@
 package com.easyswitch.serbianbookers.models;
 
+import com.easyswitch.serbianbookers.models.insert.MaxStay;
+import com.easyswitch.serbianbookers.models.insert.MinStay;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,7 +24,7 @@ public class InsertAvailData {
     private Object price;
     @SerializedName("min_stay")
     @Expose
-    private Object minStay;
+    private MinStay min_stay;
     @SerializedName("closed_departure")
     @Expose
     private Object closedDeparture;
@@ -31,10 +33,10 @@ public class InsertAvailData {
     private Object avail;
     @SerializedName("max_stay")
     @Expose
-    private Object maxStay;
+    private MaxStay max_stay;
     @SerializedName("min_stay_arrival")
     @Expose
-    private Object minStayArrival;
+    private Object min_stay_arrival;
     @SerializedName("no_ota")
     @Expose
     private Object noOta;
@@ -85,12 +87,12 @@ public class InsertAvailData {
         this.price = price;
     }
 
-    public Object getMinStay() {
-        return minStay;
+    public MinStay getMinStay() {
+        return min_stay;
     }
 
-    public void setMinStay(Object minStay) {
-        this.minStay = minStay;
+    public void setMinStay(MinStay minStay) {
+        this.min_stay = minStay;
     }
 
     public Object getClosedDeparture() {
@@ -109,20 +111,20 @@ public class InsertAvailData {
         this.avail = avail;
     }
 
-    public Object getMaxStay() {
-        return maxStay;
+    public MaxStay getMaxStay() {
+        return max_stay;
     }
 
-    public void setMaxStay(Object maxStay) {
-        this.maxStay = maxStay;
+    public void setMaxStay(MaxStay maxStay) {
+        this.max_stay = maxStay;
     }
 
     public Object getMinStayArrival() {
-        return minStayArrival;
+        return min_stay_arrival;
     }
 
     public void setMinStayArrival(Object minStayArrival) {
-        this.minStayArrival = minStayArrival;
+        this.min_stay_arrival = minStayArrival;
     }
 
     public Object getNoOta() {

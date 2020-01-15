@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
@@ -139,7 +140,10 @@ public class ReservationDescActivity extends AppCompatActivity {
         etNote.setText(reservation.getCustomerNotes());
         tvNote.setText(reservation.getCustomerNotes());
 
-        Picasso.with(this).load(reservation.getChannelLogo()).into(ivLogo);
+//        if (reservation.getChannelLogo().equals("")) {
+//            Picasso.with(this).load(R.drawable.direct_res).into(ivLogo);
+//        } else
+            Glide.with(this).load(reservation.getChannelLogo()).into(ivLogo);
 
     }
 

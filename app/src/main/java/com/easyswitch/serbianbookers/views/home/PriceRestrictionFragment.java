@@ -16,7 +16,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -30,6 +32,7 @@ import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.easyswitch.serbianbookers.models.Data;
+import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
@@ -37,6 +40,7 @@ import com.easyswitch.serbianbookers.models.NewValues;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.dialog.ChangeRestrictionActivity;
+import com.easyswitch.serbianbookers.views.dialog.PickRoomDialog;
 import com.easyswitch.serbianbookers.views.dialog.SaveAvailabilityDialog;
 import com.easyswitch.serbianbookers.views.dialog.SavePriceDialog;
 import com.easyswitch.serbianbookers.views.dialog.SaveRestrictionDialog;
@@ -78,6 +82,10 @@ public class PriceRestrictionFragment extends Fragment {
     MaterialButton  mbResDateTo;
     @BindView(R.id.spinner)
     MultiSpinner spinner;
+    @BindView(R.id.ppSpinner)
+    Spinner ppSpinner;
+    @BindView(R.id.rSpinner)
+    Spinner rSpinner;
 
     @BindView(R.id.etInsertPrice)
     EditText etInsertPrice;
@@ -119,6 +127,10 @@ public class PriceRestrictionFragment extends Fragment {
     int year, month, dayOfMonth;
     Calendar calendar;
     private int roomId;
+    String pricingPlaId, restrictionPlanId;
+    List<String> rooms = new ArrayList<>();
+    List<String> pricingPlan = new ArrayList<>();
+    List<String> restrictionPlan = new ArrayList<>();
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateParse = new SimpleDateFormat("dd.MM.yyyy.");
     @SuppressLint("SimpleDateFormat")
@@ -165,8 +177,6 @@ public class PriceRestrictionFragment extends Fragment {
 
                 if (availability == null) return;
 
-                List<String> rooms = new ArrayList<>();
-
                 for (int i = 0; i < availability.getAvailabilityList().size(); i++) {
                     rooms.addAll(Collections.singleton(availability.getAvailabilityList().get(i).getShortName()));
                     roomId = availability.getAvailabilityList().get(i).getId();
@@ -179,6 +189,50 @@ public class PriceRestrictionFragment extends Fragment {
                 selectedItems[1] = true; // select second item
                 spinner.setSelected(selectedItems);
 
+            }
+        });
+
+        DataBody dataBody = new DataBody();
+        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
+        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
+        dataBody.setNewsOrderBy("2019-12-25");
+        dataBody.setNewsOrderType("");
+        dataBody.setNewsDfrom("");
+        dataBody.setEventsDfrom("");
+        dataBody.setEventsDto("");
+        dataBody.setCalendarDfrom("2019-12-25");
+        dataBody.setCalendarDto("2020-12-24");
+        dataBody.setReservationsDfrom("2020-12-25");
+        dataBody.setReservationsDto("2020-01-24");
+        dataBody.setReservationsOrderBy("3");
+        dataBody.setReservationsFilterBy("2019-12-24");
+        dataBody.setReservationsOrderType("");
+        dataBody.setGuestsOrderBy("135");
+        dataBody.setGuestsOrderType("");
+
+        WebApiClient dataClient = ViewModelProviders.of(this).get(WebApiClient.class);
+        dataClient.getData(dataBody).observe(this, new Observer<Data>() {
+            @Override
+            public void onChanged(Data data) {
+
+                if (data == null) return;
+
+                for (int i = 0; i < data.getPrices().size(); i++) {
+                    pricingPlan.addAll(Collections.singleton(data.getPrices().get(i).getName()));
+                    pricingPlaId = data.getPrices().get(i).getId();
+                }
+
+                ArrayAdapter<String> ppAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, pricingPlan);
+                ppSpinner.setAdapter(ppAdapter);
+
+                for (int i = 0; i < data.getRestrictions().size(); i++) {
+                    restrictionPlan.addAll(Collections.singleton(data.getRestrictions().get(i).getName()));
+                    restrictionPlanId = data.getRestrictions().get(i).getId();
+                }
+
+                ArrayAdapter<String> rAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, pricingPlan);
+                rSpinner.setAdapter(rAdapter);
             }
         });
 
@@ -203,6 +257,12 @@ public class PriceRestrictionFragment extends Fragment {
 
         return tmp;
     }
+
+//    @OnClick(R.id.ppSpinner)
+//    public void pricingPlan() {
+//        Intent intent = new Intent(getActivity(), PickRoomDialog.class);
+//        startActivityForResult(intent,33);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -247,6 +307,8 @@ public class PriceRestrictionFragment extends Fragment {
 //                        });
                     }
                 });
+
+                Toast.makeText(getActivity(), pricingPlaId, Toast.LENGTH_SHORT).show();
 
                 mbSaveAvailability.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -293,7 +355,6 @@ public class PriceRestrictionFragment extends Fragment {
                         ir.setAccount(App.getInstance().getCurrentUser().getAccount());
                         ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
                         ir.setDfrom(dFrom);
-//                        ir.setPid(data.getRestrictions().get(0).getId());
                         ir.setPid("45325");
                         ir.setOldValues("");
                         ir.setNewValues(newValues);
@@ -326,6 +387,13 @@ public class PriceRestrictionFragment extends Fragment {
                 mbOpenRestriction.setText(restriction);
             }
         }
+
+//        if (requestCode == 33) {
+//            if (resultCode == RESULT_OK) {
+//                String plan = data.getStringExtra("pricingPlanName");
+//                ppSpinner.setText(plan);
+//            }
+//        }
     }
 
     @NotNull

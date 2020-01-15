@@ -177,7 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:autoLink="phone"
                         android:linksClickable="true"
                         app:layout_constraintStart_toStartOf="parent"
@@ -190,13 +190,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="12dp"
-                        android:textIsSelectable="true"
-                        android:text="+381 66 007723"
+                        android:layout_marginTop="16dp"
                         android:autoLink="phone"
                         android:linksClickable="true"
-                        android:textSize="16sp"
+                        android:text="+381 66 007723"
                         android:textColor="@color/colorText"
+                        android:textIsSelectable="true"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView4"
                         app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -259,6 +260,7 @@
                         android:padding="4dp"
                         android:paddingStart="10dp"
                         android:textSize="16sp"
+                        android:singleLine="true"
                         android:background="@color/reservationDesc"
                         android:text="05.12.2019  09:26h"/>
                 </LinearLayout>
@@ -534,21 +536,22 @@
                         android:backgroundTint="@color/cardView"
                         android:text="@string/cardReview"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8dp"
+                        android:textSize="7sp"
                         app:cornerRadius="40dp"
-                        app:icon="@drawable/credit_card" />
+                        app:icon="@drawable/kartica" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/invalidCard"
                         android:layout_width="0dp"
                         android:layout_height="65dp"
                         android:layout_marginStart="8dp"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.33"
                         android:backgroundTint="@color/colorRed"
                         android:text="@string/invalidCard"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8dp"
-                        app:cornerRadius="40dp" />
+                        android:textSize="7sp"
+                        app:cornerRadius="40dp"
+                        app:icon="@drawable/nevalidna_katica" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/guestNotShow"
@@ -556,12 +559,13 @@
                         android:layout_height="65dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.32"
                         android:backgroundTint="@color/colorText"
                         android:text="@string/guestNotShow"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8dp"
-                        app:cornerRadius="40dp" />
+                        android:textSize="7sp"
+                        app:cornerRadius="40dp"
+                        app:icon="@drawable/gost_nije_dosao" />
                 </LinearLayout>
             </RelativeLayout>
         </ScrollView>

@@ -19,6 +19,7 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="14sp"
+        android:singleLine="true"
         android:background="@color/colorDataBackground"
         android:textColor="@color/colorWhite"
         android:text="room 1" />
@@ -32,7 +33,7 @@
         android:padding="5dp"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="14dp"
+        android:textSize="12dp"
         android:background="@color/colorDataBackground"
         android:textColor="@color/colorWhite"
         android:text="6695" />
@@ -46,7 +47,7 @@
         android:padding="5dp"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:background="@color/colorDataBackground"
         android:textColor="@color/colorWhite"
         android:text="6695" />
@@ -55,15 +56,15 @@
         android:id="@+id/r1noNights"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.16"
         android:layout_marginStart="4dp"
+        android:layout_weight="0.16"
+        android:background="@color/colorDataBackground"
         android:padding="5dp"
+        android:text="6695"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="14sp"
-        android:background="@color/colorDataBackground"
         android:textColor="@color/colorWhite"
-        android:text="6695" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/r1AvPrice"
@@ -73,7 +74,7 @@
         android:layout_marginStart="4dp"
         android:padding="5dp"
         android:textAlignment="center"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:background="@color/colorDataBackground"
         android:textColor="@color/colorWhite"
         android:textAllCaps="true"
@@ -83,11 +84,11 @@
         android:id="@+id/r1AvNights"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.16"
+        android:layout_weight="0.17"
         android:layout_marginStart="4dp"
         android:padding="5dp"
         android:textAlignment="center"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:background="@color/colorDataBackground"
         android:textColor="@color/colorWhite"
         android:textAllCaps="true"

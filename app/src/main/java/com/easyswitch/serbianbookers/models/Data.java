@@ -80,7 +80,7 @@ public class Data implements Parcelable {
     private ArrayList<Price> prices = null;
     @SerializedName("restrictions")
     @Expose
-    private ArrayList<Restriction> restrictions = null;
+    private ArrayList<Restrictions> restrictions = null;
     @SerializedName("users")
     @Expose
     private ArrayList<DataUser> users = null;
@@ -88,7 +88,11 @@ public class Data implements Parcelable {
     @Expose
     private String pendingUsers;
 
-    public Data(Parcel in) {
+    public Data() {
+
+    }
+
+    protected Data(Parcel in) {
         status = in.readString();
         received = in.createTypedArrayList(Reservation.CREATOR);
         canceled = in.createTypedArrayList(Reservation.CREATOR);
@@ -100,12 +104,7 @@ public class Data implements Parcelable {
         changelog = in.createTypedArrayList(Changelog.CREATOR);
         rooms = in.createTypedArrayList(Room.CREATOR);
         channels = in.createTypedArrayList(Channel.CREATOR);
-        restrictions = in.createTypedArrayList(Restriction.CREATOR);
         pendingUsers = in.readString();
-    }
-
-    public Data() {
-
     }
 
     @Override
@@ -121,7 +120,6 @@ public class Data implements Parcelable {
         dest.writeTypedList(changelog);
         dest.writeTypedList(rooms);
         dest.writeTypedList(channels);
-        dest.writeTypedList(restrictions);
         dest.writeString(pendingUsers);
     }
 
@@ -318,11 +316,11 @@ public class Data implements Parcelable {
         this.prices = prices;
     }
 
-    public ArrayList<Restriction> getRestrictions() {
+    public ArrayList<Restrictions> getRestrictions() {
         return restrictions;
     }
 
-    public void setRestrictions(ArrayList<Restriction> restrictions) {
+    public void setRestrictions(ArrayList<Restrictions> restrictions) {
         this.restrictions = restrictions;
     }
 

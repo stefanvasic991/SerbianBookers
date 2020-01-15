@@ -24,17 +24,18 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".views.dialog.PickRoomDialog"
+        <activity android:name=".views.filter.CalendarActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity android:name=".views.dialog.ClosureSnackBar" />
+        <activity
+            android:name=".views.dialog.PickRoomDialog"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name=".views.dialog.ChangeRestrictionActivity"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeDialog" />
-        <activity
-            android:name=".views.dialog.StayActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
@@ -49,7 +50,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
         <activity
-            android:name=".views.dialog.ClosureSnackBar"
+            android:name=".views.dialog.RestrictionSnackBar"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/NavTheme" />
@@ -133,7 +134,8 @@
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name=".views.home.HomeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

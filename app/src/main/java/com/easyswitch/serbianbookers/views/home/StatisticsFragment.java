@@ -169,9 +169,9 @@ public class StatisticsFragment extends Fragment {
         countryPieChart.setVisibility(View.VISIBLE);
         rvRoomStats.setVisibility(View.VISIBLE);
         incomeChart.setVisibility(View.VISIBLE);
-        mbResDateFrom.setText(dFrom);
+        mbResDateFrom.setText(getDateOnStart(dFrom));
 //        Toast.makeText(getActivity(), dFrom, Toast.LENGTH_SHORT).show();
-        mbResDateTo.setText(dTo);
+        mbResDateTo.setText(getDateOnStart(dTo));
 
         setPieChart();
         setCombinedChart();
@@ -656,6 +656,17 @@ public class StatisticsFragment extends Fragment {
             Date d = dateParse.parse(date);
 
             return dateFormat.format(d);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private String getDateOnStart(String date) {
+        try {
+            Date d = dateFormat.parse(date);
+
+            return dateParse.format(d);
         } catch (Exception e){
             e.printStackTrace();
         }

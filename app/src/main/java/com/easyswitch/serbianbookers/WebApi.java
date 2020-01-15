@@ -10,6 +10,7 @@ import com.easyswitch.serbianbookers.models.InsertAvail;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.News;
+import com.easyswitch.serbianbookers.models.ReservationFilter;
 import com.easyswitch.serbianbookers.models.ReservationList;
 import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
@@ -46,6 +47,10 @@ public interface WebApi {
     @Headers("Content-type: application/json")
     @POST("api/data/search")
     Call<Search> search(@Body Search search);
+
+    @Headers("Content-type: application/json")
+    @POST("api/data/reservationsFilter")
+    Call<ReservationFilter> reservationFilter(@Body ReservationFilter reservationFilter);
 
     @Headers("Content-type: application/json")
     @POST("api/data/avail")

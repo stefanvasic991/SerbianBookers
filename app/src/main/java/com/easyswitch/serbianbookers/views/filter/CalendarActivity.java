@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kotlin.Unit;
 
-public class CalendarFilterActivity extends AppCompatActivity {
+public class CalendarActivity extends AppCompatActivity {
 
     @BindView(R.id.tvCurrentDate)
     TextView tvCurrentDate;
@@ -63,14 +63,15 @@ public class CalendarFilterActivity extends AppCompatActivity {
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
 
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat formatter= new SimpleDateFormat("E, MMM yyyy");
+        SimpleDateFormat formatter= new SimpleDateFormat("E, MMM yy");
         Date date = new Date(System.currentTimeMillis());
         tvCurrentDate.setText(formatter.format(date));
 
+        YearMonth firstMonth = YearMonth.now().minusMonths(24);
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);
         DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
-        cvCalendarView.setup(currentMonth, lastMonth, firstDayOfWeek);
+        cvCalendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
         cvCalendarView.scrollToMonth(currentMonth);
 
 
@@ -86,27 +87,27 @@ public class CalendarFilterActivity extends AppCompatActivity {
                 container.calendarDay = day;
                 container.tvDayText.setText(String.valueOf(day.getDate().getDayOfMonth()));
 
-                if (day.getOwner() == DayOwner.THIS_MONTH) {
+//                if (day.getOwner() == DayOwner.THIS_MONTH) {
                     container.tvDayText.setVisibility(View.VISIBLE);
                     if (container.calendarDay.getDate().isEqual(LocalDate.now())) {
 //                        container.tvDayText.setBackground(ContextCompat.getDrawable(CalendarFilterActivity.this, R.drawable.circle_background_blue));
-                        container.tvDayText.setTextColor(ContextCompat.getColor(CalendarFilterActivity.this, R.color.colorBlue));
+                        container.tvDayText.setTextColor(ContextCompat.getColor(CalendarActivity.this, R.color.colorBlue));
                     }
-                }
+//                }
 
                 if (selectedDays == day.getDate()) {
-                    container.tvDayText.setBackground(ContextCompat.getDrawable(CalendarFilterActivity.this, R.drawable.circle_background_blue));
-                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarFilterActivity.this, R.color.colorWhite));
+                    container.tvDayText.setBackground(ContextCompat.getDrawable(CalendarActivity.this, R.drawable.circle_background_blue));
+                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarActivity.this, R.color.colorWhite));
                 }
 
-                    if (day.getOwner() != DayOwner.THIS_MONTH) {
-                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarFilterActivity.this, R.color.colorText));
+                if (day.getOwner() != DayOwner.THIS_MONTH) {
+                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarActivity.this, R.color.colorText));
                     } else if (day.getDate().equals(LocalDate.now())) {
-                        container.tvDayText.setTextColor(ContextCompat.getColor(CalendarFilterActivity.this, R.color.colorBlue));
+                        container.tvDayText.setTextColor(ContextCompat.getColor(CalendarActivity.this, R.color.colorBlue));
                     } else if (day.getDate().isAfter(LocalDate.now())) {
-                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarFilterActivity.this, R.color.colorBlack));
+                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarActivity.this, R.color.colorBlack));
                 } else {
-                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarFilterActivity.this, R.color.colorTextLight));
+                    container.tvDayText.setTextColor(ContextCompat.getColor(CalendarActivity.this, R.color.colorTextLight));
                 }
             }
         });
@@ -132,7 +133,7 @@ public class CalendarFilterActivity extends AppCompatActivity {
             tvDayText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if ((calendarDay.getDate().isAfter(LocalDate.now()) || calendarDay.getDate().isEqual(LocalDate.now())) &&
+                    if ((calendarDay.getDate().isBefore(LocalDate.now()) || calendarDay.getDate().isAfter(LocalDate.now()) || calendarDay.getDate().isEqual(LocalDate.now())) &&
                             calendarDay.getOwner() == DayOwner.THIS_MONTH) {
 //                        if (selectedDays.contains(calendarDay.getDate()))
 //                            selectedDays.remove(calendarDay.getDate());

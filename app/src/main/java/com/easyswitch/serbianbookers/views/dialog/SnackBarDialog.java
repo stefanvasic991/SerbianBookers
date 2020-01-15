@@ -38,6 +38,7 @@ public class SnackBarDialog extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_snack_bar_dialog);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
         ButterKnife.bind(this);
 
         u = getIntent().getParcelableExtra("currentUser");
@@ -55,7 +56,9 @@ public class SnackBarDialog extends AppCompatActivity {
         Intent i = new Intent();
         i.putExtra("tag", tag);
         setResult(RESULT_CANCELED, i);
-        finish(); }
+        finish();
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    }
 
     @OnClick(R.id.tvSave)
     public void onSave() {
@@ -63,6 +66,12 @@ public class SnackBarDialog extends AppCompatActivity {
         i.putExtra("tag", tag);
         setResult(RESULT_OK, i);
         finish();
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    }
 }

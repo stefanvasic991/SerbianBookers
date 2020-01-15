@@ -7,19 +7,25 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.adapters.PriceAdapter;
 import com.easyswitch.serbianbookers.adapters.RoomListAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityList;
 import com.easyswitch.serbianbookers.models.Data;
+import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.Price;
 import com.easyswitch.serbianbookers.views.home.HomeFragment;
 import com.google.gson.Gson;
 
@@ -31,22 +37,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PickRoomDialog extends AppCompatActivity {
 
     @BindView(R.id.rvRoomList)
     RecyclerView rvRoomList;
-    @BindView(R.id.tvCancel)
-    TextView tcCancel;
-    @BindView(R.id.tvClear)
-    TextView tvClear;
-    @BindView(R.id.tvSelectAll)
-    TextView tvSelectAll;
-    @BindView(R.id.tvOk)
-    TextView tvOk;
-
-    List<Availability> roomList = new ArrayList<>();
-    RoomListAdapter adapter;
+    List<Price> priceList = new ArrayList<>();
+    PriceAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,36 +54,62 @@ public class PickRoomDialog extends AppCompatActivity {
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, android.R.color.transparent));
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
 
-        Availability av = new Availability();
-        av.setKey(App.getInstance().getCurrentUser().getKey());
-        av.setAccount(App.getInstance().getCurrentUser().getAccount());
-        av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        av.setDfrom(LocalDate.now().toString());
-        av.setDto(LocalDate.now().plusDays(30).toString());
-        av.setArr("");
-
-//        SharedPreferences dataPrefs = getSharedPreferences(HomeFragment.MY_PREFS_NAME, MODE_PRIVATE);
-//        Gson gson = new Gson();
-//        String json = dataPrefs.getString("availability", "");
-//        Availability availability = gson.fromJson(json, Availability.class);
-
+        DataBody dataBody = new DataBody();
+        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
+        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
+        dataBody.setNewsOrderBy("2019-12-25");
+        dataBody.setNewsOrderType("");
+        dataBody.setNewsDfrom("");
+        dataBody.setEventsDfrom("");
+        dataBody.setEventsDto("");
+        dataBody.setCalendarDfrom("2019-12-25");
+        dataBody.setCalendarDto("2020-12-24");
+        dataBody.setReservationsDfrom("2020-12-25");
+        dataBody.setReservationsDto("2020-01-24");
+        dataBody.setReservationsOrderBy("3");
+        dataBody.setReservationsFilterBy("2019-12-24");
+        dataBody.setReservationsOrderType("");
+        dataBody.setGuestsOrderBy("135");
+        dataBody.setGuestsOrderType("");
 
         WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, new Observer<Availability>() {
+        webApiClient.getData(dataBody).observe(this, new Observer<Data>() {
             @Override
-            public void onChanged(Availability availability) {
+            public void onChanged(Data data) {
 
-                if (availability == null) return;
+                if (data == null) return;
 
-                if (availability != null) {
-                    roomList.clear();
-                }
+                priceList.clear();
+                priceList.addAll(data.getPrices());
+                adapter.notifyDataSetChanged();
             }
         });
 
-
-        adapter = new RoomListAdapter(this, roomList);
+        adapter = new PriceAdapter(this, priceList);
         rvRoomList.setLayoutManager(new LinearLayoutManager(this));
         rvRoomList.setAdapter(adapter);
+
+        adapter.setOnPriceClickListener(new PriceAdapter.OnPriceClickListener() {
+            @Override
+            public void onPricingPlanClick(View view, int position, Price price) {
+                Intent i = new Intent();
+                i.putExtra("pricingPlanName", price.getName());
+                i.putExtra("pricingPlanID", price.getId());
+                setResult(RESULT_OK, i);
+                Toast.makeText(PickRoomDialog.this, price.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @OnClick(R.id.tvCancel)
+    public void cancel() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    @OnClick(R.id.tvOkej)
+    public void okej() {
+        finish();
     }
 }

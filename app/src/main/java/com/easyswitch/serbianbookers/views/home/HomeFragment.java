@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -117,7 +119,7 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.noReservations)
     TextView noReservations;
 
-
+    Double sumaProgress;
     User u;
     ArrayList<Reservation> reservationList = new ArrayList<>();
     private ReservationAdapter reservationAdapter;
@@ -177,6 +179,11 @@ public class HomeFragment extends Fragment {
 
                 if (data == null) return;
 
+                Intent i = new Intent();
+                i.setAction("dataObject");
+                i.putExtra("data", data);
+                getActivity().sendBroadcast(i);
+
                 pbLoading.setVisibility(View.GONE);
 
                 double yest = Double.parseDouble(data.getOccupancy().getYesterday());
@@ -189,7 +196,7 @@ public class HomeFragment extends Fragment {
                 tvYesterdayPercentage.setText(yesterday + "%");
                 tvTodayPercentage.setText(today + "%");
 
-                Double sumaProgress = Double.parseDouble(data.getOccupancy().getToday())
+                sumaProgress = Double.parseDouble(data.getOccupancy().getToday())
                         - Double.parseDouble(data.getOccupancy().getYesterday());
                 if (sumaProgress < 0) {
                     circularProgressBar.setProgress((float) - Double.parseDouble(String.valueOf(sumaProgress)));
@@ -254,9 +261,9 @@ public class HomeFragment extends Fragment {
         });
 
         News news = new News();
-        news.setKey(u.getKey());
-        news.setLcode(u.getProperties().get(0).getLcode());
-        news.setAccount(u.getAccount());
+        news.setKey(App.getInstance().getCurrentUser().getKey());
+        news.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        news.setAccount(App.getInstance().getCurrentUser().getAccount());
         news.setNewsOrderBy("date_arrival");
         news.setNewsOrderType("ASC");
         news.setNewsDfrom(LocalDate.now().toString());
@@ -275,9 +282,11 @@ public class HomeFragment extends Fragment {
                     reservationList.clear();
                     reservationList.addAll(news.getReceived());
                     reservationAdapter.notifyDataSetChanged();
+                    noReservations.setVisibility(View.GONE);
                 } else {
                     ArrayList<Reservation> tmpList = new ArrayList<>();
                     tmpList.addAll(news.getReceived());
+                    noReservations.setVisibility(View.GONE);
                 }
             }
         });
@@ -354,7 +363,11 @@ public class HomeFragment extends Fragment {
                     webApiClient.getEvents(e).observe(this, new Observer<Event>() {
                         @Override
                         public void onChanged(Event event) {
-                            if (event == null) return;
+                            if (event == null) {
+                                noReservations.setVisibility(View.VISIBLE);
+                                return;
+                            } else
+                                noReservations.setVisibility(View.GONE);
 
                                 if (event.getStay() != null) {
                                     reservationList.clear();
@@ -378,6 +391,12 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onResponse(Call<Event> call, Response<Event> response) {
                             if (response.isSuccessful()) {
+                                if (response.body() == null) {
+                                    noReservations.setVisibility(View.VISIBLE);
+                                    return;
+                                } else
+                                    noReservations.setVisibility(View.GONE);
+
                                 if (response.body().getArrivals() != null) {
                                     reservationList.clear();
                                     reservationList.addAll(response.body().getArrivals());
@@ -406,6 +425,13 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onResponse(Call<Event> call, Response<Event> response) {
                             if (response.isSuccessful()) {
+
+                                if (response.body() == null) {
+                                    noReservations.setVisibility(View.VISIBLE);
+                                    return;
+                                } else
+                                    noReservations.setVisibility(View.GONE);
+
                                 if (response.body().getDepartures() != null) {
                                     reservationList.clear();
                                     reservationList.addAll(response.body().getDepartures());
@@ -435,9 +461,9 @@ public class HomeFragment extends Fragment {
 
                  if (days.equals(Consts.YESTERDAY)) {
                     News news = new News();
-                    news.setKey(u.getKey());
-                    news.setLcode(u.getProperties().get(0).getLcode());
-                    news.setAccount(u.getAccount());
+                    news.setKey(App.getInstance().getCurrentUser().getKey());
+                    news.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    news.setAccount(App.getInstance().getCurrentUser().getAccount());
                     news.setNewsOrderBy("date_arrival");
                     news.setNewsOrderType("ASC");
                     news.setNewsDfrom(LocalDate.now().minusDays(1).toString());
@@ -446,6 +472,13 @@ public class HomeFragment extends Fragment {
                          @Override
                          public void onResponse(Call<News> call, Response<News> response) {
                              if (response.isSuccessful()) {
+
+                                 if (response.body() == null) {
+                                     noReservations.setVisibility(View.VISIBLE);
+                                     return;
+                                 } else
+                                     noReservations.setVisibility(View.GONE);
+
                                  if (response.body().getReceived() != null) {
                                      reservationList.clear();
                                      reservationList.addAll(response.body().getReceived());
@@ -464,9 +497,9 @@ public class HomeFragment extends Fragment {
                      });
                 } else if (days.equals(Consts.TOMMOROW)) {
                     News news = new News();
-                    news.setKey(u.getKey());
-                    news.setLcode(u.getProperties().get(0).getLcode());
-                    news.setAccount(u.getAccount());
+                    news.setKey(App.getInstance().getCurrentUser().getKey());
+                    news.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    news.setAccount(App.getInstance().getCurrentUser().getAccount());
                     news.setNewsOrderBy("date_arrival");
                     news.setNewsOrderType("ASC");
                     news.setNewsDfrom(LocalDate.now().plusDays(1).toString());
@@ -475,6 +508,13 @@ public class HomeFragment extends Fragment {
                          @Override
                          public void onResponse(Call<News> call, Response<News> response) {
                              if (response.isSuccessful()) {
+
+                                 if (response.body() == null) {
+                                     noReservations.setVisibility(View.VISIBLE);
+                                     return;
+                                 } else
+                                     noReservations.setVisibility(View.GONE);
+
                                  if (response.body().getReceived() != null) {
                                      reservationList.clear();
                                      reservationList.addAll(response.body().getReceived());
@@ -503,14 +543,25 @@ public class HomeFragment extends Fragment {
     public void openSearch() {
         ivLogo.setVisibility(View.GONE);
         searchView.setVisibility(View.VISIBLE);
+
+        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                }
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Search search = new Search();
-                search.setKey(u.getKey());
-//        dataBody.setKey("6229dbc00c2d22e48b68db46b1e80c662a267931");
-                search.setLcode(u.getProperties().get(0).getLcode());
-                search.setAccount(u.getAccount());
+                search.setKey(App.getInstance().getCurrentUser().getKey());
+                search.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                search.setAccount(App.getInstance().getCurrentUser().getAccount());
                 search.setKeyword(query);
 
                 WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);

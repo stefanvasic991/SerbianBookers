@@ -104,8 +104,8 @@
     <string name="noNight">Broj\nnoćenja</string>
     <string name="noNights">Broj noćenja</string>
     <string name="noincome">Ukupan\nprihod</string>
-    <string name="midPrice">prosečna\ncena</string>
-    <string name="avNights">Broj\nrezervacija</string>
+    <string name="midPrice">Prosečna\ncena</string>
+    <string name="avNights">Prosečno\nnoćenja</string>
 
     <string name="naziv">Naziv</string>
     <string name="unit">Jedinice</string>
@@ -127,6 +127,8 @@
     <string name="reset">RESET</string>
     <string name="yes">Da</string>
     <string name="no">Ne</string>
+    <string name="pricing_plan">Plan cena:</string>
+    <string name="restriction">Restrikcije:</string>
 
 
     <string-array name="rooms">

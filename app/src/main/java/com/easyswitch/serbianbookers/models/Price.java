@@ -1,9 +1,12 @@
 package com.easyswitch.serbianbookers.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Price {
+public class Price implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -23,6 +26,42 @@ public class Price {
     @SerializedName("vpid")
     @Expose
     private String vpid;
+
+    protected Price(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        type = in.readString();
+        variation = in.readString();
+        variationType = in.readString();
+        vpid = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(type);
+        dest.writeString(variation);
+        dest.writeString(variationType);
+        dest.writeString(vpid);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Price> CREATOR = new Creator<Price>() {
+        @Override
+        public Price createFromParcel(Parcel in) {
+            return new Price(in);
+        }
+
+        @Override
+        public Price[] newArray(int size) {
+            return new Price[size];
+        }
+    };
 
     public String getId() {
         return id;

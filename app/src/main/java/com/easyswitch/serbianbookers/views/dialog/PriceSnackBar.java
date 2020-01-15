@@ -42,6 +42,7 @@ public class PriceSnackBar extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_snack_bar_dialog);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
         ButterKnife.bind(this);
 
         u = getIntent().getParcelableExtra("currentUser");
@@ -56,10 +57,13 @@ public class PriceSnackBar extends AppCompatActivity {
         Intent i = new Intent();
         i.putExtra("oldPrice", oldPrice);
         setResult(RESULT_CANCELED, i);
-        finish(); }
+        finish();
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    }
 
     @OnClick(R.id.tvSave)
     public void onSave() {
+
         AvailabilityData av = new AvailabilityData();
         Integer prc = av.setPrice(Integer.valueOf(price));
 
@@ -86,5 +90,12 @@ public class PriceSnackBar extends AppCompatActivity {
 //            }
 //        });
         finish();
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }
 }

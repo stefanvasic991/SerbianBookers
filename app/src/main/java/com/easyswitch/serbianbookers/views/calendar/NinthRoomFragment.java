@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,12 +33,11 @@ import com.easyswitch.serbianbookers.adapters.CalendarAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.easyswitch.serbianbookers.models.User;
-import com.easyswitch.serbianbookers.views.dialog.ClosureSnackBar;
+import com.easyswitch.serbianbookers.views.dialog.RestrictionSnackBar;
 import com.easyswitch.serbianbookers.views.dialog.OpenClosureActivity;
 import com.easyswitch.serbianbookers.views.dialog.OtaActivity;
 import com.easyswitch.serbianbookers.views.dialog.PriceSnackBar;
 import com.easyswitch.serbianbookers.views.dialog.SnackBarDialog;
-import com.easyswitch.serbianbookers.views.dialog.StayActivity;
 import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -174,7 +174,12 @@ public class NinthRoomFragment extends Fragment {
                 etAvail.setVisibility(View.VISIBLE);
 
                 etAvail.setCursorVisible(true);
+                etAvail.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(etAvail, InputMethodManager.SHOW_IMPLICIT);
+
                 etAvail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @SuppressLint("PrivateResource")
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if (etAvail.getText().length() == 0) {
@@ -183,11 +188,13 @@ public class NinthRoomFragment extends Fragment {
                             tvAvail.setText(etAvail.getText().toString());
                             etAvail.setVisibility(View.GONE);
                             tvAvail.setVisibility(View.VISIBLE);
-                            Intent avails = new Intent(getActivity(), ClosureSnackBar.class);
+                            Intent avails = new Intent(getActivity(), RestrictionSnackBar.class);
                             avails.putExtra("datum", av.getDate());
                             avails.putExtra("roomID", id);
                             avails.putExtra("avail", tvAvail.getText().toString());
+//                            Toast.makeText(getActivity(), tvAvail.getText().toString(), Toast.LENGTH_SHORT).show();
                             startActivityForResult(avails, 15);
+                            etAvail.clearFocus();
                         }
                         return false;
                     }
@@ -203,6 +210,10 @@ public class NinthRoomFragment extends Fragment {
                 price = view.findViewById(R.id.etPrice);
                 tvPrice.setVisibility(View.GONE);
                 price.setVisibility(View.VISIBLE);
+
+                price.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(price, InputMethodManager.SHOW_IMPLICIT);
                 price.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -212,6 +223,7 @@ public class NinthRoomFragment extends Fragment {
                             tvPrice.setText(price.getText().toString());
                             price.setVisibility(View.GONE);
                             tvPrice.setVisibility(View.VISIBLE);
+
                             Intent i = new Intent(getActivity(), PriceSnackBar.class);
                             i.putExtra("datum", av.getDate());
                             i.putExtra("roomID", id);
@@ -298,6 +310,11 @@ public class NinthRoomFragment extends Fragment {
 
                 tvMinStay.setVisibility(View.GONE);
                 minStay.setVisibility(View.VISIBLE);
+
+                minStay.setCursorVisible(true);
+                minStay.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(minStay, InputMethodManager.SHOW_IMPLICIT);
                 minStay.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -307,7 +324,7 @@ public class NinthRoomFragment extends Fragment {
                             tvMinStay.setText(minStay.getText().toString());
                             minStay.setVisibility(View.GONE);
                             tvMinStay.setVisibility(View.VISIBLE);
-                            Intent minStays = new Intent(getActivity(), ClosureSnackBar.class);
+                            Intent minStays = new Intent(getActivity(), RestrictionSnackBar.class);
                             minStays.putExtra("datum", av.getDate());
                             minStays.putExtra("minStay", minStay.getText().toString());
                             startActivityForResult(minStays, 18);
@@ -327,6 +344,11 @@ public class NinthRoomFragment extends Fragment {
 
                 tvMinStayArr.setVisibility(View.GONE);
                 minStayArr.setVisibility(View.VISIBLE);
+
+                minStayArr.setCursorVisible(true);
+                minStayArr.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(minStayArr, InputMethodManager.SHOW_IMPLICIT);
                 minStayArr.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -336,7 +358,7 @@ public class NinthRoomFragment extends Fragment {
                             tvMinStayArr.setText(minStayArr .getText().toString());
                             minStayArr.setVisibility(View.GONE);
                             tvMinStayArr.setVisibility(View.VISIBLE);
-                            Intent minStayArrs = new Intent(getActivity(), ClosureSnackBar.class);
+                            Intent minStayArrs = new Intent(getActivity(), RestrictionSnackBar.class);
                             minStayArrs.putExtra("datum", av.getDate());
                             minStayArrs.putExtra("minStayArr", minStayArr.getText().toString());
                             startActivityForResult(minStayArrs, 17);
@@ -355,6 +377,11 @@ public class NinthRoomFragment extends Fragment {
 
                 tvMaxStay.setVisibility(View.GONE);
                 maxStay.setVisibility(View.VISIBLE);
+
+                maxStay.setCursorVisible(true);
+                maxStay.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(maxStay, InputMethodManager.SHOW_IMPLICIT);
                 maxStay.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -365,7 +392,7 @@ public class NinthRoomFragment extends Fragment {
                             maxStay.setVisibility(View.GONE);
                             tvMaxStay.setVisibility(View.VISIBLE);
 
-                            Intent maxStays = new Intent(getActivity(), ClosureSnackBar.class);
+                            Intent maxStays = new Intent(getActivity(), RestrictionSnackBar.class);
                             maxStays.putExtra("datum", av.getDate());
                             maxStays.putExtra("maxStay", maxStay.getText().toString());
                             startActivityForResult(maxStays, 16);
@@ -397,8 +424,9 @@ public class NinthRoomFragment extends Fragment {
                 a.setLcode(u.getProperties().get(0).getLcode());
                 a.setDfrom(changeFormat);
                 a.setDto(LocalDate.now().plusDays(35).toString());
-                a.setPriceId("121900");
-                a.setRestrictionId("55482");
+                a.setArr("");
+//                a.setPriceId("121900");
+//                a.setRestrictionId("55482");
 
                 WebApiManager.get(getContext()).getWebApi().availability(a).enqueue(new Callback<Availability>() {
                     @Override
@@ -515,7 +543,7 @@ public class NinthRoomFragment extends Fragment {
 
 //            String date = data.getStringExtra("datum");
 
-            Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+            Intent closure = new Intent(getActivity(), RestrictionSnackBar.class);
             closure.putExtra("onCheckIn", checkIn.getText().toString());
 //            closure.putExtra("datum", date);
             startActivityForResult(closure, 221);
@@ -549,7 +577,7 @@ public class NinthRoomFragment extends Fragment {
             }
 
 //            String date = data.getStringExtra("datum");
-            Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+            Intent closure = new Intent(getActivity(), RestrictionSnackBar.class);
             closure.putExtra("onCheckOut", checkOut.getText().toString());
 //            closure.putExtra("datum", date);
             startActivityForResult(closure, 220);
@@ -582,7 +610,7 @@ public class NinthRoomFragment extends Fragment {
             }
 
 //            String date = data.getStringExtra("datum");
-            Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+            Intent closure = new Intent(getActivity(), RestrictionSnackBar.class);
 //            closure.putExtra("datum", date);
             startActivityForResult(closure, 219);
         }
@@ -629,7 +657,7 @@ public class NinthRoomFragment extends Fragment {
 //                String date = data.getStringExtra("datum");
 //                String day = data.getStringExtra("day");
 //                minStayArr.setText(day);
-//                Intent minStayArrs = new Intent(getActivity(), ClosureSnackBar.class);
+//                Intent minStayArrs = new Intent(getActivity(), RestrictionSnackBar.class);
 //                minStayArrs.putExtra("minStayArr", day);
 //                minStayArrs.putExtra("datum", date);
 //                startActivityForResult(minStayArrs, 217);
@@ -655,7 +683,7 @@ public class NinthRoomFragment extends Fragment {
 //                String date = data.getStringExtra("datum");
 //                String day = data.getStringExtra("day");
 //                maxStay.setText(day);
-//                Intent maxStays = new Intent(getActivity(), ClosureSnackBar.class);
+//                Intent maxStays = new Intent(getActivity(), RestrictionSnackBar.class);
 //                maxStays.putExtra("maxStay", day);
 //                maxStays.putExtra("dates", date);
 //                startActivityForResult(maxStays, 216);

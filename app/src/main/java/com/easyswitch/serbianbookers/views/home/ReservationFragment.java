@@ -1,17 +1,18 @@
 package com.easyswitch.serbianbookers.views.home;
 
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -34,15 +35,18 @@ import com.easyswitch.serbianbookers.adapters.ReservationAdapter;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.Reservation;
+import com.easyswitch.serbianbookers.models.ReservationFilter;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
-import com.easyswitch.serbianbookers.views.dialog.TimeDialog;
 import com.easyswitch.serbianbookers.views.filter.FilterActivity;
-import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +61,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by: Stefan Vasic
  */
-public class ReservationFragment extends Fragment implements View.OnKeyListener {
+public class ReservationFragment extends Fragment {
 
     @BindView(R.id.ivLogo)
     ImageView ivLogo;
@@ -76,13 +80,18 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
     TextView tvFilter;
     @BindView(R.id.clCancelFilter)
     ConstraintLayout clCancelFilter;
+    @SuppressLint("SimpleDateFormat")
+    private DateFormat dateParse = new SimpleDateFormat("dd.MM.yyyy.");
+    @SuppressLint("SimpleDateFormat")
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     User u;
     ArrayList<Reservation> reservationList = new ArrayList<>();
     ReservationAdapter reservationAdapter;
     BroadcastReceiver broadcastReceiver;
     DataBody dataBody = new DataBody();
-    String dateFromBroadcast;
+    String query, dateArrFrom, dateArrTo, dateDepFrom, dateDepTo, dateResFrom, dateResTo, channel;
+    int id = 0;
 
     public static ReservationFragment newInstance() {
         
@@ -109,8 +118,8 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
         dataBody.setKey(App.getInstance().getCurrentUser().getKey());
         dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
-        dataBody.setNewsOrderBy("2019-10-21");
-        dataBody.setNewsOrderType("");
+        dataBody.setNewsOrderBy("date_arrival");
+        dataBody.setNewsOrderType("ASC");
         dataBody.setNewsDfrom("");
         dataBody.setEventsDfrom("");
         dataBody.setEventsDto("");
@@ -179,9 +188,9 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
 
         u = getActivity().getIntent().getParcelableExtra("currentUser");
         DataBody dataBody = new DataBody();
-        dataBody.setKey(u.getKey());
-        dataBody.setLcode(u.getProperties().get(0).getLcode());
-        dataBody.setAccount(u.getAccount());
+        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
+        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
         dataBody.setNewsOrderBy("2019-10-21");
         dataBody.setNewsOrderType("");
         dataBody.setNewsDfrom("");
@@ -197,21 +206,24 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
         dataBody.setGuestsOrderBy("135");
         dataBody.setGuestsOrderType("");
 
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getData(dataBody).observe(this, new Observer<Data>() {
+        WebApiManager.get(getContext()).getWebApi().data(dataBody).enqueue(new Callback<Data>() {
             @Override
-            public void onChanged(Data data) {
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                if (response.isSuccessful()) {
+                    for (int i = 0; i < response.body().getReceived().size(); i++) {
+                        if (!response.body().getReceived().get(i).getDateArrival().equals(dateArrFrom)) {
 
-                if (data == null) return;
-
-                if (data.getReceived() != null) {
-                    reservationList.clear();
-                    reservationList.addAll(data.getReceived());
-                    reservationAdapter.notifyDataSetChanged();
-                } else {
-                    ArrayList<Reservation> tmpList = new ArrayList<>();
-                    tmpList.addAll(data.getReceived());
+                            reservationList.clear();
+                            reservationList.addAll(response.body().getReceived());
+                            reservationAdapter.notifyDataSetChanged();
+                        }
+                    }
                 }
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+
             }
         });
 
@@ -236,52 +248,170 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
                 clFilter.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
                 clCancelFilter.setVisibility(View.VISIBLE);
 
-//                String query = data.getStringExtra("query");
+                if (id == 6) {
+                    Search search = new Search();
+                    search.setKey(App.getInstance().getCurrentUser().getKey());
+                    search.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    search.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    search.setKeyword(query);
 
-//                Search search = new Search();
-//                search.setKey(App.getInstance().getCurrentUser().getKey());
-//                search.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-//                search.setAccount(App.getInstance().getCurrentUser().getAccount());
-//                search.setKeyword(query);
-//
-//                WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-//                webApiClient.getSearch(search).observe(this, new Observer<Search>() {
-//                    @Override
-//                    public void onChanged(Search search) {
-//                        if (search == null) return;
-//
-//                        if (search.getReservationList() != null) {
-//                            reservationList.clear();
-//                            reservationList.addAll(search.getReservationList());
-//                            reservationAdapter.notifyDataSetChanged();
-//                        } else {
-//                            ArrayList<Reservation> tmpList = new ArrayList<>();
-//                            tmpList.addAll(search.getReservationList());
-//                            reservationAdapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                });
+                    WebApiManager.get(getActivity()).getWebApi().search(search).enqueue(new Callback<Search>() {
+                        @Override
+                        public void onResponse(Call<Search> call, Response<Search> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body() == null) return;
 
-                WebApiManager.get(getContext()).getWebApi().data(dataBody).enqueue(new Callback<Data>() {
-                    @Override
-                    public void onResponse(Call<Data> call, Response<Data> response) {
-                        if (response.isSuccessful()) {
-                            for (int i = 0; i < response.body().getReceived().size(); i++) {
-                                if (!response.body().getReceived().get(i).getDateArrival().equals(dateFromBroadcast)) {
-
+                                if (response.body().getReservationList() != null) {
                                     reservationList.clear();
-                                    reservationList.addAll(response.body().getReceived());
+                                    reservationList.addAll(response.body().getReservationList());
+                                    reservationAdapter.notifyDataSetChanged();
+                                } else {
+                                    ArrayList<Reservation> tmpList = new ArrayList<>();
+                                    tmpList.addAll(response.body().getReservationList());
                                     reservationAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Data> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<Search> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
+                if (id == 1) {
+                    ReservationFilter rf = new ReservationFilter();
+                    rf.setKey(App.getInstance().getCurrentUser().getKey());
+                    rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    rf.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    rf.setOrderBy("date_arrival");
+                    rf.setOrderType("ASC");
+                    rf.setDateArrivalFrom(getDate(dateArrFrom));
+                    rf.setDateArrivalTo(getDate(dateArrTo));
+
+                    WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                        @Override
+                        public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                            if (response.isSuccessful()) {
+                                reservationList.clear();
+                                reservationList.addAll(response.body().getFilterReservationList());
+                                reservationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReservationFilter> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                if (id == 2) {
+                    ReservationFilter rf = new ReservationFilter();
+                    rf.setKey(App.getInstance().getCurrentUser().getKey());
+                    rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    rf.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    rf.setOrderBy("date_arrival");
+                    rf.setOrderType("ASC");
+                    rf.setDateDepartureFrom(getDate(dateDepFrom));
+                    rf.setDateDepartureTo(getDate(dateDepTo));
+
+                    WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                        @Override
+                        public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                            if (response.isSuccessful()) {
+                                reservationList.clear();
+                                reservationList.addAll(response.body().getFilterReservationList());
+                                reservationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReservationFilter> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                if (id == 3) {
+                    ReservationFilter rf = new ReservationFilter();
+                    rf.setKey(App.getInstance().getCurrentUser().getKey());
+                    rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    rf.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    rf.setOrderBy("date_arrival");
+                    rf.setOrderType("ASC");
+                    rf.setDateReceivedFrom(getDate(dateResFrom));
+                    rf.setDateReceivedTo(getDate(dateResTo));
+
+                    WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                        @Override
+                        public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                            if (response.isSuccessful()) {
+                                reservationList.clear();
+                                reservationList.addAll(response.body().getFilterReservationList());
+                                reservationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReservationFilter> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                if (id == 4) {
+                    ReservationFilter rf = new ReservationFilter();
+                    rf.setKey(App.getInstance().getCurrentUser().getKey());
+                    rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    rf.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    rf.setOrderBy("date_arrival");
+                    rf.setOrderType("ASC");
+                    rf.setStatus(channel);
+
+                    WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                        @Override
+                        public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                            if (response.isSuccessful()) {
+                                reservationList.clear();
+                                reservationList.addAll(response.body().getFilterReservationList());
+                                reservationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReservationFilter> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                if (id == 5) {
+                    ReservationFilter rf = new ReservationFilter();
+                    rf.setKey(App.getInstance().getCurrentUser().getKey());
+                    rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    rf.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    rf.setOrderBy("date_arrival");
+                    rf.setOrderType("ASC");
+                    rf.setChannel(channel);
+
+                    WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                        @Override
+                        public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                            if (response.isSuccessful()) {
+                                reservationList.clear();
+                                reservationList.addAll(response.body().getFilterReservationList());
+                                reservationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReservationFilter> call, Throwable t) {
+
+                        }
+                    });
+                }
             }
         }
     }
@@ -294,10 +424,16 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                dateFromBroadcast = intent.getExtras().getString("arrDateFrom");
-                String dateFromBroadcast1 = intent.getExtras().getString("arrDateTo");
+                query = intent.getExtras().getString("query");
 
-
+                id = intent.getIntExtra("arrID", 0);
+                dateArrFrom = intent.getExtras().getString("arrDateFrom");
+                dateArrTo = intent.getExtras().getString("arrDateTo");
+                dateDepFrom = intent.getExtras().getString("depDateFrom");
+                dateDepTo = intent.getExtras().getString("depDateTo");
+                dateResFrom = intent.getExtras().getString("resDateFrom");
+                dateResTo = intent.getExtras().getString("resDateTo");
+                channel = intent.getExtras().getString("channel");
             }
         };
         getActivity().registerReceiver(broadcastReceiver, filter);
@@ -313,13 +449,17 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
     public void openSearch() {
         ivLogo.setVisibility(View.GONE);
         searchView.setVisibility(View.VISIBLE);
+
+        searchView.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Search search = new Search();
-                search.setKey("6229dbc00c2d22e48b68db46b1e80c662a267931");
-                search.setLcode("1521199571");
-                search.setAccount("PV117");
+                search.setKey(App.getInstance().getCurrentUser().getKey());
+                search.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                search.setAccount(App.getInstance().getCurrentUser().getAccount());
                 search.setKeyword(query);
 
                 WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
@@ -351,17 +491,21 @@ public class ReservationFragment extends Fragment implements View.OnKeyListener 
         });
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-        }
-
-        return true;
-    }
-
     @OnClick(R.id.navigationViewBtn)
     public void openNavigationView() {
         Intent i = new Intent(getActivity(), NavigationViewActivity.class);
         startActivityForResult(i, 200);
+    }
+
+    @NotNull
+    private String getDate(String date) {
+        try {
+            Date d = dateParse.parse(date);
+
+            return dateFormat.format(d);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
     }
 }
