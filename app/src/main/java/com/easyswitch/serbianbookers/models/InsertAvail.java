@@ -19,6 +19,9 @@ public class InsertAvail {
     @SerializedName("dfrom")
     @Expose
     private String dfrom;
+    @SerializedName("dto")
+    @Expose
+    private String dto;
     @SerializedName("old_values")
     @Expose
     private Object oldValues;
@@ -63,6 +66,14 @@ public class InsertAvail {
 
     public void setDfrom(String dfrom) {
         this.dfrom = dfrom;
+    }
+
+    public String getDto() {
+        return dto;
+    }
+
+    public void setDto(String dto) {
+        this.dto = dto;
     }
 
     public Object getOldValues() {

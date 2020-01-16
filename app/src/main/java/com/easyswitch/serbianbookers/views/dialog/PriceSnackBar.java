@@ -63,7 +63,7 @@ public class PriceSnackBar extends AppCompatActivity {
 
     @OnClick(R.id.tvSave)
     public void onSave() {
-
+        setResult(RESULT_OK);
         AvailabilityData av = new AvailabilityData();
         Integer prc = av.setPrice(Integer.valueOf(price));
 
@@ -74,21 +74,21 @@ public class PriceSnackBar extends AppCompatActivity {
         newValues.setRoomId(String.valueOf(id));
         newValues.setAvailabilityData(priceList);
 
-//        InsertPrice ip = new InsertPrice();
-//        ip.setKey(App.getInstance().getCurrentUser().getKey());
-//        ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-//        ip.setAccount(App.getInstance().getCurrentUser().getAccount());
-//        ip.setDfrom(date);
-//        ip.setPid();
-//        ip.setOldValues("");
-//        ip.setNewValues(newValues);
-//
-//        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-//        webApiClient.getInsertPrice(ip).observe(this, new Observer<InsertPrice>() {
-//            @Override
-//            public void onChanged(InsertPrice insertPrice) {
-//            }
-//        });
+        InsertPrice ip = new InsertPrice();
+        ip.setKey(App.getInstance().getCurrentUser().getKey());
+        ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        ip.setAccount(App.getInstance().getCurrentUser().getAccount());
+        ip.setDfrom(date);
+        ip.setPid("");
+        ip.setOldValues("");
+        ip.setNewValues(newValues);
+
+        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+        webApiClient.getInsertPrice(ip).observe(this, new Observer<InsertPrice>() {
+            @Override
+            public void onChanged(InsertPrice insertPrice) {
+            }
+        });
         finish();
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }

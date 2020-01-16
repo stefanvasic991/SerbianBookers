@@ -24,8 +24,11 @@ import com.easyswitch.serbianbookers.models.InsertAvailData;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.NewValues;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.models.insert.Closed;
+import com.easyswitch.serbianbookers.models.insert.ClosedInOut;
 import com.easyswitch.serbianbookers.models.insert.MaxStay;
 import com.easyswitch.serbianbookers.models.insert.MinStay;
+import com.easyswitch.serbianbookers.models.insert.MinStayArr;
 import com.easyswitch.serbianbookers.views.home.HomeFragment;
 import com.google.gson.Gson;
 
@@ -47,7 +50,8 @@ public class RestrictionSnackBar extends AppCompatActivity {
     String empty = "";
     String date, roomID;
     BroadcastReceiver broadcastReceiver;
-    String closure, onCheckIn, onCheckOut, minStay, minStayArr, maxStay, avail;
+    String closure, onCheckIn, onCheckOut, minStay, minStayArr, maxStay;
+    Integer closedInOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,33 +60,18 @@ public class RestrictionSnackBar extends AppCompatActivity {
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
         ButterKnife.bind(this);
 
-//        IntentFilter filter = new IntentFilter("sendData");
-//        broadcastReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                minStay = intent.getExtras().getString("oldMin");
-//            }
-//        };
-//        registerReceiver(broadcastReceiver, filter);
-
-
-//        Toast.makeText(this, minStay, Toast.LENGTH_SHORT).show();
-
         u = getIntent().getParcelableExtra("currentUser");
         date  = getIntent().getStringExtra("datum");
 
         roomID = getIntent().getStringExtra("roomID");
         closure = getIntent().getStringExtra("closure");
+        closedInOut = getIntent().getIntExtra("closed", 0);
         onCheckIn = getIntent().getStringExtra("onCheckIn");
         onCheckOut = getIntent().getStringExtra("onCheckOut");
         minStay = getIntent().getStringExtra("minStay");
         minStayArr = getIntent().getStringExtra("minStayArr");
         maxStay = getIntent().getStringExtra("maxStay");
-        avail = getIntent().getStringExtra("avail");
 
-        if (closure ==  null) {
-            closure = "/";
-        }
     }
 
     @Override
@@ -106,50 +95,43 @@ public class RestrictionSnackBar extends AppCompatActivity {
     @OnClick(R.id.tvSave)
     public void onSave() {
         setResult(RESULT_OK);
-
-        List<NewValues> nwList = new ArrayList<>();
-
-        Toast.makeText(getApplicationContext(), minStay+minStayArr+maxStay, Toast.LENGTH_SHORT).show();
-
         InsertAvailData av = new InsertAvailData();
-//        if (minStay == null) {
-//            av.setMinStay(0);
-//            Toast.makeText(this, minStay, Toast.LENGTH_SHORT).show();
-//        } else {
-//            av.setMinStay(minStay);
-//            Toast.makeText(this, minStay, Toast.LENGTH_SHORT).show();
-//        }
+
+        Closed cio = new Closed();
+        cio.setClosed(closedInOut);
 
         MinStay ms = new MinStay();
         ms.setMinStay(minStay);
 
+        MinStayArr msa = new MinStayArr();
+        msa.setMinStayArr(minStayArr);
+
         MaxStay maxs = new MaxStay();
         maxs.setMaxStay(maxStay);
 
-        av.setMinStay(ms);
-        av.setMinStayArrival(2);
-        av.setMaxStay(maxs);
+        av.setMin_stay(ms);
+        av.setMin_stay_arrival(msa);
+        av.setMax_stay(maxs);
+        av.setClosedArrival(cio);
+        av.setClosedDeparture(cio);
 
         NewValues newValues = new NewValues();
-        newValues.setRoomId("229827");
+        newValues.setRoomId("416694");
         newValues.setAvailabilityData(Collections.singletonList(av));
-        nwList.add(newValues);
 
-
-        InsertAvail ia = new InsertAvail();
-        ia.setKey(App.getInstance().getCurrentUser().getKey());
-        ia.setAccount(App.getInstance().getCurrentUser().getAccount());
-        ia.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        ia.setDfrom(date);
-//        ir.setPid(data.getRestrictions().get(0).getId());
-//        ia.setPid("55482");
-        ia.setOldValues("");
-        ia.setNewValues(nwList);
+        InsertRestriction ir = new InsertRestriction();
+        ir.setKey(App.getInstance().getCurrentUser().getKey());
+        ir.setAccount(App.getInstance().getCurrentUser().getAccount());
+        ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        ir.setDfrom(date);
+        ir.setPid("");
+        ir.setOldValues("");
+        ir.setNewValues(newValues);
 
         WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getInsertAvail(ia).observe(this, new Observer<InsertAvail>() {
+        webApiClient.getInsertRestriction(ir).observe(this, new Observer<InsertRestriction>() {
             @Override
-            public void onChanged(InsertAvail insertAvail) {
+            public void onChanged(InsertRestriction insertRestriction) {
 
             }
         });

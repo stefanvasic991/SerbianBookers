@@ -321,7 +321,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             }
          }
 
-         @OnClick(R.id.mbStatus)
+         @OnClick({R.id.mbStatus, R.id.tvClosure})
         public void changeStatus() {
              if (onStatusChangeListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
                  onStatusChangeListener.onStatusChanged(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
@@ -329,12 +329,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
 
          }
 
-         @OnClick(R.id.tvClosure)
-        public void ChangeClosure() {
-             if (onOpenClosureChangeListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                 onOpenClosureChangeListener.onOpenClosureChanged(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
-             }
-         }
+//         @OnClick(R.id.tvClosure)
+//        public void ChangeClosure() {
+//             if (onOpenClosureChangeListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+//                 onOpenClosureChangeListener.onOpenClosureChanged(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
+//             }
+//         }
 
         @OnClick(R.id.tvOnCheckIn)
         public void ChangeOnCheckIn() {

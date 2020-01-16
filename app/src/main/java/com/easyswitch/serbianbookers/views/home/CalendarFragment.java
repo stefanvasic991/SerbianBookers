@@ -147,33 +147,7 @@ public class CalendarFragment extends Fragment {
 //        };
 //        getActivity().registerReceiver(broadcastReceiver, filter);
 
-        DataBody dataBody = new DataBody();
-        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
-        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
-        dataBody.setNewsOrderBy("2019-12-25");
-        dataBody.setNewsOrderType("");
-        dataBody.setNewsDfrom("");
-        dataBody.setEventsDfrom("");
-        dataBody.setEventsDto("");
-        dataBody.setCalendarDfrom("2019-12-25");
-        dataBody.setCalendarDto("2020-12-24");
-        dataBody.setReservationsDfrom("2020-12-25");
-        dataBody.setReservationsDto("2020-01-24");
-        dataBody.setReservationsOrderBy("3");
-        dataBody.setReservationsFilterBy("2019-12-24");
-        dataBody.setReservationsOrderType("");
-        dataBody.setGuestsOrderBy("135");
-        dataBody.setGuestsOrderType("");
 
-        WebApiClient dataApi = ViewModelProviders.of(this).get(WebApiClient.class);
-        dataApi.getData(dataBody).observe(this, new Observer<Data>() {
-            @Override
-            public void onChanged(Data data) {
-                priceID = data.getPrices().get(0).getName();
-                restrictionID = data.getRestrictions().get(0).getName();
-            }
-        });
 
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);

@@ -17,6 +17,9 @@ public class InsertRestriction {
     @SerializedName("dfrom")
     @Expose
     private String dfrom;
+    @SerializedName("dto")
+    @Expose
+    private String dto;
     @SerializedName("pid")
     @Expose
     private String pid;
@@ -64,6 +67,14 @@ public class InsertRestriction {
 
     public void setDfrom(String dfrom) {
         this.dfrom = dfrom;
+    }
+
+    public String getDto() {
+        return dto;
+    }
+
+    public void setDto(String dto) {
+        this.dto = dto;
     }
 
     public String getPid() {

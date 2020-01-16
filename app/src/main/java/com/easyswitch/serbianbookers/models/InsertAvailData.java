@@ -1,7 +1,12 @@
 package com.easyswitch.serbianbookers.models;
 
+import com.easyswitch.serbianbookers.models.insert.Avail;
+import com.easyswitch.serbianbookers.models.insert.Closed;
+import com.easyswitch.serbianbookers.models.insert.ClosedInOut;
 import com.easyswitch.serbianbookers.models.insert.MaxStay;
 import com.easyswitch.serbianbookers.models.insert.MinStay;
+import com.easyswitch.serbianbookers.models.insert.MinStayArr;
+import com.easyswitch.serbianbookers.models.insert.NoOta;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +14,7 @@ public class InsertAvailData {
 
     @SerializedName("closed_arrival")
     @Expose
-    private Object closedArrival;
+    private Closed closedArrival;
     @SerializedName("booked")
     @Expose
     private Object booked;
@@ -18,7 +23,7 @@ public class InsertAvailData {
     private Object maxStayArrival;
     @SerializedName("closed")
     @Expose
-    private Object closed;
+    private Closed closed;
     @SerializedName("price")
     @Expose
     private Object price;
@@ -27,19 +32,19 @@ public class InsertAvailData {
     private MinStay min_stay;
     @SerializedName("closed_departure")
     @Expose
-    private Object closedDeparture;
+    private Closed closedDeparture;
     @SerializedName("avail")
     @Expose
-    private Object avail;
+    private Avail avail;
     @SerializedName("max_stay")
     @Expose
     private MaxStay max_stay;
     @SerializedName("min_stay_arrival")
     @Expose
-    private Object min_stay_arrival;
+    private MinStayArr min_stay_arrival;
     @SerializedName("no_ota")
     @Expose
-    private Object noOta;
+    private NoOta no_ota;
     @SerializedName("date")
     @Expose
     private Object date;
@@ -47,11 +52,11 @@ public class InsertAvailData {
     @Expose
     private Object day;
 
-    public Object getClosedArrival() {
+    public Closed getClosedArrival() {
         return closedArrival;
     }
 
-    public void setClosedArrival(Object closedArrival) {
+    public void setClosedArrival(Closed closedArrival) {
         this.closedArrival = closedArrival;
     }
 
@@ -71,11 +76,11 @@ public class InsertAvailData {
         this.maxStayArrival = maxStayArrival;
     }
 
-    public Object getClosed() {
+    public Closed getClosed() {
         return closed;
     }
 
-    public void setClosed(Object closed) {
+    public void setClosed(Closed closed) {
         this.closed = closed;
     }
 
@@ -87,52 +92,52 @@ public class InsertAvailData {
         this.price = price;
     }
 
-    public MinStay getMinStay() {
+    public MinStay getMin_stay() {
         return min_stay;
     }
 
-    public void setMinStay(MinStay minStay) {
-        this.min_stay = minStay;
+    public void setMin_stay(MinStay min_stay) {
+        this.min_stay = min_stay;
     }
 
-    public Object getClosedDeparture() {
+    public Closed getClosedDeparture() {
         return closedDeparture;
     }
 
-    public void setClosedDeparture(Object closedDeparture) {
+    public void setClosedDeparture(Closed closedDeparture) {
         this.closedDeparture = closedDeparture;
     }
 
-    public Object getAvail() {
+    public Avail getAvail() {
         return avail;
     }
 
-    public void setAvail(Object avail) {
+    public void setAvail(Avail avail) {
         this.avail = avail;
     }
 
-    public MaxStay getMaxStay() {
+    public MaxStay getMax_stay() {
         return max_stay;
     }
 
-    public void setMaxStay(MaxStay maxStay) {
-        this.max_stay = maxStay;
+    public void setMax_stay(MaxStay max_stay) {
+        this.max_stay = max_stay;
     }
 
-    public Object getMinStayArrival() {
+    public MinStayArr getMin_stay_arrival() {
         return min_stay_arrival;
     }
 
-    public void setMinStayArrival(Object minStayArrival) {
-        this.min_stay_arrival = minStayArrival;
+    public void setMin_stay_arrival(MinStayArr min_stay_arrival) {
+        this.min_stay_arrival = min_stay_arrival;
     }
 
-    public Object getNoOta() {
-        return noOta;
+    public NoOta getNo_ota() {
+        return no_ota;
     }
 
-    public void setNoOta(Object noOta) {
-        this.noOta = noOta;
+    public void setNo_ota(NoOta no_ota) {
+        this.no_ota = no_ota;
     }
 
     public Object getDate() {

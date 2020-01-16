@@ -82,6 +82,7 @@ public class FilterActivity extends AppCompatActivity {
     String selected;
     List<String> channels = new ArrayList<>();
     List<String> rooms = new ArrayList<>();
+    List<String> Id = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,9 +154,11 @@ public class FilterActivity extends AppCompatActivity {
 
                 for (int i = 0; i < data.getChannels().size(); i++) {
                     channels.addAll(Collections.singleton(data.getChannels().get(i).getName()));
+                    Id.addAll(Collections.singleton(data.getChannels().get(i).getId()));
                 }
 
-                ArrayAdapter<String> cAdapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_dropdown_item, channels);
+                ArrayAdapter<String> cAdapter = new ArrayAdapter<>(getApplication(),
+                        android.R.layout.simple_spinner_dropdown_item, channels);
                 channelSpinner.setAdapter(cAdapter);
                 channelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -179,7 +182,8 @@ public class FilterActivity extends AppCompatActivity {
                     rooms.addAll(Collections.singleton(data.getRooms().get(i).getShortname()));
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_item, rooms);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplication(),
+                        android.R.layout.simple_spinner_item, rooms);
                 typeSpinner.setAdapter(adapter, false, onSelectedListener);
 
                 boolean[] selectedItems = new boolean[adapter.getCount()];

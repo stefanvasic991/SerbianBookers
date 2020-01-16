@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,13 +13,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -36,16 +33,14 @@ import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.adapters.CalendarAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
-import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.views.dialog.AvailabilitySnackBar;
+import com.easyswitch.serbianbookers.views.dialog.ClosureSnackBar;
 import com.easyswitch.serbianbookers.views.dialog.RestrictionSnackBar;
 import com.easyswitch.serbianbookers.views.dialog.OpenClosureActivity;
 import com.easyswitch.serbianbookers.views.dialog.OtaActivity;
 import com.easyswitch.serbianbookers.views.dialog.PriceSnackBar;
-import com.easyswitch.serbianbookers.views.dialog.SnackBarDialog;
-import com.easyswitch.serbianbookers.views.home.HomeFragment;
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.LocalDate;
@@ -90,7 +85,8 @@ public class FirstRoomFragment extends Fragment {
     View vCheckIn, vCheckOut;
     ImageView ivClose;
     LinearLayout llInfo;
-    Integer id;
+    Integer id, closedOptions;
+    String priceID, restrictionID, noOta, datum, closure;
 
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateParse = new SimpleDateFormat("dd.MM.yyyy.");
@@ -117,52 +113,33 @@ public class FirstRoomFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_jednosobni, container, false);
         ButterKnife.bind(this, view);
 
-        SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sp.getString("Data", "");
-        Data data = gson.fromJson(json, Data.class);
-
         u = getActivity().getIntent().getParcelableExtra("currentUser");
         assert u != null;
-        av.setKey(u.getKey());
-        av.setAccount(u.getAccount());
-        av.setLcode(u.getProperties().get(0).getLcode());
+        av.setKey(App.getInstance().getCurrentUser().getKey());
+        av.setAccount(App.getInstance().getCurrentUser().getAccount());
+        av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         av.setDfrom(LocalDate.now().toString());
         av.setDto(LocalDate.now().plusDays(60).toString());
         av.setArr("");
-//        av.setPriceId("46439");
-//        av.setRestrictionId("55482");
-//        av.setPriceId(data.getPrices().get(1).getId());
-//        av.setRestrictionId(data.getRestrictions().get(0).getId());
+//        av.setPriceId(priceID);
+//        av.setRestrictionId(restrictionID);
 
         WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, availability -> {
+        webApiClient.getAvailability(av).observe(getActivity(), availability -> {
 
             if (availability == null) return;
 
-                    if (availability.getAvailabilityList() != null) {
-                        calendarList.clear();
-                        calendarList.addAll(availability.getAvailabilityList().get(0).getData());
-                        calendarAdapter.notifyDataSetChanged();
-                    } else {
-                        List<AvailabilityData> tmpList = new ArrayList<>();
-                        tmpList.addAll(availability.getAvailabilityList().get(0).getData());
-                        calendarAdapter.notifyDataSetChanged();
-                    }
+            if (availability.getAvailabilityList() != null) {
+                calendarList.clear();
+                calendarList.addAll(availability.getAvailabilityList().get(0).getData());
+                calendarAdapter.notifyDataSetChanged();
+            } else {
+                List<AvailabilityData> tmpList = new ArrayList<>();
+                tmpList.addAll(availability.getAvailabilityList().get(0).getData());
+                calendarAdapter.notifyDataSetChanged();
+            }
 
-                    id = availability.getAvailabilityList().get(0).getId();
-
-                    Intent oldData = new Intent();
-                    oldData.setAction("sendData");
-                    oldData.putExtra("oldMin", availability.getAvailabilityList().get(0).getData().get(0).getMinStay());
-                    getActivity().sendBroadcast(oldData);
-
-//            SharedPreferences.Editor prefs = Objects.requireNonNull(getActivity())
-//                    .getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE).edit();
-//            Gson gson = new Gson();
-//            String json = gson.toJson(availability);
-//            prefs.putString("availability", json);
-//            prefs.apply();
+            id = availability.getAvailabilityList().get(0).getId();
         });
 
         calendarAdapter = new CalendarAdapter(getActivity(), calendarList);
@@ -211,7 +188,7 @@ public class FirstRoomFragment extends Fragment {
                             tvAvail.setText(etAvail.getText().toString());
                             etAvail.setVisibility(View.GONE);
                             tvAvail.setVisibility(View.VISIBLE);
-                            Intent avails = new Intent(getActivity(), RestrictionSnackBar.class);
+                            Intent avails = new Intent(getActivity(), AvailabilitySnackBar.class);
                             avails.putExtra("datum", av.getDate());
                             avails.putExtra("roomID", id);
                             avails.putExtra("avail", tvAvail.getText().toString());
@@ -266,34 +243,46 @@ public class FirstRoomFragment extends Fragment {
             public void onStatusChanged(View view, int position, AvailabilityData av) {
 
                 status = view.findViewById(R.id.mbStatus);
+                openClosure = view.findViewById(R.id.tvClosure);
+                checkIn = view.findViewById(R.id.tvOnCheckIn);
+                checkOut = view.findViewById(R.id.tvOnCheckOut);
                 if (status.getTag().equals("0")) {
                     status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
                     status.setTag("1");
+                    closedOptions = 1;
+                    openClosure.setText("Zatvoreno");
+                    checkIn.setFocusable(false);
+                    checkOut.setFocusable(false);
 
-                    Intent i = new Intent(getActivity(), SnackBarDialog.class);
+                    Intent i = new Intent(getActivity(), ClosureSnackBar.class);
                     i.putExtra("datum", av.getDate());
+                    i.putExtra("closedOptions", closedOptions);
                     i.putExtra("status", status.getTag().toString());
                     startActivityForResult(i, 11);
                 } else if (status.getTag().equals("1")) {
                     status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
                     status.setTag("0");
-                    Intent i = new Intent(getActivity(), SnackBarDialog.class);
+                    closedOptions = 0;
+                    openClosure.setText("Otvoreno");
+
+                    Intent i = new Intent(getActivity(), ClosureSnackBar.class);
                     i.putExtra("datum", av.getDate());
+                    i.putExtra("closedOptions", closedOptions);
                     i.putExtra("status", status.getTag().toString());
                     startActivityForResult(i, 11);
                 }
             }
         });
 
-        calendarAdapter.setOnOpenClosureChangeListener(new CalendarAdapter.OnOpenClosureChangeListener() {
-            @Override
-            public void onOpenClosureChanged(View view, int position, AvailabilityData av) {
-                openClosure = view.findViewById(R.id.tvClosure);
-                llInfo = view.findViewById(R.id.llInfo);
-                Intent openClosure = new Intent(getActivity(), OpenClosureActivity.class);
-                startActivityForResult(openClosure, 22);
-            }
-        });
+//        calendarAdapter.setOnOpenClosureChangeListener(new CalendarAdapter.OnOpenClosureChangeListener() {
+//            @Override
+//            public void onOpenClosureChanged(View view, int position, AvailabilityData av) {
+//                openClosure = view.findViewById(R.id.tvClosure);
+//                llInfo = view.findViewById(R.id.llInfo);
+//                Intent openClosure = new Intent(getActivity(), OpenClosureActivity.class);
+//                startActivityForResult(openClosure, 22);
+//            }
+//        });
 
         calendarAdapter.setOnCheckInListener(new CalendarAdapter.OnCheckInListener() {
             @Override
@@ -302,6 +291,7 @@ public class FirstRoomFragment extends Fragment {
                 vCheckIn = view.findViewById(R.id.vOnCheckIn);
                 llInfo = view.findViewById(R.id.llInfo);
                 Intent openClosure = new Intent(getActivity(), OpenClosureActivity.class);
+                openClosure.putExtra("datum", av.getDate());
                 startActivityForResult(openClosure, 21);
             }
         });
@@ -313,6 +303,7 @@ public class FirstRoomFragment extends Fragment {
                 vCheckOut = view.findViewById(R.id.vOnCheckOut);
                 llInfo = view.findViewById(R.id.llInfo);
                 Intent openClosure = new Intent(getActivity(), OpenClosureActivity.class);
+                openClosure.putExtra("datum", av.getDate());
                 startActivityForResult(openClosure, 20);
             }
         });
@@ -322,6 +313,7 @@ public class FirstRoomFragment extends Fragment {
             public void otaClick(View view, int position, AvailabilityData av) {
                 ota = view.findViewById(R.id.tvOTA);
                 Intent changeOta = new Intent(getActivity(), OtaActivity.class);
+                changeOta.putExtra("datum", av.getDate());
                 startActivityForResult(changeOta, 19);
             }
         });
@@ -427,7 +419,6 @@ public class FirstRoomFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
@@ -487,9 +478,12 @@ public class FirstRoomFragment extends Fragment {
                 if (tag.equals("1")) {
                         status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
                         status.setTag("0");
+                        openClosure.setText("Otvoreno");
                 } else  if (tag.equals("0")) {
                     status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
-                    status.setTag("1");}
+                    status.setTag("1");
+                    openClosure.setText("Zatvoreno");
+                }
             }
 
 //            if (resultCode == RESULT_OK) {
@@ -520,49 +514,55 @@ public class FirstRoomFragment extends Fragment {
         }
 
         //tvClosure
-        if (requestCode == 22) {
-            if (resultCode == RESULT_OK) {
-                openClosure.setText(getResources().getString(R.string.open));
-            } else if (resultCode == RESULT_CANCELED) {
-                openClosure.setText(getResources().getString(R.string.closed));
-            }
-
-            Intent closure = new Intent(getActivity(), SnackBarDialog.class);
-            closure.putExtra("closure", openClosure.getText().toString());
-            startActivityForResult(closure, 222);
-
-//            if (openClosure.getText().toString().equals(getResources().getString(R.string.closed))) {
-//                status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
-//                checkIn.setFocusable(false);
-//                checkOut.setFocusable(false);
+//        if (requestCode == 22) {
+//            if (resultCode == RESULT_OK) {
+//                openClosure.setText(getResources().getString(R.string.open));
+//            } else if (resultCode == RESULT_CANCELED) {
+//                openClosure.setText(getResources().getString(R.string.closed));
 //            }
-        }
-
-
-        if (requestCode == 222) {
-            if (resultCode == RESULT_CANCELED) {
-                if (openClosure.getText().toString().equals("Zatvoreno")) {
-                    openClosure.setText("Otvoreno");
-                } else if (openClosure.getText().toString().equals("Otvoreno")) {
-                    openClosure.setText("Zatvoreno");
-                }
-            }
-
-            if (resultCode == RESULT_OK) {
-                llInfo.setVisibility(View.GONE);
-                ivClose.setImageResource(R.drawable.ic_arrow_down);
-                ivClose.setTag("0");
-            }
-        }
+//
+//            Intent closure = new Intent(getActivity(), ClosureSnackBar.class);
+//            closure.putExtra("closure", openClosure.getText().toString());
+//            startActivityForResult(closure, 222);
+//
+////            if (openClosure.getText().toString().equals(getResources().getString(R.string.closed))) {
+////                status.getBackground().setColorFilter(getActivity().getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+////                checkIn.setFocusable(false);
+////                checkOut.setFocusable(false);
+////            }
+//        }
+//
+//
+//        if (requestCode == 222) {
+//            if (resultCode == RESULT_CANCELED) {
+//                if (openClosure.getText().toString().equals("Zatvoreno")) {
+//                    openClosure.setText("Otvoreno");
+//                } else if (openClosure.getText().toString().equals("Otvoreno")) {
+//                    openClosure.setText("Zatvoreno");
+//                }
+//            }
+//
+//            if (resultCode == RESULT_OK) {
+//                llInfo.setVisibility(View.GONE);
+//                ivClose.setImageResource(R.drawable.ic_arrow_down);
+//                ivClose.setTag("0");
+//            }
+//        }
 
 
         //tvOnCheckIn
         if (requestCode == 21) {
             if (resultCode == RESULT_OK) {
-                checkIn.setText(getResources().getString(R.string.open));
+                datum = data.getStringExtra("datum");
+                closure = data.getStringExtra("closure");
+                checkIn.setText(closure);
+                closedOptions = 0;
                 vCheckIn.setVisibility(View.GONE);
             } else if (resultCode == RESULT_CANCELED) {
-                checkIn.setText(getResources().getString(R.string.closed));
+                datum = data.getStringExtra("datum");
+                closure = data.getStringExtra("closure");
+                checkIn.setText(closure);
+                closedOptions = 1;
                 vCheckIn.setVisibility(View.VISIBLE);
             }
 
@@ -570,7 +570,8 @@ public class FirstRoomFragment extends Fragment {
 
             Intent closure = new Intent(getActivity(), RestrictionSnackBar.class);
             closure.putExtra("onCheckIn", checkIn.getText().toString());
-//            closure.putExtra("datum", date);
+            closure.putExtra("closed", closedOptions);
+            closure.putExtra("datum", datum);
             startActivityForResult(closure, 221);
         }
 
@@ -578,9 +579,11 @@ public class FirstRoomFragment extends Fragment {
             if (resultCode == RESULT_CANCELED) {
                 if (checkIn.getText().toString().equals("Zatvoreno")) {
                     checkIn.setText("Otvoreno");
+                    closedOptions = 0;
                     vCheckIn.setVisibility(View.GONE);
                 } else if (checkIn.getText().toString().equals("Otvoreno")) {
                     checkIn.setText("Zatvoreno");
+                    closedOptions = 1;
                     vCheckIn.setVisibility(View.VISIBLE);
                 }
             }
@@ -589,22 +592,32 @@ public class FirstRoomFragment extends Fragment {
                 llInfo.setVisibility(View.GONE);
                 ivClose.setImageResource(R.drawable.ic_arrow_down);
                 ivClose.setTag("0");
+
+                if (closure.equals("Zatvoreno")) {
+                    vCheckIn.setVisibility(View.VISIBLE);
+                }
             }
         }
         //tvOnCheckOut
         if (requestCode == 20) {
             if (resultCode == RESULT_OK) {
-                checkOut.setText(getResources().getString(R.string.open));
+                datum = data.getStringExtra("datum");
+                closure = data.getStringExtra("closure");
+                checkOut.setText(closure);
+                closedOptions = 0;
                 vCheckOut.setVisibility(View.GONE);
             } else if (resultCode == RESULT_CANCELED) {
-                checkOut.setText(getResources().getString(R.string.closed));
+                datum = data.getStringExtra("datum");
+                closure = data.getStringExtra("closure");
+                checkOut.setText(closure);
+                closedOptions = 1;
                 vCheckOut.setVisibility(View.VISIBLE);
             }
 
-//            String date = data.getStringExtra("datum");
             Intent closure = new Intent(getActivity(), RestrictionSnackBar.class);
             closure.putExtra("onCheckOut", checkOut.getText().toString());
-//            closure.putExtra("datum", date);
+            closure.putExtra("closed", closedOptions);
+            closure.putExtra("datum", datum);
             startActivityForResult(closure, 220);
         }
 
@@ -613,9 +626,11 @@ public class FirstRoomFragment extends Fragment {
             if (resultCode == RESULT_CANCELED) {
                 if (checkOut.getText().toString().equals("Zatvoreno")) {
                     checkOut.setText("Otvoreno");
+                    closedOptions = 0;
                     vCheckOut.setVisibility(View.GONE);
                 } else if (checkOut.getText().toString().equals("Otvoreno")) {
                     checkOut.setText("Zatvoreno");
+                    closedOptions = 1;
                     vCheckOut.setVisibility(View.VISIBLE);
                 }
             }
@@ -624,19 +639,26 @@ public class FirstRoomFragment extends Fragment {
                 llInfo.setVisibility(View.GONE);
                 ivClose.setImageResource(R.drawable.ic_arrow_down);
                 ivClose.setTag("0");
+
+                if (closure.equals("Zatvoreno")) {
+                    vCheckOut.setVisibility(View.VISIBLE);
+                }
             }
         }
 
         if (requestCode == 19) {
             if (resultCode == RESULT_OK) {
+                datum = data.getStringExtra("datum");
                 ota.setText(getResources().getString(R.string.yes));
+                noOta = "1";
             } else if (resultCode == RESULT_CANCELED) {
                 ota.setText(getResources().getString(R.string.no));
+                noOta = "0";
             }
 
-//            String date = data.getStringExtra("datum");
-            Intent closure = new Intent(getActivity(), RestrictionSnackBar.class);
-//            closure.putExtra("datum", date);
+            Intent closure = new Intent(getActivity(), AvailabilitySnackBar.class);
+            closure.putExtra("datum", datum);
+            closure.putExtra("ota", noOta);
             startActivityForResult(closure, 219);
         }
 

@@ -179,10 +179,6 @@ public class HomeFragment extends Fragment {
 
                 if (data == null) return;
 
-                Intent i = new Intent();
-                i.setAction("dataObject");
-                i.putExtra("data", data);
-                getActivity().sendBroadcast(i);
 
                 pbLoading.setVisibility(View.GONE);
 

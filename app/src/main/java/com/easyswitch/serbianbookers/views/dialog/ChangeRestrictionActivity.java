@@ -29,7 +29,9 @@ public class ChangeRestrictionActivity extends AppCompatActivity {
     @BindView(R.id.rb6)
     RadioButton rb6;
 
-    String restriction, date, oldMaxStay;
+    String restriction, date;
+    Integer canceled = 0;
+    Integer cancelInOut = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +49,33 @@ public class ChangeRestrictionActivity extends AppCompatActivity {
         }
         if (rb2.isChecked()) {
             restriction = getResources().getString(R.string.open);
+            canceled = 0;
         }
         if (rb3.isChecked()) {
             restriction = getResources().getString(R.string.closed);
+            canceled = 1;
         }
         if (rb4.isChecked()) {
             restriction = getResources().getString(R.string.openNoCheckIn);
+            canceled = 0;
+            cancelInOut = 1;
         }
         if (rb5.isChecked()) {
             restriction = getResources().getString(R.string.openNoCheckOut);
+            canceled = 0;
+            cancelInOut = 1;
         }
         if (rb6.isChecked()) {
             restriction = getResources().getString(R.string.openNoCheckInCheckOut);
+            canceled = 0;
+            cancelInOut = 1;
         }
 
         Intent sendRes = new Intent();
         sendRes.putExtra("restriction", restriction);
         sendRes.putExtra("datum", date);
+        sendRes.putExtra("canceled", canceled);
+        sendRes.putExtra("cancelInOut", cancelInOut);
         setResult(RESULT_OK, sendRes);
     }
 

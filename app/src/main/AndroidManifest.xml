@@ -28,7 +28,10 @@
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
-        <activity android:name=".views.dialog.ClosureSnackBar" />
+        <activity android:name=".views.dialog.AvailabilitySnackBar"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/NavTheme" />
         <activity
             android:name=".views.dialog.PickRoomDialog"
             android:label=""
@@ -60,7 +63,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NavTheme" />
         <activity
-            android:name=".views.dialog.SnackBarDialog"
+            android:name=".views.dialog.ClosureSnackBar"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/NavTheme" />

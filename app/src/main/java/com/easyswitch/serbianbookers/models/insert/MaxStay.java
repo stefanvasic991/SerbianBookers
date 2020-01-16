@@ -8,7 +8,7 @@ public class MaxStay {
         return max_stay;
     }
 
-    public void setMaxStay(String maxStay) {
-        this.max_stay = maxStay;
+    public void setMaxStay(String max_stay) {
+        this.max_stay = max_stay;
     }
 }

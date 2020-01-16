@@ -34,10 +34,19 @@ import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.InsertAvail;
+import com.easyswitch.serbianbookers.models.InsertAvailData;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
+import com.easyswitch.serbianbookers.models.NewPrice;
 import com.easyswitch.serbianbookers.models.NewValues;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.models.insert.Avail;
+import com.easyswitch.serbianbookers.models.insert.Closed;
+import com.easyswitch.serbianbookers.models.insert.ClosedInOut;
+import com.easyswitch.serbianbookers.models.insert.MaxStay;
+import com.easyswitch.serbianbookers.models.insert.MinStay;
+import com.easyswitch.serbianbookers.models.insert.MinStayArr;
+import com.easyswitch.serbianbookers.models.insert.NoOta;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.dialog.ChangeRestrictionActivity;
 import com.easyswitch.serbianbookers.views.dialog.PickRoomDialog;
@@ -122,11 +131,9 @@ public class PriceRestrictionFragment extends Fragment {
     MaterialButton mbSaveRestriction;
 
     User u;
-    String dateFrom, dateTo;
+    String dateFrom, dateTo, dFrom;
     Set<LocalDate> selectedDays = new HashSet<>();
-    int year, month, dayOfMonth;
-    Calendar calendar;
-    private int roomId;
+    private int roomId, canceled, cancelInOut;
     String pricingPlaId, restrictionPlanId;
     List<String> rooms = new ArrayList<>();
     List<String> pricingPlan = new ArrayList<>();
@@ -270,105 +277,12 @@ public class PriceRestrictionFragment extends Fragment {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 dateFrom = data.getStringExtra("data");
-                String dFrom = getDate(dateFrom);
+                dFrom = getDate(dateFrom);
                 mbResDateFrom.setText(dateFrom);
                 mbResDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
 
-                mbSavePrice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        AvailabilityData av = new AvailabilityData();
-//                        Integer prc = av.setPrice(Integer.valueOf(etInsertPrice.getText().toString()));
-//
-//                        List<Integer> priceList = new ArrayList<>();
-//                        priceList.add(prc);
-//
-//                        NewValues newValues = new NewValues();
-//                        newValues.setRoomId(String.valueOf(roomId));
-//                        newValues.setAvailabilityData(priceList);
-//
-//                        InsertPrice insertPrice = new InsertPrice();
-//                        insertPrice.setKey(u.getKey());
-//                        insertPrice.setAccount(u.getAccount());
-//                        insertPrice.setLcode(u.getProperties().get(0).getLcode());
-//                        insertPrice.setDfrom(dFrom);
-//                        insertPrice.setPid("151731");
-//                        insertPrice.setOldValues("");
-//                        insertPrice.setNewValues(newValues);
-//
-//                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-//                        webApiClient.getInsertPrice(insertPrice).observe(getActivity(), new Observer<InsertPrice>() {
-//                            @Override
-//                            public void onChanged(InsertPrice insertPrice) {
-//                                Intent i = new Intent(getActivity(), SavePriceDialog.class);
-//                                startActivity(i);
-//                            }
-//                        });
-                    }
-                });
 
-                Toast.makeText(getActivity(), pricingPlaId, Toast.LENGTH_SHORT).show();
-
-                mbSaveAvailability.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        InsertAvail insertAvail = new InsertAvail();
-                        insertAvail.setKey(u.getKey());
-                        insertAvail.setAccount(u.getAccount());
-                        insertAvail.setLcode(u.getProperties().get(0).getLcode());
-                        insertAvail.setDfrom(dFrom);
-                        insertAvail.setOldValues("");
-//                        insertAvail.setNewValues(etInsertAvailability.getText().toString());
-
-                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                        webApiClient.getInsertAvail(insertAvail).observe(getActivity(), new Observer<InsertAvail>() {
-                            @Override
-                            public void onChanged(InsertAvail insertAvail) {
-                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
-                                startActivity(i);
-                            }
-                        });
-                    }
-                });
-
-                mbSaveRestriction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SharedPreferences dataPrefs = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String json = dataPrefs.getString("Data", "");
-                        Data data = gson.fromJson(json, Data.class);
-
-                        AvailabilityData av = new AvailabilityData();
-
-                        av.setMinStay(Integer.parseInt(etInsertMinStay.getText().toString()));
-                        av.setMinStayArrival(Integer.parseInt(etInsertMinStayArr.getText().toString()));
-                        av.setMaxStay(Integer.parseInt(etInsertMaxStay.getText().toString()));
-
-                        NewValues newValues = new NewValues();
-                        newValues.setRoomId(String.valueOf(roomId));
-//                        newValues.setAvailabilityData(av);
-
-                        InsertRestriction ir = new InsertRestriction();
-                        ir.setKey(App.getInstance().getCurrentUser().getKey());
-                        ir.setAccount(App.getInstance().getCurrentUser().getAccount());
-                        ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-                        ir.setDfrom(dFrom);
-                        ir.setPid("45325");
-                        ir.setOldValues("");
-                        ir.setNewValues(newValues);
-
-                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                        webApiClient.getInsertRestriction(ir).observe(getActivity(), new Observer<InsertRestriction>() {
-                            @Override
-                            public void onChanged(InsertRestriction insertRestriction) {
-                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
-                                startActivity(i);
-                            }
-                        });
-                    }
-                });
             }
         }
 
@@ -378,12 +292,139 @@ public class PriceRestrictionFragment extends Fragment {
                 mbResDateTo.setText(dateTo);
                 mbResDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+
+                mbSavePrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        AvailabilityData av = new AvailabilityData();
+                        Integer prc = av.setPrice(Integer.valueOf(etInsertPrice.getText().toString()));
+
+                        List<Integer> priceList = new ArrayList<>();
+                        priceList.add(prc);
+
+                        NewPrice newValues = new NewPrice();
+                        newValues.setRoomId(String.valueOf(roomId));
+                        newValues.setAvailabilityData(priceList);
+
+                        InsertPrice ip = new InsertPrice();
+                        ip.setKey(App.getInstance().getCurrentUser().getKey());
+                        ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                        ip.setAccount(App.getInstance().getCurrentUser().getAccount());
+                        ip.setDfrom(dFrom);
+                        ip.setDto(dateTo);
+                        ip.setPid("");
+                        ip.setOldValues("");
+                        ip.setNewValues(newValues);
+
+                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                        webApiClient.getInsertPrice(ip).observe(getActivity(), new Observer<InsertPrice>() {
+                            @Override
+                            public void onChanged(InsertPrice insertPrice) {
+                                Intent i = new Intent(getActivity(), SavePriceDialog.class);
+                                startActivity(i);
+                                etInsertPrice.setText("");
+                            }
+                        });
+                    }
+                });
+
+                mbSaveAvailability.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<NewValues> nwList = new ArrayList<>();
+
+                        InsertAvailData av = new InsertAvailData();
+
+                        Avail a = new Avail();
+                        a.setAvail(etInsertAvailability.getText().toString());
+
+                        NewValues newValues = new NewValues();
+                        newValues.setAvailabilityData(Collections.singletonList(av));
+                        nwList.add(newValues);
+
+                        InsertAvail ia = new InsertAvail();
+                        ia.setKey(App.getInstance().getCurrentUser().getKey());
+                        ia.setAccount(App.getInstance().getCurrentUser().getAccount());
+                        ia.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                        ia.setDfrom(dFrom);
+                        ia.setDto(dateTo);
+                        ia.setOldValues("");
+                        ia.setNewValues(nwList);
+
+                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                        webApiClient.getInsertAvail(ia).observe(getActivity(), new Observer<InsertAvail>() {
+                            @Override
+                            public void onChanged(InsertAvail insertAvail) {
+                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
+                                startActivity(i);
+                                etInsertAvailability.setText("");
+                            }
+                        });
+                    }
+                });
+
+                mbSaveRestriction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        InsertAvailData av = new InsertAvailData();
+
+                        Closed c = new Closed();
+                        c.setClosed(canceled);
+
+                        Closed cio = new Closed();
+                        cio.setClosed(cancelInOut);
+
+                        MinStay ms = new MinStay();
+                        ms.setMinStay(etInsertMinStay.getText().toString());
+
+                        MinStayArr msa = new MinStayArr();
+                        msa.setMinStayArr(etInsertMinStayArr.getText().toString());
+
+                        MaxStay maxs = new MaxStay();
+                        maxs.setMaxStay(etInsertMaxStay.getText().toString());
+
+                        av.setMin_stay(ms);
+                        av.setMin_stay_arrival(msa);
+                        av.setMax_stay(maxs);
+                        av.setClosed(c);
+                        av.setClosedArrival(cio);
+
+                        NewValues newValues = new NewValues();
+                        newValues.setRoomId("416694");
+                        newValues.setAvailabilityData(Collections.singletonList(av));
+
+                        InsertRestriction ir = new InsertRestriction();
+                        ir.setKey(App.getInstance().getCurrentUser().getKey());
+                        ir.setAccount(App.getInstance().getCurrentUser().getAccount());
+                        ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                        ir.setDfrom(dFrom);
+                        ir.setDto(dateTo);
+                        ir.setPid("");
+                        ir.setOldValues("");
+                        ir.setNewValues(newValues);
+
+                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                        webApiClient.getInsertRestriction(ir).observe(getActivity(), new Observer<InsertRestriction>() {
+                            @Override
+                            public void onChanged(InsertRestriction insertRestriction) {
+                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
+                                startActivity(i);
+                                etInsertMinStay.setText("");
+                                etInsertMinStayArr.setText("");
+                                etInsertMaxStay.setText("");
+                            }
+                        });
+                    }
+                });
             }
         }
 
         if (requestCode == 11) {
             if (resultCode == RESULT_OK) {
                 String restriction = data.getStringExtra("restriction");
+                canceled = data.getIntExtra("canceled", 0);
+                cancelInOut = data.getIntExtra("cancelInOut", 0);
                 mbOpenRestriction.setText(restriction);
             }
         }
@@ -513,23 +554,33 @@ public class PriceRestrictionFragment extends Fragment {
     @OnClick(R.id.savePrice)
     public void savePrice() {
 
-        Intent i = new Intent(getActivity(), SavePriceDialog.class);
-        startActivity(i);
+        if (etInsertPrice.getText().toString().isEmpty()) {
+            etInsertPrice.setError(getResources().getString(R.string.emptyField));
+        }
     }
 
     @OnClick(R.id.saveAvailability)
     public void saveAvailability() {
 
-        Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
-        startActivity(i);
-
+        if (etInsertAvailability.getText().toString().isEmpty()) {
+            etInsertAvailability.setError(getResources().getString(R.string.emptyField));
+        }
     }
 
     @OnClick(R.id.saveRestriction)
     public void saveRestriction() {
 
-        Intent i = new Intent(getActivity(), SaveRestrictionDialog.class);
-        startActivity(i);
+        if (etInsertMinStay.getText().toString().isEmpty()) {
+            etInsertMinStay.setError(getResources().getString(R.string.emptyField));
+        }
+
+        if (etInsertMinStayArr.getText().toString().isEmpty()) {
+            etInsertMinStayArr.setError(getResources().getString(R.string.emptyField));
+        }
+
+        if (etInsertMaxStay.getText().toString().isEmpty()) {
+            etInsertMaxStay.setError(getResources().getString(R.string.emptyField));
+        }
     }
 
     @OnClick(R.id.mbOpenRestriction)

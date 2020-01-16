@@ -80,6 +80,8 @@ public class ReservationFragment extends Fragment {
     TextView tvFilter;
     @BindView(R.id.clCancelFilter)
     ConstraintLayout clCancelFilter;
+    @BindView(R.id.tvCancel)
+    TextView tvCancel;
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateParse = new SimpleDateFormat("dd.MM.yyyy.");
     @SuppressLint("SimpleDateFormat")
@@ -480,6 +482,13 @@ public class ReservationFragment extends Fragment {
                 });
                 searchView.setVisibility(View.GONE);
                 ivLogo.setVisibility(View.VISIBLE);
+
+                ivFilter.setColorFilter(getResources().getColor(R.color.colorWhite));
+                tvFilter.setTextColor(getResources().getColor(R.color.colorWhite));
+                tvFilter.setText(getResources().getString(R.string.changeFilter));
+                clFilter.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+                clCancelFilter.setVisibility(View.VISIBLE);
+                tvCancel.setText(getResources().getString(R.string.resetSearch));
 
                 return true;
             }

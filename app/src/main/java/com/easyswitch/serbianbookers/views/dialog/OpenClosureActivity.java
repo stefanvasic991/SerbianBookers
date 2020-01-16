@@ -15,7 +15,7 @@ import butterknife.OnClick;
 
 public class OpenClosureActivity extends AppCompatActivity {
 
-    String date;
+    String date, closure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,27 +24,28 @@ public class OpenClosureActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, android.R.color.transparent));
         getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
-    }
-
-    public void sendDate() {
-        date = getIntent().getStringExtra("datum");
-//        Toast.makeText(this, date, Toast.LENGTH_SHORT).show();
-
-        Intent i = new Intent();
-        i.putExtra("datum", date);
-        setResult(RESULT_OK, i);
+        setFinishOnTouchOutside(false);
     }
 
     @OnClick(R.id.rbOpen)
     public void setOpen() {
-        setResult(RESULT_OK);
-        sendDate();
+        date = getIntent().getStringExtra("datum");
+        closure = "Otvoreno";
+        Intent i = new Intent();
+        i.putExtra("datum", date);
+        i.putExtra("closure", closure);
+        setResult(RESULT_OK, i);
         finish();
     }
 
     @OnClick(R.id.rbClosed)
     public void setClosed() {
-        setResult(RESULT_CANCELED);
+        date = getIntent().getStringExtra("datum");
+        closure = "Zatvoreno";
+        Intent i = new Intent();
+        i.putExtra("datum", date);
+        i.putExtra("closure", closure);
+        setResult(RESULT_OK, i);
         finish();
     }
 }
