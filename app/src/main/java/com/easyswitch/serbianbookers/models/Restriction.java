@@ -1,143 +1,74 @@
 package com.easyswitch.serbianbookers.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Restriction implements Parcelable {
+public class Restriction {
 
-    @SerializedName("key")
+    @SerializedName("closed")
     @Expose
-    private String key;
-    @SerializedName("account")
+    private Integer closed;
+    @SerializedName("closed_arrival")
     @Expose
-    private String account;
-    @SerializedName("lcode")
+    private Integer closedArrival;
+    @SerializedName("closed_departure")
     @Expose
-    private String lcode;
-    @SerializedName("dfrom")
+    private Integer closedDeparture;
+    @SerializedName("min_stay")
     @Expose
-    private String dfrom;
-    @SerializedName("dto")
+    private Integer minStay;
+    @SerializedName("min_stay_arrival")
     @Expose
-    private String dto;
-    @SerializedName("id")
+    private Integer minStayArr;
+    @SerializedName("max_stay")
     @Expose
-    private String id;
-    @SerializedName("status")
-    @Expose
-    private String status;
-    @SerializedName("restrictions")
-    @Expose
-    private RestrictionList restrictions;
+    private Integer maxStay;
 
-    public Restriction(Parcel in) {
-        key = in.readString();
-        account = in.readString();
-        lcode = in.readString();
-        dfrom = in.readString();
-        dto = in.readString();
-        id = in.readString();
-        status = in.readString();
+    public Integer getClosed() {
+        return closed;
     }
 
-    public Restriction() {
-
+    public void setClosed(Integer closed) {
+        this.closed = closed;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(key);
-        dest.writeString(account);
-        dest.writeString(lcode);
-        dest.writeString(dfrom);
-        dest.writeString(dto);
-        dest.writeString(id);
-        dest.writeString(status);
+    public Integer getClosedArrival() {
+        return closedArrival;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setClosedArrival(Integer closedArrival) {
+        this.closedArrival = closedArrival;
     }
 
-    public static final Creator<Restriction> CREATOR = new Creator<Restriction>() {
-        @Override
-        public Restriction createFromParcel(Parcel in) {
-            return new Restriction(in);
-        }
-
-        @Override
-        public Restriction[] newArray(int size) {
-            return new Restriction[size];
-        }
-    };
-
-    public String getKey() {
-        return key;
+    public Integer getClosedDeparture() {
+        return closedDeparture;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setClosedDeparture(Integer closedDeparture) {
+        this.closedDeparture = closedDeparture;
     }
 
-    public String getAccount() {
-        return account;
+    public Integer getMinStay() {
+        return minStay;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setMinStay(Integer minStay) {
+        this.minStay = minStay;
     }
 
-    public String getLcode() {
-        return lcode;
+    public Integer getMinStayArr() {
+        return minStayArr;
     }
 
-    public void setLcode(String lcode) {
-        this.lcode = lcode;
+    public void setMinStayArr(Integer minStayArr) {
+        this.minStayArr = minStayArr;
     }
 
-    public String getDfrom() {
-        return dfrom;
+    public Integer getMaxStay() {
+        return maxStay;
     }
 
-    public void setDfrom(String dfrom) {
-        this.dfrom = dfrom;
+    public void setMaxStay(Integer maxStay) {
+        this.maxStay = maxStay;
     }
-
-    public String getDto() {
-        return dto;
-    }
-
-    public void setDto(String dto) {
-        this.dto = dto;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public RestrictionList getRestrictions() {
-        return restrictions;
-    }
-
-    public void setRestrictions(RestrictionList restrictions) {
-        this.restrictions = restrictions;
-    }
-
-
 }

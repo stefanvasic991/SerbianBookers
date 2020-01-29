@@ -2,9 +2,12 @@ package com.easyswitch.serbianbookers.views.home;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +18,19 @@ import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
+import com.easyswitch.serbianbookers.SP;
+import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.adapters.HomeViewPagerAdapter;
+import com.easyswitch.serbianbookers.models.Data;
+import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.User;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -31,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.bnvNavigation)
     AHBottomNavigation bnvNavigation;
 
+    User u;
     HomeViewPagerAdapter homeAdapter;
 
     @Override
@@ -38,6 +50,45 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        u = getIntent().getExtras().getParcelable("currentUser");
+        DataBody dataBody = new DataBody();
+        dataBody.setKey(u.getKey());
+        dataBody.setLcode(u.getProperties().get(0).getLcode());
+        dataBody.setAccount(u.getAccount());
+        dataBody.setNewsOrderBy("2019-12-25");
+        dataBody.setNewsOrderType("");
+        dataBody.setNewsDfrom("");
+        dataBody.setEventsDfrom("");
+        dataBody.setEventsDto("");
+        dataBody.setCalendarDfrom("2019-12-25");
+        dataBody.setCalendarDto("2020-12-24");
+        dataBody.setReservationsDfrom("2020-12-25");
+        dataBody.setReservationsDto("2020-01-24");
+        dataBody.setReservationsOrderBy("3");
+        dataBody.setReservationsFilterBy("2019-12-24");
+        dataBody.setReservationsOrderType("");
+        dataBody.setGuestsOrderBy("135");
+        dataBody.setGuestsOrderType("");
+
+        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
+        webApiClient.getData(dataBody).observe(this, new Observer<Data>() {
+            @Override
+            public void onChanged(Data data) {
+
+                Intent i = new Intent();
+                i.setAction("data");
+                i.putExtra("priceId", data.getPrices().get(0).getId());
+                i.putExtra("pricePlanName", data.getPrices().get(0).getName());
+                if (data.getRestrictions().isEmpty()) {
+                    Timber.e("Empty Restriction");
+                } else {
+                    i.putExtra("rId", data.getRestrictions().get(0).getId());
+                    i.putExtra("restrictionPlanName", data.getRestrictions().get(0).getName());
+                }
+                sendBroadcast(i);
+            }
+        });
 
         homeAdapter = new HomeViewPagerAdapter(getSupportFragmentManager());
 

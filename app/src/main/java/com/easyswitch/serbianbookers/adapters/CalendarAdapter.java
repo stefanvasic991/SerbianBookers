@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.google.android.material.button.MaterialButton;
@@ -55,6 +56,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         this.context = context;
     }
 
+    public void setCalendars(List<AvailabilityData> calendars) {
+        this.calendars = new ArrayList<>();
+        this.calendars = calendars;
+        notifyDataSetChanged();
+    }
+
     public CalendarAdapter(Context context, List<AvailabilityData> data) {
         this.context = context;
         this.calendars = data;
@@ -62,6 +69,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         if (data == null) {
             this.calendars = new ArrayList<>();
         }
+
+
     }
 
     public interface OnCalendarClickListener {
@@ -183,14 +192,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         else if (ad.getDay().equals("5")) holder.tvDay.setText("Pet");
         else if (ad.getDay().equals("6")) holder.tvDay.setText("Sub");
 
-//        double pp = ad.getPricingPlan();
-//        int pricingPlan  = (int) pp;
-//        holder.tvPrice.setText(String.valueOf(pricingPlan));
-//        holder.etPrice.setText(String.valueOf(pricingPlan));
-
-        holder.tvPrice.setText(ad.getPrice().toString());
-        holder.etPrice.setText(ad.getPrice().toString());
-
         if (ad.getClosed() == 0) {
             holder.tvClosure.setText("Otvoreno");
             holder.mbStatus.getBackground().setColorFilter(context.getResources().getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
@@ -209,12 +210,32 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         if (ad.getNoOta() == 0) holder.tvOTA.setText("Ne");
         else holder.tvOTA.setText("Da");
 
-        holder.tvMinStay.setText(ad.getMinStay().toString());
-        holder.etMinStay.setText(ad.getMinStay().toString());
-        holder.tvMinStayArr.setText(ad.getMinStayArrival().toString());
-        holder.etMinStayArr.setText(ad.getMinStayArrival().toString());
-        holder.tvMaxStay.setText(ad.getMaxStay().toString());
-        holder.etMaxStay.setText(ad.getMaxStay().toString());
+        double prc = ad.getPricingPlan();
+        int price = (int) prc;
+
+//        for (int i = 0; i < App.getInstance().getData().getPrices().size(); i++) {
+//
+//            if (App.getInstance().getData().getPrices().get(i).getType().equals("daily")){
+//                holder.tvPrice.setClickable(true);
+//                holder.tvPrice.setTextColor(context.getResources().getColor(R.color.colorText));
+//                holder.tvPrice.setText(String.valueOf(price));
+//                holder.etPrice.setText(String.valueOf(price));
+//            }
+//
+//            if (App.getInstance().getData().getPrices().get(i).getType().equals("virtual")) {
+//                holder.tvPrice.setText(String.valueOf(price));
+//                holder.tvPrice.setClickable(false);
+//                holder.tvPrice.setTextColor(context.getResources().getColor(R.color.colorTextLight));
+//            }
+//        }
+        holder.tvPrice.setText(String.valueOf(price));
+        holder.etPrice.setText(String.valueOf(price));
+        holder.tvMinStay.setText(ad.getRestrictionPlan().getMinStay().toString());
+        holder.etMinStay.setText(ad.getRestrictionPlan().getMinStay().toString());
+        holder.tvMinStayArr.setText(ad.getRestrictionPlan().getMinStayArrival().toString());
+        holder.etMinStayArr.setText(ad.getRestrictionPlan().getMinStayArrival().toString());
+        holder.tvMaxStay.setText(ad.getRestrictionPlan().getMaxStay().toString());
+        holder.etMaxStay.setText(ad.getRestrictionPlan().getMaxStay().toString());
     }
 
     @Override
@@ -261,8 +282,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         TextView tvNoAvail;
         @BindView(R.id.etNoAvail)
         EditText etNoAvail;
-//        @BindView(R.id.tvPrice)
-//        TextView tvPrice;
         @BindView(R.id.tvPrice)
         TextView tvPrice;
         @BindView(R.id.etPrice)
@@ -377,5 +396,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
                 maxStayClickLitener.maxStayClick(itemView, getAdapterPosition(), calendars.get(getAdapterPosition()));
             }
         }
+    }
+
+    public ArrayList<AvailabilityData> getAll() {
+        return (ArrayList<AvailabilityData>) calendars;
+    }
+
+    public ArrayList<AvailabilityData> getSelected() {
+        ArrayList<AvailabilityData> selected = new ArrayList<>();
+        for (int i = 0; i < calendars.size(); i++) {
+            if (calendars.get(i).isChecked()) {
+                selected.add(calendars.get(i));
+            }
+        }
+        return selected;
     }
 }

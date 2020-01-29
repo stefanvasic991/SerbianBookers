@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -96,18 +96,21 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/clDate"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@+id/appBarLayout"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbCurrentDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_width="0dp"
+            android:layout_height="47dp"
+            android:layout_weight="0.42"
+            android:layout_marginStart="8dp"
+            android:textSize="13sp"
             android:textColor="@color/colorTextLight"
             app:backgroundTint="@color/colorWhite"
             app:cornerRadius="10dp"
@@ -116,7 +119,36 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints" />
 
-<!--        <LinearLayout-->
+        <TextView
+            android:id="@+id/tvPricingPlan"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="0.29"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/spinner_background"
+            android:hint="Plan cena"
+            android:paddingTop="8dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorText"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvRestrictionPlan"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="0.29"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:paddingTop="8dp"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:textColor="@color/colorText"
+            android:background="@drawable/spinner_background"
+            android:hint="Restrikcije" />
+
+        <!--        <LinearLayout-->
 <!--            android:layout_width="150dp"-->
 <!--            android:layout_height="match_parent"-->
 <!--            android:background="@drawable/diagram_shape"-->
@@ -146,13 +178,14 @@
 <!--                    tools:ignore="MissingConstraints" />-->
 <!--        </LinearLayout>-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:layout_below="@+id/clDate"
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.tabs.TabLayout
@@ -167,10 +200,24 @@
             app:tabTextAppearance="@style/FontTheme"/>
     </androidx.viewpager.widget.ViewPager>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16sp"
+        android:layout_marginBottom="76sp"
+        android:clickable="true"
+        android:tag="0"
+        android:src="@drawable/gantogram"
+        android:backgroundTint="@color/colorPrimary" />
+
     <com.kizitonwose.calendarview.CalendarView
         android:id="@+id/cvCalendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/clDate"
         android:visibility="gone"
         app:cv_dayViewResource="@layout/calendar_day_layout"
         app:cv_hasBoundaries="true"
@@ -179,4 +226,4 @@
         app:cv_maxRowCount="1"
         app:cv_orientation="horizontal"
         app:cv_scrollMode="continuous" />
-</LinearLayout>
+</RelativeLayout>

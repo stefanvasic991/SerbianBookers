@@ -19,11 +19,13 @@ import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.NewPrice;
 import com.easyswitch.serbianbookers.models.NewValues;
 import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.models.Values;
 import com.easyswitch.serbianbookers.views.home.HomeFragment;
 
 import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,9 +49,8 @@ public class PriceSnackBar extends AppCompatActivity {
 
         u = getIntent().getParcelableExtra("currentUser");
         date  = getIntent().getStringExtra("datum");
-        id = getIntent().getIntExtra("roomID", 1);
-        oldPrice = getIntent().getStringExtra("staraCena");
         price = getIntent().getStringExtra("cena");
+        id = getIntent().getIntExtra("roomID", 0);
     }
 
     @OnClick(R.id.tvReset)
@@ -70,18 +71,22 @@ public class PriceSnackBar extends AppCompatActivity {
         List<Integer> priceList = new ArrayList<>();
         priceList.add(prc);
 
-        NewPrice newValues = new NewPrice();
-        newValues.setRoomId(String.valueOf(id));
-        newValues.setAvailabilityData(priceList);
+        Values values = new Values();
+        values.setId(String.valueOf(""));
+        values.setDays(priceList);
+
+        List<Values> valuesList = new ArrayList<>();
+        valuesList.add(values);
 
         InsertPrice ip = new InsertPrice();
         ip.setKey(App.getInstance().getCurrentUser().getKey());
         ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         ip.setAccount(App.getInstance().getCurrentUser().getAccount());
         ip.setDfrom(date);
-        ip.setPid("");
-        ip.setOldValues("");
-        ip.setNewValues(newValues);
+        ip.setPid(App.getInstance().getData().getPrices().get(1).getId());
+        ip.setOldValues(valuesList);
+        ip.setNewValues(valuesList);
+        ip.setMultipleIDs(Collections.singletonList(String.valueOf(id)));
 
         WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
         webApiClient.getInsertPrice(ip).observe(this, new Observer<InsertPrice>() {

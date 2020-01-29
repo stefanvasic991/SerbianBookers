@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="DJ050"
+            android:text="PV117"
             android:hint="username" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:text="Djole12#"
+            android:text="Vojvoda1234#"
             android:hint="password" />
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -19,5 +19,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="-16dp" />
-
 </RelativeLayout>

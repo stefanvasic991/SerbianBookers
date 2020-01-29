@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class NewValues {
+public class NewValuesRestriction {
 
     @SerializedName("id")
     @Expose
     private String id;
     @SerializedName("days")
     @Expose
-    private List<Day> days = null;
+    private List<Restriction> days = null;
 
     public String getId() {
         return id;
@@ -22,12 +22,11 @@ public class NewValues {
         this.id = id;
     }
 
-    public List<Day> getDays() {
+    public List<Restriction> getDays() {
         return days;
     }
 
-    public void setDays(List<Day> days) {
+    public void setDays(List<Restriction> days) {
         this.days = days;
     }
-
 }

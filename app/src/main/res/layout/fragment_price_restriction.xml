@@ -170,13 +170,17 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp">
 
-            <com.thomashaertel.widget.MultiSpinner
+            <TextView
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:paddingStart="8dp"
+                android:paddingStart="16dp"
+                android:paddingTop="10dp"
                 android:paddingEnd="8dp"
-                android:spinnerMode="dropdown"
+                android:textSize="16sp"
+                android:hint="@string/pickRooms"
+                android:textColor="@color/colorText"
+
                 android:background="@drawable/spinner_background"/>
 
             <ImageView
@@ -301,14 +305,16 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="20dp">
 
-                <Spinner
+                <TextView
                     android:id="@+id/ppSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:paddingStart="8dp"
+                    android:paddingTop="10dp"
+                    android:paddingStart="16dp"
                     android:paddingEnd="8dp"
-                    android:spinnerMode="dropdown"
-                    android:background="@drawable/spinner_background"/>
+                    android:textSize="16dp"
+                    android:hint="@string/pricingPlan"
+                    android:background="@drawable/diagram_shape" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -437,14 +443,16 @@
                         android:layout_marginEnd="17dp"
                         android:layout_marginBottom="40dp">
 
-                        <Spinner
+                        <TextView
                             android:id="@+id/rSpinner"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:paddingStart="8dp"
+                            android:paddingTop="10dp"
+                            android:paddingStart="10dp"
                             android:paddingEnd="8dp"
-                            android:spinnerMode="dropdown"
-                            android:background="@drawable/spinner_background"/>
+                            android:textSize="14sp"
+                            android:hint="plan restrikcija"
+                            android:background="@drawable/diagram_shape"/>
 
                         <ImageView
                             android:layout_width="wrap_content"

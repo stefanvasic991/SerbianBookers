@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.easyswitch.serbianbookers.models.Availability;
-import com.easyswitch.serbianbookers.models.AvailabilityBody;
+import com.easyswitch.serbianbookers.models.Calendar;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.Event;
@@ -21,7 +21,6 @@ import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.ReservationFilter;
 import com.easyswitch.serbianbookers.models.ReservationList;
-import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.ShowCard;
 import com.easyswitch.serbianbookers.models.Statistics;
@@ -45,7 +44,7 @@ public class WebApiClient extends AndroidViewModel {
     private MutableLiveData<Search> search;
     private MutableLiveData<ReservationFilter> filter;
     private MutableLiveData<Availability> availability;
-    private MutableLiveData<Restriction> restrictions;
+    private MutableLiveData<Calendar> calDetails;
     private MutableLiveData<News> news;
     private MutableLiveData<Event> events;
     private MutableLiveData<InsertAvail> insertAvail;
@@ -92,6 +91,7 @@ public class WebApiClient extends AndroidViewModel {
                 public void onResponse(Call<Data> call, Response<Data> response) {
                     if (response.isSuccessful()) {
                         data.setValue(response.body());
+//                        App.getInstance().setData(response.body());
                     } else {
                         data.setValue(null);
                         Timber.v("ResponseError");
@@ -246,28 +246,29 @@ public class WebApiClient extends AndroidViewModel {
         return availability;
     }
 
-    public MutableLiveData<Restriction> getRestrictions(Restriction restriction) {
-        if (restrictions == null) {
-            restrictions = new MutableLiveData<>();
-            webApi.restriction(restriction).enqueue(new Callback<Restriction>() {
+    public MutableLiveData<Calendar> getCalDetails(Calendar c) {
+        if (calDetails == null) {
+            calDetails = new MutableLiveData<>();
+            webApi.calDetails(c).enqueue(new Callback<Calendar>() {
                 @Override
-                public void onResponse(Call<Restriction> call, Response<Restriction> response) {
+                public void onResponse(Call<Calendar> call, Response<Calendar> response) {
                     if (response.isSuccessful()) {
-                        restrictions.setValue(response.body());
+                        calDetails.setValue(response.body());
                     } else {
-                        restrictions.setValue(null);
+                        calDetails.setValue(null);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<Restriction> call, Throwable t) {
+                public void onFailure(Call<Calendar> call, Throwable t) {
                     t.printStackTrace();
-                    restrictions.setValue(null);
+                    calDetails.setValue(null);
                     Timber.v("onFailure");
+
                 }
             });
         }
-        return restrictions;
+        return calDetails;
     }
 
     public MutableLiveData<News> getNews(News n) {

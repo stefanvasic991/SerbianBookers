@@ -94,14 +94,19 @@ public class App extends MultiDexApplication {
     }
 
     public Data getData() {
-        if (data == null) {
-            data = SP.getInstance().getDATA();
+        if (this.data == null) {
+            this.data = SP.getInstance().getData();
+
+            if (this.data == null) {
+                this.data = new Data();
+            }
         }
         return data;
     }
 
     public void setData(Data data) {
         this.data = data;
+        SP.getInstance().setData(this.data);
     }
 
     public AvailabilityData getAvailabilityData() {

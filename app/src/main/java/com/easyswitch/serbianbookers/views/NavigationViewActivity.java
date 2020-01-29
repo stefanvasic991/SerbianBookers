@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
+import com.easyswitch.serbianbookers.SP;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.dialog.SendMailActivity;
 import com.easyswitch.serbianbookers.views.home.HomeActivity;
@@ -77,17 +78,14 @@ public class NavigationViewActivity extends AppCompatActivity {
 
     @OnClick(R.id.ivLogout)
     public void logout() {
-        User user = new User();
-        user.setUsername(null);
-        user.setPassword(null);
-        user.setKey(null);
-        user.setEmail(null);
-        user.setAccount(null);
+//        User user = new User();
+//        user.setUsername(null);
+//        user.setPassword(null);
+//        user.setKey(null);
+//        user.setEmail(null);
+//        user.setAccount(null);
 
-        SharedPreferences preferences = getSharedPreferences("Data", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove("Data");
-        editor.commit();
+        SP.getInstance().logout();
 
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);

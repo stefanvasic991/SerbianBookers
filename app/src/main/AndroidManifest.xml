@@ -24,16 +24,32 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".views.filter.CalendarActivity"
+        <activity android:name=".views.dialog.ChannelDialog"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />
-        <activity android:name=".views.dialog.AvailabilitySnackBar"
+        <activity
+            android:name=".views.dialog.PickRoomDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.RestrictionPlanDialog"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.filter.CalendarActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".views.dialog.AvailabilitySnackBar"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/NavTheme" />
         <activity
-            android:name=".views.dialog.PickRoomDialog"
+            android:name=".views.dialog.PricingPlanDialog"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDialog" />

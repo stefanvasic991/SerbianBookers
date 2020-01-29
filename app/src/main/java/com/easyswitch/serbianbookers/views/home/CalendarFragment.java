@@ -35,6 +35,7 @@ import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.models.Calendar;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.User;
@@ -49,8 +50,11 @@ import com.easyswitch.serbianbookers.views.calendar.SeventhRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.SixthRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.TenthRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.ThirdRoomFragment;
+import com.easyswitch.serbianbookers.views.dialog.PricingPlanDialog;
+import com.easyswitch.serbianbookers.views.dialog.RestrictionPlanDialog;
 import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -69,12 +73,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -85,6 +88,10 @@ public class CalendarFragment extends Fragment {
 
     @BindView(R.id.mbCurrentDate)
     MaterialButton mbCurrentDate;
+    @BindView(R.id.tvPricingPlan)
+    TextView tvPricingPlan;
+    @BindView(R.id.tvRestrictionPlan)
+    TextView tvRestrictionPlan;
 //    @BindView(R.id.ivList)
 //    ImageView ivList;
 //    @BindView(R.id.ivGantogram)
@@ -93,6 +100,8 @@ public class CalendarFragment extends Fragment {
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     @BindView(R.id.cvCalendar)
     CalendarView cvCalendar;
@@ -100,9 +109,8 @@ public class CalendarFragment extends Fragment {
     CalendarPagerAdapter calendarPagerAdapter;
     List<String> calendarList = new ArrayList<>();
     List<FirstRoomFragment> fragmentList = new ArrayList<>();
-    User u;
-    Availability av = new Availability();
-    String date, priceID, restrictionID;
+    String date, pid, rid, priceID, pricePlanName, restrictionPlanName;
+    ;
     BroadcastReceiver broadcastReceiver;
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd");
@@ -136,19 +144,6 @@ public class CalendarFragment extends Fragment {
 
         viewPager.setVisibility(View.VISIBLE);
 
-//        IntentFilter filter = new IntentFilter("dataObject");
-//        broadcastReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                data = intent.getParcelableExtra("data");
-//                String s = data.getStatus();
-//                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
-//            }
-//        };
-//        getActivity().registerReceiver(broadcastReceiver, filter);
-
-
-
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);
 
@@ -157,32 +152,42 @@ public class CalendarFragment extends Fragment {
         Date date = new Date(System.currentTimeMillis());
         mbCurrentDate.setText(formatter.format(date));
 
-        SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sp.getString("Data", "");
-        Data data = gson.fromJson(json, Data.class);
+        IntentFilter filter = new IntentFilter("data");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                priceID = intent.getExtras().getString("priceId");
+                pricePlanName = intent.getExtras().getString("pricePlanName");
+                rid = intent.getExtras().getString("rId");
+                restrictionPlanName = intent.getExtras().getString("restrictionPlanName");
 
-        av.setKey(App.getInstance().getCurrentUser().getKey());
-        av.setAccount(App.getInstance().getCurrentUser().getAccount());
-        av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        av.setDfrom(LocalDate.now().toString());
-        av.setDto(LocalDate.now().plusDays(30).toString());
-        av.setArr("");
-//        av.setPriceId("46439");
-//        av.setPriceId(App.getInstance().getData().getPrices().get(1).getId());
-//        av.setRestrictionId("55482");
-//        av.setPriceId(data.getPrices().get(1).getId());
-//        av.setRestrictionId(data.getRestrictions().get(0).getId());
+                tvPricingPlan.setText(pricePlanName);
+                tvRestrictionPlan.setText(restrictionPlanName);
 
-        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(getActivity(), availability -> {
+                Calendar av = new Calendar();
+                av.setKey(App.getInstance().getCurrentUser().getKey());
+                av.setAccount(App.getInstance().getCurrentUser().getAccount());
+                av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                av.setDfrom(LocalDate.now().toString());
+                av.setDto(LocalDate.now().plusDays(30).toString());
+                av.setPriceId(priceID);
+                av.setRestrictionId("");
 
-            if (availability == null) return;
+                WebApiClient wac = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
+                wac.getCalDetails(av).observe(getActivity(), new Observer<Calendar>() {
+                    @Override
+                    public void onChanged(Calendar calendar) {
 
-            for(int i = 0; i < availability.getAvailabilityList().size(); i++){
-                addTab(availability.getAvailabilityList().get(i).getShortName());
+                        if (calendar == null) return;
+
+                        for(int i = 0; i < calendar.getAvailabilityList().size(); i++){
+                            addTab(calendar.getAvailabilityList().get(i).getShortName());
+                        }
+                    }
+                });
             }
-        });
+        };
+        getActivity().registerReceiver(broadcastReceiver, filter);
 
         calendarPagerAdapter = new CalendarPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(calendarPagerAdapter);
@@ -195,7 +200,13 @@ public class CalendarFragment extends Fragment {
         return view;
     }
 
-//    @Override
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
+    }
+
+    //    @Override
 //    public void onDestroy() {
 //        getActivity().unregisterReceiver(broadcastReceiver);
 //        super.onDestroy();
@@ -225,24 +236,24 @@ public class CalendarFragment extends Fragment {
             switch (position) {
                 case 0:
                     return FirstRoomFragment.newInstance();
-                case 1:
-                    return SecondRoomFragment.newInstance();
-                case 2:
-                    return ThirdRoomFragment.newInstance();
-                case 3:
-                    return FourthRoomFragment.newInstance();
-                case 4:
-                    return FifthRoomFragment.newInstance();
-                case 5:
-                    return SixthRoomFragment.newInstance();
-                case 6:
-                    return SeventhRoomFragment.newInstance();
-                case 7:
-                    return EighthRoomFragment.newInstance();
-                case 8:
-                    return NinthRoomFragment.newInstance();
-                case 9:
-                    return TenthRoomFragment.newInstance();
+//                case 1:
+//                    return SecondRoomFragment.newInstance();
+//                case 2:
+//                    return ThirdRoomFragment.newInstance();
+//                case 3:
+//                    return FourthRoomFragment.newInstance();
+//                case 4:
+//                    return FifthRoomFragment.newInstance();
+//                case 5:
+//                    return SixthRoomFragment.newInstance();
+//                case 6:
+//                    return SeventhRoomFragment.newInstance();
+//                case 7:
+//                    return EighthRoomFragment.newInstance();
+//                case 8:
+//                    return NinthRoomFragment.newInstance();
+//                case 9:
+//                    return TenthRoomFragment.newInstance();
                 default:
                     return FirstRoomFragment.newInstance();
             }
@@ -364,6 +375,21 @@ public class CalendarFragment extends Fragment {
 //        viewPager.setVisibility(View.GONE);
 //    }
 
+    @OnClick(R.id.fab)
+    public void openGantogram() {
+        if (fab.getTag().equals("0")) {
+            cvCalendar.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.INVISIBLE);
+            fab.setTag("1");
+            fab.setImageResource(R.drawable.lista);
+        } else if (fab.getTag().equals("1")){
+            cvCalendar.setVisibility(View.INVISIBLE);
+            viewPager.setVisibility(View.VISIBLE);
+            fab.setTag("0");
+            fab.setImageResource(R.drawable.gantogram);
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -377,10 +403,38 @@ public class CalendarFragment extends Fragment {
 
                 Intent sendDate = new Intent();
                 sendDate.setAction("sendDateToChild");
+                sendDate.putExtra("arrID", 1);
                 sendDate.putExtra("date", date);
                 getActivity().sendBroadcast(sendDate);
             }
+        }
 
+        if (requestCode == 33) {
+            if (resultCode == RESULT_OK) {
+                String a = data.getStringExtra("pricingPlanName");
+                pid = data.getStringExtra("pricingPlanID");
+                tvPricingPlan.setText(a);
+
+                Intent sendDate = new Intent();
+                sendDate.setAction("sendDateToChild");
+                sendDate.putExtra("arrID", 2);
+                sendDate.putExtra("planId", pid);
+                getActivity().sendBroadcast(sendDate);
+            }
+        }
+
+        if (requestCode == 111) {
+            if (resultCode == RESULT_OK) {
+                String a = data.getStringExtra("restrictionPlanName");
+                rid = data.getStringExtra("restrictionPlanID");
+                tvRestrictionPlan.setText(a);
+
+                Intent sendDate = new Intent();
+                sendDate.setAction("sendDateToChild");
+                sendDate.putExtra("arrID", 3);
+                sendDate.putExtra("restrictionId", rid);
+                getActivity().sendBroadcast(sendDate);
+            }
         }
     }
 
@@ -388,13 +442,24 @@ public class CalendarFragment extends Fragment {
     public void openNavigationView() {
         Intent i = new Intent(getActivity(), NavigationViewActivity.class);
         startActivityForResult(i, 200);
-        Toast.makeText(getActivity(), priceID, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.mbCurrentDate)
     public void changeCalendarDate() {
         Intent intent = new Intent(getActivity(), CalendarFilterActivity.class);
         startActivityForResult(intent, Consts.REQ_FILTER_DIALOG);
+    }
+
+    @OnClick(R.id.tvPricingPlan)
+    public void openPrice() {
+        Intent i = new Intent(getActivity(), PricingPlanDialog.class);
+        startActivityForResult(i, 33);
+    }
+
+    @OnClick(R.id.tvRestrictionPlan)
+    public void openDialog() {
+        Intent i = new Intent(getActivity(), RestrictionPlanDialog.class);
+        startActivityForResult(i, 111);
     }
 }
 

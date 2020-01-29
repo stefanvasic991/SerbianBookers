@@ -112,9 +112,9 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         holder.tvNights.setText(reservation.getNights() + " noćenja");
 //        holder.ivLogo.setImageResource(Integer.parseInt(reservation.getChannelLogo()));
 
-//        if (reservation.getChannelLogo().equals(empty)) {
-//            Glide.with(context).load(R.drawable.direct_res).into(holder.ivLogo);
-//        } else
+        if (reservation.getChannelLogo().equals(empty)) {
+            Glide.with(context).load(R.drawable.direct_res).into(holder.ivLogo);
+        } else
             Glide.with(context).load(reservation.getChannelLogo()).into(holder.ivLogo);
 
 

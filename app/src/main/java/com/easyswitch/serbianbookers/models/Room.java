@@ -54,6 +54,9 @@ public class Room implements Parcelable {
     @Expose
     private String roomNumbers;
 
+    private boolean selected;
+
+
     protected Room(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -69,6 +72,7 @@ public class Room implements Parcelable {
         masterRoom = in.readString();
         parentRoom = in.readString();
         roomNumbers = in.readString();
+        selected = in.readByte() != 0;
     }
 
     @Override
@@ -87,6 +91,7 @@ public class Room implements Parcelable {
         dest.writeString(masterRoom);
         dest.writeString(parentRoom);
         dest.writeString(roomNumbers);
+        dest.writeByte((byte) (selected ? 1 : 0));
     }
 
     @Override
@@ -224,5 +229,13 @@ public class Room implements Parcelable {
 
     public void setRoomNumbers(String roomNumbers) {
         this.roomNumbers = roomNumbers;
+    }
+
+    public boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

@@ -34,6 +34,7 @@ import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.adapters.CalendarAdapter;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
+import com.easyswitch.serbianbookers.models.Calendar;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.dialog.AvailabilitySnackBar;
 import com.easyswitch.serbianbookers.views.dialog.ClosureSnackBar;
@@ -112,31 +113,29 @@ public class FourthRoomFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_studio, container, false);
         ButterKnife.bind(this, view);
 
-        Availability av = new Availability();
-        av.setKey(App.getInstance().getCurrentUser().getKey());
-        av.setAccount(App.getInstance().getCurrentUser().getAccount());
-        av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        av.setDfrom(LocalDate.now().toString());
-        av.setDto(LocalDate.now().plusDays(30).toString());
+        Calendar c = new Calendar();
+        c.setKey(App.getInstance().getCurrentUser().getKey());
+        c.setAccount(App.getInstance().getCurrentUser().getAccount());
+        c.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+        c.setDfrom(LocalDate.now().toString());
+        c.setDto(LocalDate.now().plusDays(30).toString());
+//        c.setArr("");
+        c.setPriceId(App.getInstance().getData().getPrices().get(0).getId());
+        c.setRestrictionId(App.getInstance().getData().getRestrictions().get(0).getId());
 
         WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, new Observer<Availability>() {
+        webApiClient.getCalDetails(c).observe(this, new Observer<Calendar>() {
             @Override
-            public void onChanged(Availability availability) {
+            public void onChanged(Calendar calendar) {
 
-                if (availability == null) return;
-
-                if (availability.getAvailabilityList() != null) {
+                if (calendar.getAvailabilityList() != null) {
                     calendarList.clear();
-                    calendarList.addAll(availability.getAvailabilityList().get(3).getData());
+                    calendarList.addAll(calendar.getAvailabilityList().get(3).getData());
                     calendarAdapter.notifyDataSetChanged();
                 } else {
                     List<AvailabilityData> tmpList = new ArrayList<>();
-                    tmpList.addAll(availability.getAvailabilityList().get(3).getData());
+                    tmpList.addAll(calendar.getAvailabilityList().get(3).getData());
                 }
-
-                    id = availability.getAvailabilityList().get(3).getId();
-
             }
         });
 
@@ -428,32 +427,33 @@ public class FourthRoomFragment extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 dateFromBroadcast = intent.getExtras().getString("date");
                 changeFormat = getDate(dateFromBroadcast);
-                Availability a = new Availability();
-                a.setKey(App.getInstance().getCurrentUser().getKey());
-                a.setAccount(App.getInstance().getCurrentUser().getAccount());
-                a.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-                a.setDfrom(changeFormat);
-                a.setDto(LocalDate.now().plusDays(35).toString());
-                a.setArr("");
-//                a.setPriceId("121900");
-//                a.setRestrictionId("55482");
 
-                WebApiManager.get(getContext()).getWebApi().availability(a).enqueue(new Callback<Availability>() {
-                    @Override
-                    public void onResponse(Call<Availability> call, Response<Availability> response) {
-                        if (response.isSuccessful()) {
-                            calendarList.clear();
-                            calendarList.addAll(response.body().getAvailabilityList().get(3).getData());
-                            calendarAdapter.notifyDataSetChanged();
-                        } else {}
-                    }
-
-                    @Override
-                    public void onFailure(Call<Availability> call, Throwable t) {
-                        t.printStackTrace();
-                        Timber.v("onFailure");
-                    }
-                });
+//                Calendar c = new Calendar();
+//                c.setKey(App.getInstance().getCurrentUser().getKey());
+//                c.setAccount(App.getInstance().getCurrentUser().getAccount());
+//                c.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+//                c.setDfrom(changeFormat);
+//                c.setDto(LocalDate.now().plusDays(35).toString());
+////                a.setArr("");
+//                c.setPriceId(App.getInstance().getData().getPrices().get(0).getId());
+//                c.setRestrictionId(App.getInstance().getData().getRestrictions().get(0).getId());
+//
+//                WebApiManager.get(getContext()).getWebApi().calDetails(c).enqueue(new Callback<Calendar>() {
+//                    @Override
+//                    public void onResponse(Call<Calendar> call, Response<Calendar> response) {
+//                        if (response.isSuccessful()) {
+//                            calendarList.clear();
+//                            calendarList.addAll(response.body().getAvailabilityList().get(3).getData());
+//                            calendarAdapter.notifyDataSetChanged();
+//                        } else {}
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Calendar> call, Throwable t) {
+//                        t.printStackTrace();
+//                        Timber.v("onFailure");
+//                    }
+//                });
 
             }
         };
@@ -681,7 +681,7 @@ public class FourthRoomFragment extends Fragment {
 
 //        if (requestCode == 218) {
 //            if (resultCode == RESULT_CANCELED) {
-//                minStay.setText(av.getAvailabilityList().get(0).getData().get(0).getMinStay());
+//                minStay.setText(av.getAvailabilityList().get(0).getData().get(0).getRestriction());
 //            }
 //
 //            if (resultCode == RESULT_OK) {

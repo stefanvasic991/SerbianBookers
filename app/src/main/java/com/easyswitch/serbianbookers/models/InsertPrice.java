@@ -3,6 +3,8 @@ package com.easyswitch.serbianbookers.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class InsertPrice {
 
     @SerializedName("key")
@@ -25,10 +27,10 @@ public class InsertPrice {
     private String pid;
     @SerializedName("old_values")
     @Expose
-    private String oldValues;
+    private List<Values> oldValues;
     @SerializedName("new_values")
     @Expose
-    private NewPrice newValues;
+    private List<Values> newValues;
 
     @SerializedName("status")
     @Expose
@@ -36,6 +38,9 @@ public class InsertPrice {
     @SerializedName("data")
     @Expose
     private InsertData insertData;
+    @SerializedName("multiple_ids")
+    @Expose
+    List<String> multipleIDs;
 
     public String getKey() {
         return key;
@@ -85,19 +90,19 @@ public class InsertPrice {
         this.pid = pid;
     }
 
-    public String getOldValues() {
+    public List<Values> getOldValues() {
         return oldValues;
     }
 
-    public void setOldValues(String oldValues) {
+    public void setOldValues(List<Values> oldValues) {
         this.oldValues = oldValues;
     }
 
-    public NewPrice getNewValues() {
+    public List<Values> getNewValues() {
         return newValues;
     }
 
-    public void setNewValues(NewPrice newValues) {
+    public void setNewValues(List<Values> newValues) {
         this.newValues = newValues;
     }
 
@@ -115,5 +120,13 @@ public class InsertPrice {
 
     public void setInsertData(InsertData insertData) {
         this.insertData = insertData;
+    }
+
+    public List<String> getMultipleIDs() {
+        return multipleIDs;
+    }
+
+    public void setMultipleIDs(List<String> multipleIDs) {
+        this.multipleIDs = multipleIDs;
     }
 }

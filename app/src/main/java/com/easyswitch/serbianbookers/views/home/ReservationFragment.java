@@ -92,7 +92,8 @@ public class ReservationFragment extends Fragment {
     ReservationAdapter reservationAdapter;
     BroadcastReceiver broadcastReceiver;
     DataBody dataBody = new DataBody();
-    String query, dateArrFrom, dateArrTo, dateDepFrom, dateDepTo, dateResFrom, dateResTo, channel;
+    private String query, dateArrFrom, dateArrTo, dateDepFrom, dateDepTo, dateResFrom, dateResTo;
+    private String status, statusID, channelId, roomId;
     int id = 0;
 
     public static ReservationFragment newInstance() {
@@ -117,9 +118,10 @@ public class ReservationFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         u = getActivity().getIntent().getParcelableExtra("currentUser");
-        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
-        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
+        assert u != null;
+        dataBody.setKey(u.getKey());
+        dataBody.setLcode(u.getProperties().get(0).getLcode());
+        dataBody.setAccount(u.getAccount());
         dataBody.setNewsOrderBy("date_arrival");
         dataBody.setNewsOrderType("ASC");
         dataBody.setNewsDfrom("");
@@ -152,13 +154,6 @@ public class ReservationFragment extends Fragment {
                     ArrayList<Reservation> tmpList = new ArrayList<>();
                     tmpList.addAll(data.getReceived());
                 }
-
-//                SharedPreferences sp = getActivity().getSharedPreferences(HomeFragment.MY_PREFS_NAME, Context.MODE_PRIVATE);
-//                SharedPreferences.Editor prefsEditor = sp.edit();
-//                Gson gson = new Gson();
-//                String json = gson.toJson(data);
-//                prefsEditor.putString("Data", json);
-//                prefsEditor.apply();
             }
         });
 
@@ -364,13 +359,21 @@ public class ReservationFragment extends Fragment {
                 }
 
                 if (id == 4) {
+                    if (status.equals("Dolazak")) {
+                        statusID = "1";
+                    }
+
+
+                    if (status.equals("Odlazak")) {
+                        statusID = "5";
+                    }
                     ReservationFilter rf = new ReservationFilter();
                     rf.setKey(App.getInstance().getCurrentUser().getKey());
                     rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
                     rf.setAccount(App.getInstance().getCurrentUser().getAccount());
                     rf.setOrderBy("date_arrival");
                     rf.setOrderType("ASC");
-                    rf.setStatus(channel);
+                    rf.setStatus(statusID);
 
                     WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
                         @Override
@@ -396,7 +399,33 @@ public class ReservationFragment extends Fragment {
                     rf.setAccount(App.getInstance().getCurrentUser().getAccount());
                     rf.setOrderBy("date_arrival");
                     rf.setOrderType("ASC");
-                    rf.setChannel(channel);
+                    rf.setChannel(channelId);
+
+                    WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
+                        @Override
+                        public void onResponse(Call<ReservationFilter> call, Response<ReservationFilter> response) {
+                            if (response.isSuccessful()) {
+                                reservationList.clear();
+                                reservationList.addAll(response.body().getFilterReservationList());
+                                reservationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReservationFilter> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                if (id == 8) {
+                    ReservationFilter rf = new ReservationFilter();
+                    rf.setKey(App.getInstance().getCurrentUser().getKey());
+                    rf.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+                    rf.setAccount(App.getInstance().getCurrentUser().getAccount());
+                    rf.setOrderBy("date_arrival");
+                    rf.setOrderType("ASC");
+                    rf.setRoom(roomId);
 
                     WebApiManager.get(getActivity()).getWebApi().reservationFilter(rf).enqueue(new Callback<ReservationFilter>() {
                         @Override
@@ -435,7 +464,9 @@ public class ReservationFragment extends Fragment {
                 dateDepTo = intent.getExtras().getString("depDateTo");
                 dateResFrom = intent.getExtras().getString("resDateFrom");
                 dateResTo = intent.getExtras().getString("resDateTo");
-                channel = intent.getExtras().getString("channel");
+                status = intent.getExtras().getString("channel");
+                channelId = intent.getExtras().getString("channelId");
+                roomId = String.valueOf(intent.getExtras().getStringArrayList("checkedList"));
             }
         };
         getActivity().registerReceiver(broadcastReceiver, filter);

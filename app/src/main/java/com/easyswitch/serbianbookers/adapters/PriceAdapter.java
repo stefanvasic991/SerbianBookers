@@ -4,7 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +26,7 @@ public class PriceAdapter extends RecyclerView.Adapter<PriceAdapter.PriceHolder>
     private Context context;
     private List<Price> priceList;
     private OnPriceClickListener onPriceClickListener;
+    private RadioButton lastCheckedRB = null;
 
     public PriceAdapter(Context context, List<Price> priceList) {
         this.context = context;
@@ -59,6 +63,8 @@ public class PriceAdapter extends RecyclerView.Adapter<PriceAdapter.PriceHolder>
 
     class PriceHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.rgRoom)
+        RadioGroup rgRoom;
         @BindView(R.id.rbRoom)
         RadioButton rbRoom;
 
@@ -67,10 +73,11 @@ public class PriceAdapter extends RecyclerView.Adapter<PriceAdapter.PriceHolder>
             ButterKnife.bind(this, itemView);
         }
 
-        @OnClick(R.id.llClick)
+        @OnClick(R.id.rbRoom)
         public  void click() {
             if (onPriceClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
                 onPriceClickListener.onPricingPlanClick(itemView, getAdapterPosition(), priceList.get(getAdapterPosition()));
+
             }
         }
     }

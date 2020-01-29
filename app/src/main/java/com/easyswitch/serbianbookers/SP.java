@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.User;
 
+import timber.log.Timber;
+
 public class SP {
 
     private static SP myInstance;
@@ -28,26 +30,15 @@ public class SP {
         pref = context.getSharedPreferences("SAFetlz", Context.MODE_PRIVATE);
     }
 
-    public Data getDATA() {
-        String dataString = getStringValueFromPreferences(DATA, null);
-
-        return  App.getInstance().getGson().fromJson(dataString, Data.class);
-//        if (dataString == null) {
-//            return null;
-//        }
-//
-//        try {
-//            Data data = App.getInstance().getGson().fromJson(dataString, Data.class);
-//            return data;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            logout();
-//            return  null;
-//        }
+    public void setData(Data data) {
+        String json = App.getInstance().getGson().toJson(data);
+        saveStringValueToPreferences(DATA, json);
     }
 
-    public void setDATA(Data data) {
-        saveStringValueToPreferences(DATA, App.getInstance().getGson().toJson(data));
+    public Data getData() {
+        String dataString = getStringValueFromPreferences(DATA, null);
+        Timber.e("getFilter");
+        return  App.getInstance().getGson().fromJson(dataString, Data.class);
     }
 
     public boolean getUserExist() {
@@ -82,10 +73,9 @@ public class SP {
         saveStringValueToPreferences(API_KEY, null);
 //        saveStringValueToPreferences(EMAIL, null);
         saveBooleanValueToPreferences(USER, false);
-//        saveStringValueToPreferences(DATA, null);
-//        App.getInstance().setCurrentUser(null);
-
-//        App.getInstance().setCurrentUser(null);
+        saveStringValueToPreferences(DATA, null);
+        App.getInstance().setCurrentUser(null);
+        App.getInstance().setData(null);
     }
 
 //    public void setUser(User user) {
@@ -93,6 +83,10 @@ public class SP {
 //    }
 
     public static SP getMyInstance() {
+
+        if (myInstance == null) {
+            myInstance = new SP(App.getInstance().getApplicationContext());
+        }
         return myInstance;
     }
 

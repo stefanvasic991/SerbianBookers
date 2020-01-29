@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
+import com.easyswitch.serbianbookers.SP;
 import com.easyswitch.serbianbookers.WebApiClient;
 import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.adapters.ReservationAdapter;
@@ -153,9 +154,9 @@ public class HomeFragment extends Fragment {
 
         u = getActivity().getIntent().getParcelableExtra("currentUser");
         DataBody dataBody = new DataBody();
-        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
-        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
+        dataBody.setKey(u.getKey());
+        dataBody.setLcode(u.getProperties().get(0).getLcode());
+        dataBody.setAccount(u.getAccount());
         dataBody.setNewsOrderBy("2019-12-25");
         dataBody.setNewsOrderType("");
         dataBody.setNewsDfrom("");
@@ -178,7 +179,6 @@ public class HomeFragment extends Fragment {
             public void onChanged(Data data) {
 
                 if (data == null) return;
-
 
                 pbLoading.setVisibility(View.GONE);
 
@@ -540,12 +540,12 @@ public class HomeFragment extends Fragment {
         ivLogo.setVisibility(View.GONE);
         searchView.setVisibility(View.VISIBLE);
 
+        searchView.requestFocus();
         searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus){
-                    InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
-                    assert imm != null;
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 }
             }

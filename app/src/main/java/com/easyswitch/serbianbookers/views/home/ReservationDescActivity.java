@@ -107,9 +107,7 @@ public class ReservationDescActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reservation_desc);
         ButterKnife.bind(this);
 
-        getWindow().setGravity(Gravity.CENTER);
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, android.R.color.transparent));
-        setFinishOnTouchOutside(true);
 
         reservation = getIntent().getParcelableExtra("reservation");
         u = getIntent().getParcelableExtra("currentUser");
@@ -140,9 +138,9 @@ public class ReservationDescActivity extends AppCompatActivity {
         etNote.setText(reservation.getCustomerNotes());
         tvNote.setText(reservation.getCustomerNotes());
 
-//        if (reservation.getChannelLogo().equals("")) {
-//            Picasso.with(this).load(R.drawable.direct_res).into(ivLogo);
-//        } else
+        if (reservation.getChannelLogo().equals("")) {
+            Picasso.with(this).load(R.drawable.direct_res).into(ivLogo);
+        } else
             Glide.with(this).load(reservation.getChannelLogo()).into(ivLogo);
 
     }

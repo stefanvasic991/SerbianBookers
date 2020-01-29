@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
     android:layout_marginTop="4dp">
 
     <RelativeLayout
@@ -338,7 +339,7 @@
                 android:layout_weight="0.4"
                 android:background="@color/reservationDesc"
                 android:paddingTop="5dp"
-                android:text="@string/minStay"
+                android:text="@string/restriction"
                 android:textAlignment="center"
                 android:textSize="16dp" />
 

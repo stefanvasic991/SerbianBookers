@@ -19,22 +19,18 @@ public class InsertAvail {
     @SerializedName("dfrom")
     @Expose
     private String dfrom;
-    @SerializedName("dto")
+    @SerializedName("log")
     @Expose
-    private String dto;
+    private String log;
     @SerializedName("old_values")
     @Expose
-    private Object oldValues;
+    private List<NewValues> oldValues = null;
     @SerializedName("new_values")
     @Expose
-    private List<NewValues> newValues;
-
-    @SerializedName("status")
+    private List<NewValues> newValues = null;
+    @SerializedName("multiple_ids")
     @Expose
-    private String status;
-    @SerializedName("data")
-    @Expose
-    private InsertData insertData;
+    List<String> multipleIDs;
 
     public String getKey() {
         return key;
@@ -68,19 +64,19 @@ public class InsertAvail {
         this.dfrom = dfrom;
     }
 
-    public String getDto() {
-        return dto;
+    public String getLog() {
+        return log;
     }
 
-    public void setDto(String dto) {
-        this.dto = dto;
+    public void setLog(String log) {
+        this.log = log;
     }
 
-    public Object getOldValues() {
+    public List<NewValues> getOldValues() {
         return oldValues;
     }
 
-    public void setOldValues(Object oldValues) {
+    public void setOldValues(List<NewValues> oldValues) {
         this.oldValues = oldValues;
     }
 
@@ -92,19 +88,11 @@ public class InsertAvail {
         this.newValues = newValues;
     }
 
-    public String getStatus() {
-        return status;
+    public List<String> getMultipleIDs() {
+        return multipleIDs;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public InsertData getInsertData() {
-        return insertData;
-    }
-
-    public void setInsertData(InsertData insertData) {
-        this.insertData = insertData;
+    public void setMultipleIDs(List<String> multipleIDs) {
+        this.multipleIDs = multipleIDs;
     }
 }

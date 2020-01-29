@@ -12,19 +12,11 @@ import android.widget.Toast;
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
-import com.easyswitch.serbianbookers.models.Availability;
-import com.easyswitch.serbianbookers.models.AvailabilityData;
-import com.easyswitch.serbianbookers.models.InsertAvailData;
-import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.NewValues;
+import com.easyswitch.serbianbookers.models.NewValuesRestriction;
+import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.User;
-import com.easyswitch.serbianbookers.models.insert.Closed;
-import com.easyswitch.serbianbookers.models.insert.MaxStay;
-import com.easyswitch.serbianbookers.models.insert.MinStay;
-import com.easyswitch.serbianbookers.models.insert.MinStayArr;
-
-import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class ClosureSnackBar extends AppCompatActivity {
 
@@ -41,7 +34,8 @@ public class ClosureSnackBar extends AppCompatActivity {
 
     User u;
     String date, tag;
-    int closedOptions = 0;
+    Integer closedOptions = 0;
+    Integer roomID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +45,11 @@ public class ClosureSnackBar extends AppCompatActivity {
         ButterKnife.bind(this);
 
         u = getIntent().getParcelableExtra("currentUser");
-        date  = getIntent().getStringExtra("date");
+        date  = getIntent().getStringExtra("datum");
+        roomID = getIntent().getIntExtra("roomID", 0);
+        date  = getIntent().getStringExtra("datum");
         tag  =getIntent().getStringExtra("status");
         closedOptions = getIntent().getIntExtra("closedOptions", 0);
-//        Toast.makeText(this, date + tag + closure, Toast.LENGTH_SHORT).show();
     }
 
 //    @OnClick(R.id.llSnackBar)
@@ -77,25 +72,28 @@ public class ClosureSnackBar extends AppCompatActivity {
         i.putExtra("closedOptions", closedOptions);
         setResult(RESULT_OK, i);
 
-        Closed c = new Closed();
-        c.setClosed(closedOptions);
+        Restriction day = new Restriction();
+        day.setClosed(Integer.valueOf(closedOptions));
 
-        InsertAvailData av = new InsertAvailData();
-        av.setClosed(c);
+        List<Restriction> list = new ArrayList<>();
+        list.add(day);
 
-        NewValues newValues = new NewValues();
-        newValues.setRoomId("416694");
-        newValues.setAvailabilityData(Collections.singletonList(av));
+        NewValuesRestriction newValues = new NewValuesRestriction();
+        newValues.setId("");
+        newValues.setDays(list);
+
+        List<NewValuesRestriction> nwList = new ArrayList<>();
+        nwList.add(newValues);
 
         InsertRestriction ir = new InsertRestriction();
         ir.setKey(App.getInstance().getCurrentUser().getKey());
         ir.setAccount(App.getInstance().getCurrentUser().getAccount());
         ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         ir.setDfrom(date);
-//        ir.setPid(data.getRestrictions().get(0).getId());
-        ir.setPid("");
-        ir.setOldValues("");
-        ir.setNewValues(newValues);
+        ir.setPid(App.getInstance().getData().getRestrictions().get(1).getId());
+        ir.setOldValues(nwList);
+        ir.setNewValues(nwList);
+        ir.setMultipleIDs(Collections.singletonList(String.valueOf(roomID)));
 
         WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
         webApiClient.getInsertRestriction(ir).observe(this, new Observer<InsertRestriction>() {
@@ -104,6 +102,7 @@ public class ClosureSnackBar extends AppCompatActivity {
 
             }
         });
+
         finish();
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }

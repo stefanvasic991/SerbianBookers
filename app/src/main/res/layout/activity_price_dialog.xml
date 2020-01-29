@@ -43,37 +43,37 @@
             android:textAlignment="center"
             android:textColor="@color/colorWhite"/>
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvClear"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="0.25"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:text="Očisti"-->
-<!--            android:textSize="16sp"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textColor="@color/colorWhite" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvClear"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="0.25"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:text="Očisti"-->
+        <!--            android:textSize="16sp"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/colorWhite" />-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvSelectAll"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="0.25"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:text="Označi sve"-->
-<!--            android:textSize="16sp"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textColor="@color/colorWhite" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvSelectAll"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="0.25"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:text="Označi sve"-->
+        <!--            android:textSize="16sp"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/colorWhite" />-->
 
-        <TextView
-            android:id="@+id/tvOkej"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:layout_marginTop="16dp"
-            android:text="OK"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/colorWhite" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvOkej"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_weight="0.25"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:text="OK"-->
+        <!--            android:textSize="16sp"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/colorWhite" />-->
     </LinearLayout>
 </RelativeLayout>

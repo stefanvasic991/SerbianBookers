@@ -1,6 +1,7 @@
 package com.easyswitch.serbianbookers;
 
 import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.models.Calendar;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.Event;
@@ -12,7 +13,6 @@ import com.easyswitch.serbianbookers.models.InsertRestriction;
 import com.easyswitch.serbianbookers.models.News;
 import com.easyswitch.serbianbookers.models.ReservationFilter;
 import com.easyswitch.serbianbookers.models.ReservationList;
-import com.easyswitch.serbianbookers.models.Restriction;
 import com.easyswitch.serbianbookers.models.Search;
 import com.easyswitch.serbianbookers.models.ShowCard;
 import com.easyswitch.serbianbookers.models.Statistics;
@@ -57,8 +57,8 @@ public interface WebApi {
     Call<Availability> availability(@Body Availability a);
 
     @Headers("Content-type: application/json")
-    @POST("api/data/restrictions")
-    Call<Restriction> restriction(@Body Restriction restriction);
+    @POST("api/data/calDetails")
+    Call<Calendar> calDetails(@Body Calendar c);
 
     @Headers("Content-type: application/json")
     @POST("api/data/news")
@@ -69,15 +69,15 @@ public interface WebApi {
     Call<Event> event(@Body Event event);
 
     @Headers("Content-type: application/json")
-    @POST("api/data/insert/avail")
+    @POST("api/insert/avail")
     Call<InsertAvail> insertAvail(@Body InsertAvail insertAvail);
 
     @Headers("Content-type: application/json")
-    @POST("api/data/insert/price")
+    @POST("api/insert/price")
     Call<InsertPrice> insertPrice(@Body InsertPrice insertPrice);
 
     @Headers("Content-type: application/json")
-    @POST("api/data/insert/restriction")
+    @POST("api/insert/restriction")
     Call<InsertRestriction> insertRestriction(@Body InsertRestriction insertRestriction);
 
     @Headers("Content-type: application/json")

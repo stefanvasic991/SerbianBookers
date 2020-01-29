@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,7 +28,11 @@ import com.easyswitch.serbianbookers.models.Channel;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
 import com.easyswitch.serbianbookers.models.Reservation;
+import com.easyswitch.serbianbookers.models.Room;
 import com.easyswitch.serbianbookers.models.Search;
+import com.easyswitch.serbianbookers.views.dialog.ChannelDialog;
+import com.easyswitch.serbianbookers.views.dialog.PickRoomDialog;
+import com.easyswitch.serbianbookers.views.dialog.PricingPlanDialog;
 import com.google.android.material.button.MaterialButton;
 import com.thomashaertel.widget.MultiSpinner;
 
@@ -39,6 +44,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class FilterActivity extends AppCompatActivity {
 
@@ -61,10 +67,10 @@ public class FilterActivity extends AppCompatActivity {
 
     @BindView(R.id.statusSpinner)
     Spinner statusSpinner;
-    @BindView(R.id.channelSpinner)
-    Spinner channelSpinner;
-    @BindView(R.id.typeSpinner)
-    MultiSpinner typeSpinner;
+    @BindView(R.id.tvChannel)
+    TextView tvChannel;
+    @BindView(R.id.tvRoomType)
+    TextView tvRoomType;
     @BindView(R.id.searchView)
     SearchView searchView;
 
@@ -79,10 +85,10 @@ public class FilterActivity extends AppCompatActivity {
 
     BroadcastReceiver broadcastReceiver;
     String arrDateFrom, arrDateTo, depDateFrom, depDateTo, resDateFrom, resDateTo;
-    String selected;
-    List<String> channels = new ArrayList<>();
-    List<String> rooms = new ArrayList<>();
-    List<String> Id = new ArrayList<>();
+    String selected, channelId, roomId, rid;
+    int roomNumber;
+    List<Room> a = new ArrayList<>();
+    List<String> multilpeIDs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,98 +115,25 @@ public class FilterActivity extends AppCompatActivity {
             }
         });
 
-        DataBody dataBody = new DataBody();
-        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
-        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
-        dataBody.setNewsOrderBy("date_arrival");
-        dataBody.setNewsOrderType("ASC");
-        dataBody.setNewsDfrom("");
-        dataBody.setEventsDfrom("");
-        dataBody.setEventsDto("");
-        dataBody.setCalendarDfrom("2019-12-21");
-        dataBody.setCalendarDto("2019-12-28");
-        dataBody.setReservationsDfrom("2019-12-21");
-        dataBody.setReservationsDto("2019-12-28");
-        dataBody.setReservationsOrderBy("3");
-        dataBody.setReservationsFilterBy("2019-10-21");
-        dataBody.setReservationsOrderType("");
-        dataBody.setGuestsOrderBy("135");
-        dataBody.setGuestsOrderType("");
-
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getData(dataBody).observe(this, new Observer<Data>() {
+        statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onChanged(Data data) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected = parent.getSelectedItem().toString();
+                Timber.e(selected);
+                Intent i = new Intent();
+                i.setAction("date");
+                i.putExtra("arrID", 4);
+                i.putExtra("channel", selected);
+                sendBroadcast(i);
+            }
 
-                if (data == null) return;
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selected = parent.getSelectedItem().toString();
-                        Intent i = new Intent();
-                        i.setAction("date");
-                        i.putExtra("arrID", 4);
-                        i.putExtra("channel", selected);
-                        sendBroadcast(i);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                for (int i = 0; i < data.getChannels().size(); i++) {
-                    channels.addAll(Collections.singleton(data.getChannels().get(i).getName()));
-                    Id.addAll(Collections.singleton(data.getChannels().get(i).getId()));
-                }
-
-                ArrayAdapter<String> cAdapter = new ArrayAdapter<>(getApplication(),
-                        android.R.layout.simple_spinner_dropdown_item, channels);
-                channelSpinner.setAdapter(cAdapter);
-                channelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selected = parent.getSelectedItem().toString();
-
-                        Intent i = new Intent();
-                        i.setAction("date");
-                        i.putExtra("arrID", 5);
-                        i.putExtra("channel", selected);
-                        sendBroadcast(i);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                for (int i = 0; i < data.getRooms().size(); i++) {
-                    rooms.addAll(Collections.singleton(data.getRooms().get(i).getShortname()));
-                }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplication(),
-                        android.R.layout.simple_spinner_item, rooms);
-                typeSpinner.setAdapter(adapter, false, onSelectedListener);
-
-                boolean[] selectedItems = new boolean[adapter.getCount()];
-                selectedItems[0] = true; // select first item
-                typeSpinner.setSelected(selectedItems);
-
-        }
+            }
         });
-    }
 
-    private MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
-        public void onItemsSelected(boolean[] selected) {
-            // Do something here with the selected items
-            String s = String.valueOf(selected);
-            mbDepDateTo.setText(s);
-        }
-    };
+    }
 
     @Override
     protected void onResume() {
@@ -365,6 +298,63 @@ public class FilterActivity extends AppCompatActivity {
 //                tvCancelDateCan.setVisibility(View.VISIBLE);
 //            }
 //        }
+
+        if (requestCode == 33) {
+            if (resultCode == RESULT_OK) {
+                String a = data.getStringExtra("channelName");
+                channelId = data.getStringExtra("channelID");
+                tvChannel.setText(a);
+
+                Intent i = new Intent();
+                i.setAction("date");
+                i.putExtra("arrID", 5);
+                i.putExtra("channelId", channelId);
+                sendBroadcast(i);
+            }
+        }
+
+
+        if (requestCode == 44) {
+            if (resultCode == RESULT_OK) {assert data != null;
+                a = data.getExtras().getParcelableArrayList("checkedList");
+                for (int i = 0; i < a.size(); i++) {
+                    if (a.size() <= 3) {
+                        tvRoomType.setText(tvRoomType.getText() + a.get(i).getShortname() + " ");
+                        multilpeIDs.add(a.get(i).getId());
+                        Timber.e(String.valueOf(multilpeIDs));
+                    } else if (a.size() == 4) {
+                        tvRoomType.setText("4 selektovane sobe");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 5) {
+                        tvRoomType.setText("5 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 6) {
+                        tvRoomType.setText("6 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 7) {
+                        tvRoomType.setText("7 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 8) {
+                        tvRoomType.setText("8 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 9) {
+                        tvRoomType.setText("9 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    }  else {
+                        tvRoomType.setText("Sve sobe su selektovane");
+                        multilpeIDs.add(a.get(i).getId());
+                    }
+
+                    roomNumber = a.size();
+                }
+
+                Intent i = new Intent();
+                i.setAction("date");
+                i.putExtra("arrID", 8);
+                i.putStringArrayListExtra("checkedList", (ArrayList<String>) multilpeIDs);
+                sendBroadcast(i);
+            }
+        }
     }
 
     @OnClick(R.id.btnBack)
@@ -419,6 +409,19 @@ public class FilterActivity extends AppCompatActivity {
 //        Intent i = new Intent(this, CalendarActivity.class);
 //        startActivityForResult(i, 10);
 //    }
+
+    @OnClick(R.id.tvChannel)
+    public void channel() {
+        Intent i  = new Intent(this, ChannelDialog.class);
+        startActivityForResult(i, 33);
+    }
+
+    @OnClick(R.id.tvRoomType)
+    public void openPrice() {
+        Intent i  = new Intent(this, PickRoomDialog.class);
+        startActivityForResult(i, 44);
+        tvRoomType.setText("");
+    }
 
     @OnClick(R.id.btnFilter)
     public void filter() {

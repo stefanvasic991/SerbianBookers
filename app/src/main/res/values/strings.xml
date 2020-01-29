@@ -6,7 +6,7 @@
     <string name="login">prijavi se</string>
     <string name="username_required">Korisničko ime obavezno.</string>
     <string name="username_not_valid">Korisničko ime nije validno.</string>
-    <string name="password_not_match">Pogrešna lozinka!</string>
+    <string name="password_not_match">Pogrešno korisničko ime ili lozinka!</string>
     <string name="password_required">Lozinka je obavezna!</string>
     <string name="password_lenght">Lozinka mora sadržati najmanje 6 karaktera.</string>
 
@@ -50,6 +50,7 @@
     <string name="reservationStatus">Status rezervacije:</string>
     <string name="reservationChannel">Kanal rezervacije:</string>
     <string name="pickChannel">Izaberi kanal prodaje:</string>
+    <string name="pickChannels">Izaberi kanal</string>
     <string name="apartmentType">Tip apartmana:</string>
     <string name="pickDate">izaberi datum</string>
 
@@ -74,7 +75,7 @@
     <string name="openNoCheckInCheckOut">Otvoreno bez prijavljivanja\ni bez odjavljivanja</string>
 
     <string name="ota">OTA</string>
-    <string name="minStay">Minimalni\nboravak</string>
+    <string name="restriction">Restrikcije:</string>
     <string name="minStayArr">Minimalni\nboravak Arr</string>
     <string name="maxStay">Maksimalni\nboravak</string>
     <string name="izaberi_datum">Izaberi datum</string>
@@ -130,7 +131,9 @@
     <string name="yes">Da</string>
     <string name="no">Ne</string>
     <string name="pricing_plan">Plan cena:</string>
-    <string name="restriction">Restrikcije:</string>
+    <string name="restrictions">Restrikcije:</string>
+    <string name="pricingPlan">plan cena</string>
+    <string name="pickRooms">izaberi sobe</string>
 
 
     <string-array name="rooms">

@@ -42,7 +42,7 @@ public class ReservationFilter {
     @SerializedName("channel")
     @Expose
     private String channel;
-    @SerializedName("room")
+    @SerializedName("reservations_room")
     @Expose
     private String room;
 

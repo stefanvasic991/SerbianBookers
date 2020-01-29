@@ -476,6 +476,7 @@
                         android:layout_height="40dp"
                         android:spinnerMode="dropdown"
                         android:entries="@array/status"
+
                         android:background="@drawable/spinner_background"/>
 
                     <ImageView
@@ -521,20 +522,25 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp">
 
-                    <Spinner
-                        android:id="@+id/channelSpinner"
+                    <TextView
+                        android:id="@+id/tvChannel"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
+                        android:paddingTop="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="8dp"
+                        android:textSize="14sp"
+                        android:hint="@string/pickChannels"
+                        android:textColor="@color/colorText"
                         android:background="@drawable/spinner_background"
-                        android:entries="@array/channels"
-                        android:spinnerMode="dropdown" />
+                        android:entries="@array/channels" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/channelSpinner"
-                        android:layout_alignEnd="@+id/channelSpinner"
-                        android:layout_alignBottom="@+id/channelSpinner"
+                        android:layout_alignTop="@+id/tvChannel"
+                        android:layout_alignEnd="@+id/tvChannel"
+                        android:layout_alignBottom="@+id/tvChannel"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
@@ -571,26 +577,29 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp">
 
-                    <com.thomashaertel.widget.MultiSpinner
-                        android:id="@+id/typeSpinner"
+                    <TextView
+                        android:id="@+id/tvRoomType"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:paddingStart="12dp"
-                        android:spinnerMode="dropdown"
+                        android:paddingTop="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="8dp"
+                        android:textSize="14sp"
+                        android:hint="@string/pickRooms"
+                        android:textColor="@color/colorText"
                         android:entries="@array/rooms"
                         android:background="@drawable/spinner_background"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/typeSpinner"
-                        android:layout_alignEnd="@+id/typeSpinner"
-                        android:layout_alignBottom="@+id/typeSpinner"
+                        android:layout_alignTop="@+id/tvRoomType"
+                        android:layout_alignEnd="@+id/tvRoomType"
+                        android:layout_alignBottom="@+id/tvRoomType"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:src="@drawable/ic_arrow_down" />
-
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
         </RelativeLayout>

@@ -15,6 +15,7 @@ import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.SP;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.models.User;
 import com.easyswitch.serbianbookers.views.home.HomeActivity;
 import com.google.android.material.button.MaterialButton;
@@ -22,6 +23,10 @@ import com.google.android.material.button.MaterialButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -75,11 +80,9 @@ public class LoginActivity extends AppCompatActivity {
             user.setRemember("0");
         }
 
-        WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        webApiClient.getLogin(user).observe(this, new Observer<User>() {
+        WebApiManager.get(this).getWebApi().login(user).enqueue(new Callback<User>() {
             @Override
-            public void onChanged(User user) {
-
+            public void onResponse(Call<User> call, Response<User> response) {
                 if (user != null) {
                     if (checkBox.isChecked()) {
                         SP.getInstance().setRemember("1");
@@ -90,9 +93,9 @@ public class LoginActivity extends AppCompatActivity {
                     SP.getInstance().setUsername(username.getText().toString());
                     SP.getInstance().setPassword(password.getText().toString());
                     SP.getInstance().setUserExist(true);
-                    App.getInstance().setCurrentUser(user);
+                    App.getInstance().setCurrentUser(response.body());
 
-                    if (user.getStatus().equals("error")) {
+                    if (response.body().getStatus().equals("error") || response.body().getStatus().equals("Invalid username/password")) {
                         password.setError(getText(R.string.password_not_match));
                         login.setVisibility(View.VISIBLE);
                         pbLoading.setVisibility(View.GONE);
@@ -100,15 +103,21 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     Intent i = new Intent(getApplication(), HomeActivity.class);
-                    i.putExtra("currentUser", user);
+                    i.putExtra("currentUser", response.body());
                     startActivity(i);
 
                     Intent intent = new Intent();
-                    intent.putExtra("user", user);
+                    intent.putExtra("user", response.body());
                     setResult(RESULT_OK, intent);
 
                     finish();
                 }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                t.printStackTrace();
+                Timber.v("OnFailure");
             }
         });
 

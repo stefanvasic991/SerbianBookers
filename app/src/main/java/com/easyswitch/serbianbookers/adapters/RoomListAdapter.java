@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,21 +13,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.models.Availability;
 import com.easyswitch.serbianbookers.models.AvailabilityList;
+import com.easyswitch.serbianbookers.models.Room;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomListHolder> {
 
     Context context;
-    List<Availability> roomList;
+    List<Room> roomList;
+    OnRoomClickListener onRoomClickListener;
 
-    public RoomListAdapter(Context context, List<Availability> roomList) {
+    public RoomListAdapter(Context context, List<Room> roomList) {
         this.context = context;
         this.roomList = roomList;
+    }
+
+    public interface OnRoomClickListener {
+        void onRoomClick(View view, int position, Room room);
+    }
+
+    public void setOnRoomClickListener(OnRoomClickListener onRoomClickListener) {
+        this.onRoomClickListener = onRoomClickListener;
     }
 
     @NonNull
@@ -38,12 +50,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomLi
 
     @Override
     public void onBindViewHolder(@NonNull RoomListHolder holder, int position) {
-        Availability availability = roomList.get(position);
+        Room room = roomList.get(position);
 
-//        holder.cbRoom.setText(availability.getAvailabilityList().get(0).getShortName());
-        for (int i = 0; i < availability.getAvailabilityList().size(); i++) {
-            holder.cbRoom.setText(availability.getAvailabilityList().get(i).getShortName());
-        }
+        holder.cbRoom.setText(room.getShortname());
     }
 
     @Override
@@ -59,6 +68,13 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomLi
         public RoomListHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.cbRoom)
+        public  void click() {
+            if (onRoomClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                onRoomClickListener.onRoomClick(itemView, getAdapterPosition(), roomList.get(getAdapterPosition()));
+            }
         }
     }
 }

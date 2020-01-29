@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Availability implements Parcelable {
+public class Availability {
 
     @SerializedName("key")
     @Expose
@@ -45,48 +45,6 @@ public class Availability implements Parcelable {
     public Availability() {
 
     }
-
-    protected Availability(Parcel in) {
-        key = in.readString();
-        account = in.readString();
-        lcode = in.readString();
-        dfrom = in.readString();
-        dto = in.readString();
-        arr = in.readString();
-        priceId = in.readString();
-        restrictionId = in.readString();
-        status = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(key);
-        dest.writeString(account);
-        dest.writeString(lcode);
-        dest.writeString(dfrom);
-        dest.writeString(dto);
-        dest.writeString(arr);
-        dest.writeString(priceId);
-        dest.writeString(restrictionId);
-        dest.writeString(status);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Availability> CREATOR = new Creator<Availability>() {
-        @Override
-        public Availability createFromParcel(Parcel in) {
-            return new Availability(in);
-        }
-
-        @Override
-        public Availability[] newArray(int size) {
-            return new Availability[size];
-        }
-    };
 
     public String getKey() {
         return key;

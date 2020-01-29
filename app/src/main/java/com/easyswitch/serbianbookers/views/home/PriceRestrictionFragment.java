@@ -2,9 +2,7 @@ package com.easyswitch.serbianbookers.views.home;
 
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -29,43 +26,43 @@ import androidx.lifecycle.ViewModelProviders;
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
-import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.WebApiManager;
 import com.easyswitch.serbianbookers.models.AvailabilityData;
 import com.easyswitch.serbianbookers.models.Data;
 import com.easyswitch.serbianbookers.models.DataBody;
+import com.easyswitch.serbianbookers.models.Day;
 import com.easyswitch.serbianbookers.models.InsertAvail;
-import com.easyswitch.serbianbookers.models.InsertAvailData;
 import com.easyswitch.serbianbookers.models.InsertPrice;
 import com.easyswitch.serbianbookers.models.InsertRestriction;
-import com.easyswitch.serbianbookers.models.NewPrice;
 import com.easyswitch.serbianbookers.models.NewValues;
+import com.easyswitch.serbianbookers.models.NewValuesRestriction;
+import com.easyswitch.serbianbookers.models.Restriction;
+import com.easyswitch.serbianbookers.models.Room;
 import com.easyswitch.serbianbookers.models.User;
-import com.easyswitch.serbianbookers.models.insert.Avail;
-import com.easyswitch.serbianbookers.models.insert.Closed;
-import com.easyswitch.serbianbookers.models.insert.ClosedInOut;
-import com.easyswitch.serbianbookers.models.insert.MaxStay;
-import com.easyswitch.serbianbookers.models.insert.MinStay;
-import com.easyswitch.serbianbookers.models.insert.MinStayArr;
-import com.easyswitch.serbianbookers.models.insert.NoOta;
+import com.easyswitch.serbianbookers.models.Values;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.dialog.ChangeRestrictionActivity;
 import com.easyswitch.serbianbookers.views.dialog.PickRoomDialog;
+import com.easyswitch.serbianbookers.views.dialog.PricingPlanDialog;
+import com.easyswitch.serbianbookers.views.dialog.RestrictionPlanDialog;
 import com.easyswitch.serbianbookers.views.dialog.SaveAvailabilityDialog;
 import com.easyswitch.serbianbookers.views.dialog.SavePriceDialog;
 import com.easyswitch.serbianbookers.views.dialog.SaveRestrictionDialog;
 import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
 import com.thomashaertel.widget.MultiSpinner;
 
 import org.jetbrains.annotations.NotNull;
+import org.threeten.bp.Duration;
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.Month;
+import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -76,9 +73,12 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by: Stefan Vasic
@@ -90,11 +90,11 @@ public class PriceRestrictionFragment extends Fragment {
     @BindView(R.id.mbResDateTo)
     MaterialButton  mbResDateTo;
     @BindView(R.id.spinner)
-    MultiSpinner spinner;
+    TextView spinner;
     @BindView(R.id.ppSpinner)
-    Spinner ppSpinner;
+    TextView ppSpinner;
     @BindView(R.id.rSpinner)
-    Spinner rSpinner;
+    TextView rSpinner;
 
     @BindView(R.id.etInsertPrice)
     EditText etInsertPrice;
@@ -130,23 +130,17 @@ public class PriceRestrictionFragment extends Fragment {
     @BindView(R.id.saveRestriction)
     MaterialButton mbSaveRestriction;
 
-    User u;
-    String dateFrom, dateTo, dFrom;
-    Set<LocalDate> selectedDays = new HashSet<>();
-    private int roomId, canceled, cancelInOut;
-    String pricingPlaId, restrictionPlanId;
-    List<String> rooms = new ArrayList<>();
-    List<String> pricingPlan = new ArrayList<>();
-    List<String> restrictionPlan = new ArrayList<>();
+    String dateFrom, dateTo, dFrom, dTo, pid, rid, ids;
+    int canceled, cancelInOut, roomNumber;
+    int minStay, minStayArr, maxStay;
+    List<Room> a = new ArrayList<>();
+    List<String> multilpeIDs = new ArrayList<>();
+
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateParse = new SimpleDateFormat("dd.MM.yyyy.");
     @SuppressLint("SimpleDateFormat")
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-
-    private PopupWindow pw;
-    private boolean expanded;
-    public static boolean[] checkSelected;
 
     public static PriceRestrictionFragment newInstance() {
 
@@ -168,80 +162,8 @@ public class PriceRestrictionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_price_restriction, container, false);
         ButterKnife.bind(this, view);
 
-        u = getActivity().getIntent().getParcelableExtra("currentUser");
-        Availability av = new Availability();
-        av.setKey(App.getInstance().getCurrentUser().getKey());
-        av.setAccount(App.getInstance().getCurrentUser().getAccount());
-        av.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        av.setDfrom(LocalDate.now().toString());
-        av.setDto(LocalDate.now().plusDays(30).toString());
-        av.setArr("");
-
-        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-        webApiClient.getAvailability(av).observe(this, new Observer<Availability>() {
-            @Override
-            public void onChanged(Availability availability) {
-
-                if (availability == null) return;
-
-                for (int i = 0; i < availability.getAvailabilityList().size(); i++) {
-                    rooms.addAll(Collections.singleton(availability.getAvailabilityList().get(i).getShortName()));
-                    roomId = availability.getAvailabilityList().get(i).getId();
-                }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, rooms);
-                spinner.setAdapter(adapter, false, onSelectedListener);
-
-                boolean[] selectedItems = new boolean[adapter.getCount()];
-                selectedItems[1] = true; // select second item
-                spinner.setSelected(selectedItems);
-
-            }
-        });
-
-        DataBody dataBody = new DataBody();
-        dataBody.setKey(App.getInstance().getCurrentUser().getKey());
-        dataBody.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-        dataBody.setAccount(App.getInstance().getCurrentUser().getAccount());
-        dataBody.setNewsOrderBy("2019-12-25");
-        dataBody.setNewsOrderType("");
-        dataBody.setNewsDfrom("");
-        dataBody.setEventsDfrom("");
-        dataBody.setEventsDto("");
-        dataBody.setCalendarDfrom("2019-12-25");
-        dataBody.setCalendarDto("2020-12-24");
-        dataBody.setReservationsDfrom("2020-12-25");
-        dataBody.setReservationsDto("2020-01-24");
-        dataBody.setReservationsOrderBy("3");
-        dataBody.setReservationsFilterBy("2019-12-24");
-        dataBody.setReservationsOrderType("");
-        dataBody.setGuestsOrderBy("135");
-        dataBody.setGuestsOrderType("");
-
-        WebApiClient dataClient = ViewModelProviders.of(this).get(WebApiClient.class);
-        dataClient.getData(dataBody).observe(this, new Observer<Data>() {
-            @Override
-            public void onChanged(Data data) {
-
-                if (data == null) return;
-
-                for (int i = 0; i < data.getPrices().size(); i++) {
-                    pricingPlan.addAll(Collections.singleton(data.getPrices().get(i).getName()));
-                    pricingPlaId = data.getPrices().get(i).getId();
-                }
-
-                ArrayAdapter<String> ppAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, pricingPlan);
-                ppSpinner.setAdapter(ppAdapter);
-
-                for (int i = 0; i < data.getRestrictions().size(); i++) {
-                    restrictionPlan.addAll(Collections.singleton(data.getRestrictions().get(i).getName()));
-                    restrictionPlanId = data.getRestrictions().get(i).getId();
-                }
-
-                ArrayAdapter<String> rAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, pricingPlan);
-                rSpinner.setAdapter(rAdapter);
-            }
-        });
+//        ppSpinner.setText(App.getInstance().getData().getPrices().get(0).getName());
+//        rSpinner.setText(App.getInstance().getData().getRestrictions().get(0).getName());
 
         return view;
     }
@@ -252,25 +174,8 @@ public class PriceRestrictionFragment extends Fragment {
         }
     };
 
-    public ArrayList<String> getSelectedDays() {
-        ArrayList<String> tmp = new ArrayList<>();
-
-        Iterator<LocalDate> iterator = selectedDays.iterator();
-
-        while (iterator.hasNext()) {
-            LocalDate localDate = iterator.next();
-            tmp.add(localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        }
-
-        return tmp;
-    }
-
-//    @OnClick(R.id.ppSpinner)
-//    public void pricingPlan() {
-//        Intent intent = new Intent(getActivity(), PickRoomDialog.class);
-//        startActivityForResult(intent,33);
-//    }
-
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -289,132 +194,131 @@ public class PriceRestrictionFragment extends Fragment {
         if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 dateTo = data.getStringExtra("data");
+                dTo = getDate(dateTo);
                 mbResDateTo.setText(dateTo);
                 mbResDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
                 mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
 
+                LocalDate from = LocalDate.parse(dFrom);
+                LocalDate to = LocalDate.parse(dTo);
+
+                Period period = Period.between(from, to);
+                int daysBetween = period.getDays();
+
+                Timber.e(String.valueOf(daysBetween));
+
                 mbSavePrice.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View v) {
 
-                        AvailabilityData av = new AvailabilityData();
-                        Integer prc = av.setPrice(Integer.valueOf(etInsertPrice.getText().toString()));
+                        if (etInsertPrice.getText().toString().trim().length() == 0) {
+                            etInsertPrice.setError(getResources().getString(R.string.emptyField));
+                            return;
+                        }
 
-                        List<Integer> priceList = new ArrayList<>();
-                        priceList.add(prc);
+                        if (ppSpinner.getText().toString().trim().length() == 0) {
+                            ppSpinner.setError(getResources().getString(R.string.emptyField));
+                        }
 
-                        NewPrice newValues = new NewPrice();
-                        newValues.setRoomId(String.valueOf(roomId));
-                        newValues.setAvailabilityData(priceList);
+                        Intent intent = new Intent(getActivity(), SavePriceDialog.class);
+                        intent.putExtra("insertedPrice", Integer.valueOf(etInsertPrice.getText().toString()));
+                        intent.putExtra("daysBetween", daysBetween);
+                        intent.putExtra("dFrom", dFrom);
+                        intent.putExtra("priceID", pid);
+                        intent.putStringArrayListExtra("multipleIDs", (ArrayList<String>) multilpeIDs);
+                        startActivityForResult(intent, 3);
 
-                        InsertPrice ip = new InsertPrice();
-                        ip.setKey(App.getInstance().getCurrentUser().getKey());
-                        ip.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-                        ip.setAccount(App.getInstance().getCurrentUser().getAccount());
-                        ip.setDfrom(dFrom);
-                        ip.setDto(dateTo);
-                        ip.setPid("");
-                        ip.setOldValues("");
-                        ip.setNewValues(newValues);
-
-                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                        webApiClient.getInsertPrice(ip).observe(getActivity(), new Observer<InsertPrice>() {
-                            @Override
-                            public void onChanged(InsertPrice insertPrice) {
-                                Intent i = new Intent(getActivity(), SavePriceDialog.class);
-                                startActivity(i);
-                                etInsertPrice.setText("");
-                            }
-                        });
                     }
                 });
 
                 mbSaveAvailability.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<NewValues> nwList = new ArrayList<>();
 
-                        InsertAvailData av = new InsertAvailData();
+                        if (etInsertAvailability.getText().toString().trim().length() == 0) {
+                            etInsertAvailability.setError(getResources().getString(R.string.emptyField));
+                            return;
+                        }
 
-                        Avail a = new Avail();
-                        a.setAvail(etInsertAvailability.getText().toString());
+                        Intent intent = new Intent(getActivity(), SaveAvailabilityDialog.class);
+                        intent.putExtra("insertedAvail", Integer.valueOf(etInsertAvailability.getText().toString()));
+                        intent.putExtra("daysBetween", daysBetween);
+                        intent.putExtra("dFrom", dFrom);
+                        intent.putStringArrayListExtra("multipleIDs", (ArrayList<String>) multilpeIDs);
+                        startActivityForResult(intent, 4);
 
-                        NewValues newValues = new NewValues();
-                        newValues.setAvailabilityData(Collections.singletonList(av));
-                        nwList.add(newValues);
-
-                        InsertAvail ia = new InsertAvail();
-                        ia.setKey(App.getInstance().getCurrentUser().getKey());
-                        ia.setAccount(App.getInstance().getCurrentUser().getAccount());
-                        ia.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-                        ia.setDfrom(dFrom);
-                        ia.setDto(dateTo);
-                        ia.setOldValues("");
-                        ia.setNewValues(nwList);
-
-                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                        webApiClient.getInsertAvail(ia).observe(getActivity(), new Observer<InsertAvail>() {
-                            @Override
-                            public void onChanged(InsertAvail insertAvail) {
-                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
-                                startActivity(i);
-                                etInsertAvailability.setText("");
-                            }
-                        });
+//                        Day day = new Day();
+//                        day.setAvail(Integer.valueOf(etInsertAvailability.getText().toString()));
+//
+//                        List<Day> dayList = new ArrayList<>();
+//                        dayList.add(day);
+//
+//                        NewValues newValues = new NewValues();
+//                        newValues.setId("");
+//                        newValues.setDays(dayList);
+//
+//                        List<NewValues> nwList = new ArrayList<>();
+//                        for (int i = 0; i < daysBetween; i ++) {
+//
+//                            nwList.add(i, newValues);
+//                        }
+//
+//                        InsertAvail ia = new InsertAvail();
+//                        ia.setKey(App.getInstance().getCurrentUser().getKey());
+//                        ia.setAccount(App.getInstance().getCurrentUser().getAccount());
+//                        ia.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
+//                        ia.setDfrom(dFrom);
+//                        ia.setOldValues(nwList);
+//                        ia.setNewValues(nwList);
+//                        ia.setMultipleIDs(multilpeIDs);
+//
+//                        WebApiManager.get(getActivity()).getWebApi().insertAvail(ia).enqueue(new Callback<InsertAvail>() {
+//                            @Override
+//                            public void onResponse(Call<InsertAvail> call, Response<InsertAvail> response) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<InsertAvail> call, Throwable t) {
+//
+//                            }
+//                        });
                     }
                 });
 
                 mbSaveRestriction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        InsertAvailData av = new InsertAvailData();
 
-                        Closed c = new Closed();
-                        c.setClosed(canceled);
+                        Intent intent = new Intent(getActivity(), SaveRestrictionDialog.class);
 
-                        Closed cio = new Closed();
-                        cio.setClosed(cancelInOut);
+                        if (etInsertMinStay.getText().toString().trim().length() == 0) {
+                            intent.putExtra("minStay", 0);
+                        } else {
+                            intent.putExtra("minStay", Integer.valueOf(etInsertMinStay.getText().toString()));
+                        }
 
-                        MinStay ms = new MinStay();
-                        ms.setMinStay(etInsertMinStay.getText().toString());
+                        if (etInsertMinStayArr.getText().toString().trim().length() == 0) {
+                            intent.putExtra("minStayArr", 0);
+                        } else {
+                            intent.putExtra("minStayArr", Integer.valueOf(etInsertMinStayArr.getText().toString()));
+                        }
 
-                        MinStayArr msa = new MinStayArr();
-                        msa.setMinStayArr(etInsertMinStayArr.getText().toString());
+                        if (etInsertMaxStay.getText().toString().trim().length() == 0) {
+                            intent.putExtra("maxStay", 0);
+                        } else {
+                            intent.putExtra("maxStay", Integer.valueOf(etInsertMaxStay.getText().toString()));
+                        }
 
-                        MaxStay maxs = new MaxStay();
-                        maxs.setMaxStay(etInsertMaxStay.getText().toString());
-
-                        av.setMin_stay(ms);
-                        av.setMin_stay_arrival(msa);
-                        av.setMax_stay(maxs);
-                        av.setClosed(c);
-                        av.setClosedArrival(cio);
-
-                        NewValues newValues = new NewValues();
-                        newValues.setRoomId("416694");
-                        newValues.setAvailabilityData(Collections.singletonList(av));
-
-                        InsertRestriction ir = new InsertRestriction();
-                        ir.setKey(App.getInstance().getCurrentUser().getKey());
-                        ir.setAccount(App.getInstance().getCurrentUser().getAccount());
-                        ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
-                        ir.setDfrom(dFrom);
-                        ir.setDto(dateTo);
-                        ir.setPid("");
-                        ir.setOldValues("");
-                        ir.setNewValues(newValues);
-
-                        WebApiClient webApiClient = ViewModelProviders.of(getActivity()).get(WebApiClient.class);
-                        webApiClient.getInsertRestriction(ir).observe(getActivity(), new Observer<InsertRestriction>() {
-                            @Override
-                            public void onChanged(InsertRestriction insertRestriction) {
-                                Intent i = new Intent(getActivity(), SaveAvailabilityDialog.class);
-                                startActivity(i);
-                                etInsertMinStay.setText("");
-                                etInsertMinStayArr.setText("");
-                                etInsertMaxStay.setText("");
-                            }
-                        });
+                        intent.putExtra("cancel", canceled);
+                        intent.putExtra("canceledInOut", cancelInOut);
+                        intent.putExtra("restrictionID", rid);
+                        intent.putExtra("daysBetween", daysBetween);
+                        intent.putExtra("dFrom", dFrom);
+                        intent.putExtra("roomNumber", roomNumber);
+                        intent.putStringArrayListExtra("multipleIDs", (ArrayList<String>) multilpeIDs);
+                        startActivityForResult(intent, 5);
                     }
                 });
             }
@@ -429,12 +333,84 @@ public class PriceRestrictionFragment extends Fragment {
             }
         }
 
-//        if (requestCode == 33) {
-//            if (resultCode == RESULT_OK) {
-//                String plan = data.getStringExtra("pricingPlanName");
-//                ppSpinner.setText(plan);
-//            }
-//        }
+        if (requestCode == 33) {
+            if (resultCode == RESULT_OK) {
+                String a = data.getStringExtra("pricingPlanName");
+                pid = data.getStringExtra("pricingPlanID");
+                ppSpinner.setText(a);
+            }
+        }
+
+        if (requestCode == 111) {
+            if (resultCode == RESULT_OK) {
+                 String a = data.getStringExtra("restrictionPlanName");
+                 rid = data.getStringExtra("restrictionPlanID");
+                rSpinner.setText(a);
+            }
+        }
+
+        if (requestCode == 44) {
+            if (resultCode == RESULT_OK) {
+                assert data != null;
+                a = data.getExtras().getParcelableArrayList("checkedList");
+                for (int i = 0; i < a.size(); i++) {
+                    if (a.size() <= 3) {
+                        spinner.setText(spinner.getText() + a.get(i).getShortname() + " ");
+                        multilpeIDs.add(a.get(i).getId());
+                        Timber.e(String.valueOf(multilpeIDs));
+                    } else if (a.size() == 4) {
+                        spinner.setText("4 selektovane sobe");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 5) {
+                        spinner.setText("5 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 6) {
+                        spinner.setText("6 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 7) {
+                        spinner.setText("7 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 8) {
+                        spinner.setText("8 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    } else if (a.size() == 9) {
+                        spinner.setText("9 selektovanih soba");
+                        multilpeIDs.add(a.get(i).getId());
+                    }  else {
+                        spinner.setText("Sve sobe su selektovane");
+                        multilpeIDs.add(a.get(i).getId());
+                    }
+
+                    roomNumber = a.size();
+                }
+            }
+        }
+
+        if (requestCode == 3 && resultCode == RESULT_OK) {
+            mbResDateFrom.setText("");
+            mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            mbResDateTo.setText("");
+            mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            etInsertPrice.setText("");
+        }
+
+        if (requestCode == 4 && resultCode == RESULT_OK) {
+            mbResDateFrom.setText("");
+            mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            mbResDateTo.setText("");
+            mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            etInsertAvailability.setText("");
+        }
+
+        if (requestCode == 5 && resultCode == RESULT_OK) {
+            mbResDateFrom.setText("");
+            mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            mbResDateTo.setText("");
+            mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            etInsertMinStay.setText("");
+            etInsertMinStayArr.setText("");
+            etInsertMaxStay.setText("");
+        }
     }
 
     @NotNull
@@ -454,63 +430,12 @@ public class PriceRestrictionFragment extends Fragment {
     public void pickDateFrom() {
         Intent i = new Intent(getActivity(), CalendarFilterActivity.class);
         startActivityForResult(i, 1);
-
-//        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-//                new DatePickerDialog.OnDateSetListener() {
-//                    @SuppressLint("SetTextI18n")
-//                    @Override
-//                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.set(year, month, day);
-//                        @SuppressLint("SimpleDateFormat")
-//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-//
-//                        String dateString = dateFormat.format(calendar.getTime());
-//                        mbResDateFrom.setText(dateString);
-//                        mbResDateFrom.setTextColor(getResources().getColor(R.color.colorWhite));
-//                        mbResDateFrom.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
-//                    }
-//                }, year, month, dayOfMonth);
-//        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-//        datePickerDialog.setCanceledOnTouchOutside(true);
-//        datePickerDialog.setTitle("");
-//        datePickerDialog.show();
     }
 
     @OnClick(R.id.mbResDateTo)
     public void pickDateTo() {
         Intent i = new Intent(getActivity(), CalendarFilterActivity.class);
         startActivityForResult(i, 2);
-
-//        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-//                new DatePickerDialog.OnDateSetListener() {
-//                    @SuppressLint("SetTextI18n")
-//                    @Override
-//                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.set(year, month, day);
-//                        @SuppressLint("SimpleDateFormat")
-//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-//
-//                        String dateString = dateFormat.format(calendar.getTime());
-//                        mbResDateTo.setText(dateString);
-//                        mbResDateTo.setTextColor(getResources().getColor(R.color.colorWhite));
-//                        mbResDateTo.getBackground().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
-//                    }
-//                }, year, month, dayOfMonth);
-//        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-//        datePickerDialog.setCanceledOnTouchOutside(true);
-//        datePickerDialog.setTitle("");
-//        datePickerDialog.show();
-//        datesBetween(mbResDateFrom.getText().toString(), mbResDateTo.getText().toString());
-    }
-
-    public static List<LocalDate> datesBetween(LocalDate start, LocalDate end) {
-        List<LocalDate> ret = new ArrayList<>();
-        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
-            ret.add(date);
-        }
-        return ret;
     }
 
     @OnClick(R.id.tvMenuPrice)
@@ -570,22 +495,30 @@ public class PriceRestrictionFragment extends Fragment {
     @OnClick(R.id.saveRestriction)
     public void saveRestriction() {
 
-        if (etInsertMinStay.getText().toString().isEmpty()) {
-            etInsertMinStay.setError(getResources().getString(R.string.emptyField));
-        }
-
-        if (etInsertMinStayArr.getText().toString().isEmpty()) {
-            etInsertMinStayArr.setError(getResources().getString(R.string.emptyField));
-        }
-
-        if (etInsertMaxStay.getText().toString().isEmpty()) {
-            etInsertMaxStay.setError(getResources().getString(R.string.emptyField));
-        }
     }
 
     @OnClick(R.id.mbOpenRestriction)
     public void changeRestriction() {
         Intent i = new Intent(getActivity(), ChangeRestrictionActivity.class);
         startActivityForResult(i, 11);
+    }
+
+    @OnClick(R.id.spinner)
+    public void pickrooms() {
+        Intent i  = new Intent(getActivity(), PickRoomDialog.class);
+        startActivityForResult(i, 44);
+        spinner.setText("");
+    }
+
+    @OnClick(R.id.ppSpinner)
+    public void openPrice() {
+        Intent i = new Intent(getActivity(), PricingPlanDialog.class);
+        startActivityForResult(i, 33);
+    }
+
+    @OnClick(R.id.rSpinner)
+    public void openDialog() {
+        Intent i = new Intent(getActivity(), RestrictionPlanDialog.class);
+        startActivityForResult(i, 111);
     }
 }

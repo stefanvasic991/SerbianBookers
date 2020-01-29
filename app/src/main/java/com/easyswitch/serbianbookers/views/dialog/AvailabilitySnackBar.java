@@ -4,22 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.easyswitch.serbianbookers.App;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
+import com.easyswitch.serbianbookers.models.Day;
 import com.easyswitch.serbianbookers.models.InsertAvail;
-import com.easyswitch.serbianbookers.models.InsertAvailData;
 import com.easyswitch.serbianbookers.models.NewValues;
 import com.easyswitch.serbianbookers.models.User;
-import com.easyswitch.serbianbookers.models.insert.Avail;
-import com.easyswitch.serbianbookers.models.insert.MaxStay;
-import com.easyswitch.serbianbookers.models.insert.MinStay;
-import com.easyswitch.serbianbookers.models.insert.MinStayArr;
-import com.easyswitch.serbianbookers.models.insert.NoOta;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +25,8 @@ public class AvailabilitySnackBar extends AppCompatActivity {
 
 
     User u;
-    String date, roomID, avail, noOta;
+    String date, avail, noOta;
+    Integer roomID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +36,13 @@ public class AvailabilitySnackBar extends AppCompatActivity {
         ButterKnife.bind(this);
 
         date  = getIntent().getStringExtra("datum");
-        roomID = getIntent().getStringExtra("roomID");
+        roomID = getIntent().getIntExtra("roomID", 0);
         avail = getIntent().getStringExtra("avail");
         noOta = getIntent().getStringExtra("ota");
     }
 
-    @OnClick(R.id.llSnackBar)
-    public void cancelSnackBar() { finish(); }
+//    @OnClick(R.id.llSnackBar)
+//    public void cancelSnackBar() { finish(); }
 
     @OnClick(R.id.tvReset)
     public void onReset() {
@@ -60,31 +54,27 @@ public class AvailabilitySnackBar extends AppCompatActivity {
     public void onSave() {
         setResult(RESULT_OK);
 
-        List<NewValues> nwList = new ArrayList<>();
+        Day day = new Day();
+        day.setAvail(Integer.valueOf(avail));
 
-        InsertAvailData av = new InsertAvailData();
-
-        Avail a = new Avail();
-        a.setAvail(avail);
-
-        NoOta ota = new NoOta();
-        ota.setNoOta(noOta);
-
-        av.setAvail(a);
-        av.setNo_ota(ota);
+        List<Day> dayList = new ArrayList<>();
+        dayList.add(day);
 
         NewValues newValues = new NewValues();
-        newValues.setAvailabilityData(Collections.singletonList(av));
-        nwList.add(newValues);
+        newValues.setId("");
+        newValues.setDays(dayList);
 
+        List<NewValues> nwList = new ArrayList<>();
+        nwList.add(newValues);
 
         InsertAvail ia = new InsertAvail();
         ia.setKey(App.getInstance().getCurrentUser().getKey());
         ia.setAccount(App.getInstance().getCurrentUser().getAccount());
         ia.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         ia.setDfrom(date);
-        ia.setOldValues("");
+        ia.setOldValues(nwList);
         ia.setNewValues(nwList);
+        ia.setMultipleIDs(Collections.singletonList(String.valueOf(roomID)));
 
         WebApiClient webApiClient = ViewModelProviders.of(this).get(WebApiClient.class);
         webApiClient.getInsertAvail(ia).observe(this, new Observer<InsertAvail>() {

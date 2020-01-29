@@ -27,6 +27,9 @@ public class Price implements Parcelable {
     @Expose
     private String vpid;
 
+    private  boolean isSelected;
+
+
     protected Price(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -34,6 +37,7 @@ public class Price implements Parcelable {
         variation = in.readString();
         variationType = in.readString();
         vpid = in.readString();
+        isSelected = in.readByte() != 0;
     }
 
     @Override
@@ -44,6 +48,7 @@ public class Price implements Parcelable {
         dest.writeString(variation);
         dest.writeString(variationType);
         dest.writeString(vpid);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 
     @Override
@@ -111,4 +116,11 @@ public class Price implements Parcelable {
         this.vpid = vpid;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 }
