@@ -135,6 +135,10 @@
     <string name="pricingPlan">plan cena</string>
     <string name="pickRooms">izaberi sobe</string>
 
+    <string name="text_gantt_task_title">Task Name</string>
+    <string name="text_gantt_today">Today</string>
+    <string name="text_gantt_week">wk #</string>
+
 
     <string-array name="rooms">
         <item>Jednosobni</item>

@@ -15,18 +15,6 @@
         android:layout_centerHorizontal="true"
         app:srcCompat="@drawable/logo" />
 
-<!--    <EditText-->
-<!--            android:id="@+id/etUsername"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/ivLogo"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:layout_marginStart="30dp"-->
-<!--            android:layout_marginEnd="30dp"-->
-<!--            android:inputType="text"-->
-<!--            android:text="NK017"-->
-<!--            android:hint="username" />-->
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilUsername"
         android:layout_width="match_parent"
@@ -42,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="PV117"
+            android:text="DJ050"
             android:hint="username" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,21 +49,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:text="Vojvoda1234#"
+            android:text="Djole12#"
             android:hint="password" />
     </com.google.android.material.textfield.TextInputLayout>
-
-<!--    <EditText-->
-<!--            android:id="@+id/etPassword"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/etUsername"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_marginStart="30dp"-->
-<!--            android:layout_marginEnd="30dp"-->
-<!--            android:inputType="textPassword"-->
-<!--            android:text="davincijevkod96"-->
-<!--            android:hint="password"/>-->
 
     <CheckBox
         android:id="@+id/checkBox"

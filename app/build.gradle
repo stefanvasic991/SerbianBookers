@@ -67,6 +67,10 @@ dependencies {
 
     implementation 'com.thomashaertel:multispinner:0.1.1'
 
+    //TableFixHeaders
+//    implementation 'com.github.InQBarna:TableFixHeaders:v0.1'
+    implementation 'com.github.miguelbcr:TableFixHeaders-Wrapper:0.2.0'
+
     //noinspection GradleCompatible
     implementation 'com.android.support:design:27.1.0'
     //Multi dex
@@ -76,7 +80,7 @@ dependencies {
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
     //RecyclerView
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     // Card view
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -102,7 +106,7 @@ dependencies {
     //KizitonWose kotlin calendar
     implementation "com.github.kizitonwose:CalendarView:0.2.8"
     implementation 'androidx.viewpager:viewpager:1.0.0'
-    implementation "androidx.work:work-runtime:2.2.0"
+    implementation "androidx.work:work-runtime:2.3.0"
     //Circle image view
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     //Circular progress bar
@@ -126,7 +130,7 @@ dependencies {
 
     implementation 'com.jakewharton.rxbinding:rxbinding:0.4.0'
 
-
+    implementation 'joda-time:joda-time:2.9.9'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'

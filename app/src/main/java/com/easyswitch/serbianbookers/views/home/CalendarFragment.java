@@ -6,22 +6,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -30,22 +25,22 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.easyswitch.serbianbookers.App;
-import com.easyswitch.serbianbookers.CalendarUnitKt;
 import com.easyswitch.serbianbookers.Consts;
 import com.easyswitch.serbianbookers.R;
 import com.easyswitch.serbianbookers.WebApiClient;
-import com.easyswitch.serbianbookers.models.Availability;
+import com.easyswitch.serbianbookers.gantogram.model.GanttData;
+import com.easyswitch.serbianbookers.gantogram.model.Project;
 import com.easyswitch.serbianbookers.models.Calendar;
 import com.easyswitch.serbianbookers.models.Data;
-import com.easyswitch.serbianbookers.models.DataBody;
-import com.easyswitch.serbianbookers.models.User;
+import com.easyswitch.serbianbookers.models.Reservation;
+import com.easyswitch.serbianbookers.models.Room;
 import com.easyswitch.serbianbookers.views.NavigationViewActivity;
 import com.easyswitch.serbianbookers.views.calendar.EighthRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.FifthRoomFragment;
-import com.easyswitch.serbianbookers.views.calendar.NinthRoomFragment;
-import com.easyswitch.serbianbookers.views.calendar.SecondRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.FirstRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.FourthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.NinthRoomFragment;
+import com.easyswitch.serbianbookers.views.calendar.SecondRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.SeventhRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.SixthRoomFragment;
 import com.easyswitch.serbianbookers.views.calendar.TenthRoomFragment;
@@ -56,13 +51,7 @@ import com.easyswitch.serbianbookers.views.filter.CalendarFilterActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.kizitonwose.calendarview.CalendarView;
-import com.kizitonwose.calendarview.model.CalendarDay;
-import com.kizitonwose.calendarview.model.DayOwner;
-import com.kizitonwose.calendarview.ui.DayBinder;
-import com.kizitonwose.calendarview.ui.ViewContainer;
 
 import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.LocalDate;
@@ -77,7 +66,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -103,8 +91,8 @@ public class CalendarFragment extends Fragment {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
-    @BindView(R.id.cvCalendar)
-    CalendarView cvCalendar;
+    @BindView(R.id.clDate)
+    LinearLayout clDate;
 
     CalendarPagerAdapter calendarPagerAdapter;
     List<String> calendarList = new ArrayList<>();
@@ -112,6 +100,11 @@ public class CalendarFragment extends Fragment {
     String date, pid, rid, priceID, pricePlanName, restrictionPlanName;
     ;
     BroadcastReceiver broadcastReceiver;
+
+    private Project project;
+    private ArrayList<Room> tasks;
+    private ArrayList<Reservation> reservations;
+
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd");
     private DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("EEE");
@@ -143,6 +136,7 @@ public class CalendarFragment extends Fragment {
         AndroidThreeTen.init(getActivity());
 
         viewPager.setVisibility(View.VISIBLE);
+        clDate.setVisibility(View.VISIBLE);
 
         YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.plusMonths(12);
@@ -195,8 +189,6 @@ public class CalendarFragment extends Fragment {
 
         tabLayout.setupWithViewPager(viewPager);
 
-//        gantogram();
-
         return view;
     }
 
@@ -236,24 +228,24 @@ public class CalendarFragment extends Fragment {
             switch (position) {
                 case 0:
                     return FirstRoomFragment.newInstance();
-//                case 1:
-//                    return SecondRoomFragment.newInstance();
-//                case 2:
-//                    return ThirdRoomFragment.newInstance();
-//                case 3:
-//                    return FourthRoomFragment.newInstance();
-//                case 4:
-//                    return FifthRoomFragment.newInstance();
-//                case 5:
-//                    return SixthRoomFragment.newInstance();
-//                case 6:
-//                    return SeventhRoomFragment.newInstance();
-//                case 7:
-//                    return EighthRoomFragment.newInstance();
-//                case 8:
-//                    return NinthRoomFragment.newInstance();
-//                case 9:
-//                    return TenthRoomFragment.newInstance();
+                case 1:
+                    return SecondRoomFragment.newInstance();
+                case 2:
+                    return ThirdRoomFragment.newInstance();
+                case 3:
+                    return FourthRoomFragment.newInstance();
+                case 4:
+                    return FifthRoomFragment.newInstance();
+                case 5:
+                    return SixthRoomFragment.newInstance();
+                case 6:
+                    return SeventhRoomFragment.newInstance();
+                case 7:
+                    return EighthRoomFragment.newInstance();
+                case 8:
+                    return NinthRoomFragment.newInstance();
+                case 9:
+                    return TenthRoomFragment.newInstance();
                 default:
                     return FirstRoomFragment.newInstance();
             }
@@ -280,114 +272,25 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    public void gantogram() {
-        YearMonth currentMonth = YearMonth.now();
-
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(dm);
-
-        cvCalendar.setDayWidth(dm.widthPixels/5);
-        cvCalendar.setDayHeight((int) (cvCalendar.getDayWidth() *1.25));
-
-        cvCalendar.setup(currentMonth, currentMonth.plusMonths(3), CalendarUnitKt.daysOfWeekFromLocale()[0]);
-        cvCalendar.scrollToDate(LocalDate.now());
-        cvCalendar.setDayBinder(new DayBinder<DayViewContainer>() {
-            @NotNull
-            @Override
-            public DayViewContainer create(@NotNull View view) {
-                return new DayViewContainer(view);
-            }
-
-            @Override
-            public void bind(@NotNull DayViewContainer container, @NotNull CalendarDay day) {
-                container.calendarDay = day;
-                container.tvMonthText.setText(monthFormatter.format(day.getDate()));
-                container.tvDateText.setText(dateFormatter.format(day.getDate()));
-                container.tvDayText.setText(dayFormatter.format(day.getDate()));
-
-                if (day.getDate().isEqual(LocalDate.now())) {
-                    container.tvMonthText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorBlue));
-                    container.tvDateText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorBlue));
-                    container.tvDayText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorBlue));
-                } else if (day.getOwner() != DayOwner.THIS_MONTH) {
-                    container.tvMonthText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorText));
-                    container.tvDateText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorText));
-                    container.tvDayText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorText));
-                }  else {
-                    container.tvMonthText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorTextLight));
-                    container.tvDateText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorTextLight));
-                    container.tvDayText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorTextLight));
-                }
-            }
-        });
-    }
-
-    public class DayViewContainer extends ViewContainer {
-        FrameLayout tvCalendarDayText;
-        TextView tvMonthText, tvDateText, tvDayText;
-        CalendarDay calendarDay;
-
-        public DayViewContainer(@NotNull View view) {
-            super(view);
-
-            tvCalendarDayText = view.findViewById(R.id.tvCalendarDayText);
-            tvMonthText = view.findViewById(R.id.tvMonthText);
-            tvDateText = view.findViewById(R.id.tvDateText);
-            tvDayText = view.findViewById(R.id.tvDayText);
-
-            tvCalendarDayText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    CalendarDay firstDay = cvCalendar.findFirstVisibleDay();
-                    CalendarDay lastDay = cvCalendar.findLastVisibleDay();
-                    if (firstDay == calendarDay) {
-                        cvCalendar.smoothScrollToDate(calendarDay.getDate());
-                    } else if (lastDay == calendarDay) {
-                        cvCalendar.smoothScrollToDate(calendarDay.getDate().minusDays(4));
-                    }
-
-                    if (selectedDate != calendarDay.getDate()) {
-                        oldDate = selectedDate;
-                        selectedDate = calendarDay.getDate();
-                        cvCalendar.notifyDateChanged(calendarDay.getDate());
-                    }
-                }
-            });
-        }
-    }
-
-//    @OnClick( R.id.ivList)
-//    public void openList() {
-//        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_selected));
-//        ivGantogram.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_gantogram_shape));
-//        cvCalendar.setVisibility(View.GONE);
-//        viewPager.setVisibility(View.VISIBLE);
-//    }
-//
-//    @OnClick( R.id.ivGantogram)
-//    public void openGantogram() {
-//
-//        ivList.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_list_shape));
-//        ivGantogram.setBackgroundDrawable(getResources().getDrawable(R.drawable.diagram_gantogram_selected));
-//        cvCalendar.setVisibility(View.VISIBLE);
-//        viewPager.setVisibility(View.GONE);
-//    }
-
     @OnClick(R.id.fab)
     public void openGantogram() {
-        if (fab.getTag().equals("0")) {
-            cvCalendar.setVisibility(View.VISIBLE);
-            viewPager.setVisibility(View.INVISIBLE);
-            fab.setTag("1");
-            fab.setImageResource(R.drawable.lista);
-        } else if (fab.getTag().equals("1")){
-            cvCalendar.setVisibility(View.INVISIBLE);
-            viewPager.setVisibility(View.VISIBLE);
-            fab.setTag("0");
-            fab.setImageResource(R.drawable.gantogram);
+        project = new Project("1", "", LocalDate.now().toString(), LocalDate.now().plusDays(60).toString());
+        tasks = new ArrayList<>();
+        reservations = new ArrayList<>();
+        for (int i = 0; i < App.getInstance().getData().getRooms().size(); i++) {
+            Room task = new Room(App.getInstance().getData().getRooms().get(i).getShortname());
+            tasks.add(task);
+            for (int j = 0; j < App.getInstance().getData().getReceived().size(); j++) {
+                Reservation reservation = new Reservation(App.getInstance().getData().getReceived().get(j).getDateArrival(),
+                        App.getInstance().getData().getReceived().get(j).getDateDeparture());
+                reservations.add(reservation);
+            }
         }
+
+
+        GanttData.initGanttData(project, tasks, reservations);
+        Intent intent = new Intent(getActivity(), GantActivity.class);
+        startActivity(intent);
     }
 
 

@@ -90,6 +90,11 @@ public class ClosureSnackBar extends AppCompatActivity {
         ir.setAccount(App.getInstance().getCurrentUser().getAccount());
         ir.setLcode(App.getInstance().getCurrentUser().getProperties().get(0).getLcode());
         ir.setDfrom(date);
+        if (App.getInstance().getData().getRestrictions().isEmpty()) {
+            Toast.makeText(this, "Ne postoje restrikcije", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         ir.setPid(App.getInstance().getData().getRestrictions().get(1).getId());
         ir.setOldValues(nwList);
         ir.setNewValues(nwList);

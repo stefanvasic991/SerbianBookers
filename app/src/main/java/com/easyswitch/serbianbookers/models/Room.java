@@ -57,7 +57,7 @@ public class Room implements Parcelable {
     private boolean selected;
 
 
-    protected Room(Parcel in) {
+    public Room(Parcel in) {
         id = in.readString();
         name = in.readString();
         shortname = in.readString();
@@ -73,6 +73,14 @@ public class Room implements Parcelable {
         parentRoom = in.readString();
         roomNumbers = in.readString();
         selected = in.readByte() != 0;
+    }
+
+    public Room() {
+
+    }
+
+    public Room(String shortname) {
+        this.shortname = shortname;
     }
 
     @Override

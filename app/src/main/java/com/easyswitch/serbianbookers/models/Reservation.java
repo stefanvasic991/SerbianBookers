@@ -232,6 +232,11 @@ public class Reservation implements Parcelable {
         dest.writeString(channelLogo);
     }
 
+    public Reservation(String dateArrival, String dateDeparture) {
+        this.dateArrival = dateArrival;
+        this.dateDeparture = dateDeparture;
+    }
+
     @Override
     public int describeContents() {
         return 0;
